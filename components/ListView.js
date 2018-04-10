@@ -112,13 +112,23 @@ const demoData = [
     /**
      * Render a row
      */
+    alertItemName = (item) => {
+        alert(item.title) 
+     }
     _renderRow = (movie) => {
         return (
           <Row
             // Pass movie object
             movie={movie}
             // Pass a function to handle row presses
-            
+            onPress={()=>{
+                // Navigate to a separate movie detail screen
+                /*this.props.navigator.push({
+                  name: 'movie',
+                  movie: movie,
+                });*/
+                this.alertItemName(movie)
+              }}
           />
         );
       }
@@ -143,3 +153,5 @@ const demoData = [
         );
       }
   }
+
+//https://rationalappdev.com/react-native-list-app-complete-how-to-guide/
