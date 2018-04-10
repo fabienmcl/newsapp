@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, TouchableOpacity, StyleSheet } from 'react-native'
+import { Text, View, TouchableOpacity, StyleSheet, Image, FlatList } from 'react-native'
 
 class List extends Component {
    data = {
@@ -33,12 +33,15 @@ class List extends Component {
       return (
          <View> 
             {
-               this.data.news.map((item, index) => (
+                this.data.news.map((item, index) => (
                   <TouchableOpacity
                      key = {item.id}
                      style = {styles.container}
                      onPress = {() => this.alertItemName(item)}>
-                     
+                     <Image
+                        style={{width: 50, height: 50, marginRight: 18}}
+                        source={{uri: 'https://facebook.github.io/react-native/docs/assets/favicon.png'}}
+                    />
                      <Text style = {styles.title}>
                         {item.name}
                      </Text>
@@ -46,7 +49,7 @@ class List extends Component {
                         {item.content}
                      </Text>
                   </TouchableOpacity>
-               ))
+                ))
             }
          </View>
       )
@@ -65,9 +68,12 @@ const styles = StyleSheet.create ({
       color: '#212121',
       fontSize: 20,
       fontWeight: 'bold',
-      alignItems : 'center'
+      justifyContent: 'center',
+    alignItems: 'center',
    },
    content:{
     color: '#4f603c',
+    justifyContent: 'center',
+    alignItems: 'center',
     }
 })
