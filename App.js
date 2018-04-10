@@ -14,22 +14,6 @@ export default class App extends React.Component {
         <Header />
         <View style={styles.body}>
         <List />
-        <ListViewDemo /> 
-          <Text>project news app master</Text>
-          <FlatList
-            data={[{key: 'a'}, {key: 'b'}]}
-            renderItem={({item}) => <Text>{item.key}</Text>}
-          />
-          <FlatList
-          data = {[
-            { key: 1, name: 'Alice' },
-            { key: 2, name: 'Bob' },
-            { key: 3, name: 'Claire' },
-            { key: 4, name: 'David' },
-            ]}
-            renderItem={({item}) => <Text>{item.key} : {item.name}</Text>}
-          />
-          
         </View>
       </View>
     );

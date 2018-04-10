@@ -2,41 +2,48 @@ import React, { Component } from 'react'
 import { Text, View, TouchableOpacity, StyleSheet } from 'react-native'
 
 class List extends Component {
-   state = {
-      names: [
+   data = {
+      news: [
          {
             id: 0,
-            name: 'Ben',
+            name: 'iPhone 8 et 8 Plus : la version rouge est arrivée',
+            content : 'Quam ob rem id primum videamus, si placet, quatenus amor in amicitia progredi debeat.'  ,
          },
          {
             id: 1,
-            name: 'Susan',
+            name: 'Elon Musk dévoile le moule principal de la Big Falcon Rocket',
+            content : 'Quam ob rem id primum videamus, si placet, quatenus amor in amicitia progredi debeat.'  ,
          },
          {
             id: 2,
-            name: 'Robert',
+            name: 'La Cour de justice de l’UE tranche : Uber pourra être régulé comme une entreprise de transports',
+            content : 'Quam ob rem id primum videamus, si placet, quatenus amor in amicitia progredi debeat.'  ,
          },
          {
             id: 3,
-            name: 'Mary',
+            name: 'Vous pouvez désormais savoir si Cambridge Analytica a mis la main sur vos données',
+            content : 'Quam ob rem id primum videamus, si placet, quatenus amor in amicitia progredi debeat.'  ,
          }
       ]
    }
    alertItemName = (item) => {
-      alert(item.name)
+      alert(item.name) 
    }
    render() {
       return (
          <View> 
             {
-               this.state.names.map((item, index) => (
+               this.data.news.map((item, index) => (
                   <TouchableOpacity
                      key = {item.id}
                      style = {styles.container}
                      onPress = {() => this.alertItemName(item)}>
                      
-                     <Text style = {styles.text}>
+                     <Text style = {styles.title}>
                         {item.name}
+                     </Text>
+                     <Text style = {styles.text}>
+                        {item.content}
                      </Text>
                   </TouchableOpacity>
                ))
@@ -51,10 +58,16 @@ const styles = StyleSheet.create ({
    container: {
       padding: 10,
       marginTop: 3,
-      backgroundColor: '#d9f9b1',
+      backgroundColor: '#F5F5F5',
       alignItems: 'center',
    },
-   text: {
-      color: '#4f603c'
-   }
+   title: {
+      color: '#212121',
+      fontSize: 20,
+      fontWeight: 'bold',
+      alignItems : 'center'
+   },
+   content:{
+    color: '#4f603c',
+    }
 })
