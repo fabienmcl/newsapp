@@ -1,6 +1,17 @@
 import React, { Component } from 'react';
 import { ListView, RefreshControl, Text } from 'react-native';
 import Row from './Row';
+import {
+    NavigationActions ,
+  } from 'react-navigation';
+  
+  import Header from './Header'; 
+  import ListS from './List'; 
+  import ListV from './ListView';
+  import Movie from './Movie';
+  import Vide from './Vide';
+  import Home from './App';
+
 const demoData = [
     {
       title: 'Zootopia',
@@ -73,8 +84,16 @@ const demoData = [
       plot: 'The tender, heartbreaking story of a young man\'s struggle to find himself, told across three defining chapters in his life as he experiences the ecstasy, pain, and beauty of falling in love, while grappling with his own sexuality.',
     },
   ];
-  export default class List extends Component {
+  export default class List extends React.Component {
+    constructor(props)
+    {
+        super(props);
 
+    }
+    static navigationOptions = {
+        title: "SecondScreen"
+      }
+    
     /**
      * Store the data for ListView
      */
@@ -113,21 +132,30 @@ const demoData = [
      * Render a row
      */
     alertItemName = (item) => {
-        alert(item.title) 
+        alert(item.title)
+        //this.props.navigation.dispatch(navigateAction)
+        //navigate("WelcomeView", {screen: "WelcomeView"})
      }
     _renderRow = (movie) => {
+        //const { navigate } = this.props.navigation
         return (
           <Row
             // Pass movie object
             movie={movie}
             // Pass a function to handle row presses
-            onPress={()=>{
+            
+            onPress={()=>{ 
                 // Navigate to a separate movie detail screen
                 /*this.props.navigator.push({
                   name: 'movie',
                   movie: movie,
                 });*/
-                this.alertItemName(movie)
+                //this.alertItemName(movie)
+                this.props.navigation.navigate('Home');
+                //navigate("WelcomeView", {screen: "WelcomeView"})
+                //https://codeburst.io/getting-started-with-expo-react-native-and-styled-components-using-a-netflix-clone-example-652c7cb2a794
+                //const { navigate } = this.props.navigation;
+                //navigate('Movie', { name: 'movie', movie : movie })
               }}
           />
         );

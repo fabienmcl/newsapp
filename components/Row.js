@@ -7,12 +7,18 @@ import {
   View                // Container component
 } from 'react-native';
 import Dimensions from 'Dimensions';
-
+import {
+  StackNavigator,
+  NavigationActions 
+} from 'react-navigation';
 // Detect screen size to calculate row height
 const screen = Dimensions.get('window');
-
-export default class Row extends Component {
-
+let {navigate} = NavigationActions;
+export default class Row extends React.Component {
+    static navigationOptions = {
+      title: "Row"
+    }
+    
     // Extract movie and onPress props passed from List component
     render({ movie, onPress } = this.props) {
       // Extract values from movie object
@@ -24,9 +30,14 @@ export default class Row extends Component {
           style={styles.row}
           // Call onPress function passed from List component when pressed
           onPress={onPress}
+          //onPress={() => {this.props.rootNavigation.navigation.navigate('Vide');
+          //}}
+        
           // Dim row a little bit when pressed
           activeOpacity={0.7}
-        >
+          
+          //onPress={() => this.props.navigation.navigate("Vide", {screen: "Vide"})}>
+          >
           {/* Background image */}
           <ImageBackground source={{uri: image}} style={styles.imageBackground}>
             {/* Title */}
@@ -45,7 +56,6 @@ export default class Row extends Component {
         </TouchableOpacity>
       );
     }
-  
   }
 
   const styles = StyleSheet.create({

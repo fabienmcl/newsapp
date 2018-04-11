@@ -1,36 +1,20 @@
-import React, { Component } from 'react';
-import { StyleSheet, Text, View, FlatList, StatusBar} from 'react-native';
-  
+import React from 'react';
+import { StackNavigator } from 'react-navigation';
 
-import Header from './components/Header'; 
-import ListS from './components/List'; 
-import ListV from './components/ListView' 
+import WelcomeView from './components/App';
 import Movie from './components/Movie';
+import Vide from './components/Vide';
+import Home from './components/HomeScreen'
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Header />
-        <View style={styles.body}>
-        <ListV/>
-        
-        </View>
-      </View>
-    );
-  }
-}
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  body: {
-    flex: 18,
-    justifyContent: 'space-between',
-    padding: 10,
-    marginTop: 20
-  }
+const App = StackNavigator({
+    WelcomeView: {screen: WelcomeView},
+    Movie: {screen: Movie},
+    Vide: {screen: Vide},
+    Home: { screen: Home}
+},
+{
+    initialRouteName: 'Home',
+    headerMode: 'none'
 });
+
+export default App;
