@@ -10,7 +10,8 @@ import {
 } from 'react-navigation';
 import ListV from './ListView';
 import Movie from './Movie';
-
+import WebV from './WebV';
+import TabNav from './TabNavigator';
 class HomeScreen extends React.Component {
   static navigationOptions = {
     title: 'FirstScreen'
@@ -24,12 +25,28 @@ class HomeScreen extends React.Component {
           title="Go to second screen"
           onPress={this._handlePress}
         />
+        <Button
+          title="Go to React Native WebView"
+          onPress={this._handlePressWebView}
+        />
+        <Button
+          title="Go to React Native TabNavigator"
+          onPress={this._handlePressTabNavigator}
+        />
+      
       </View>
+      
     )
   }
 
   _handlePress = () => {
     this.props.navigation.navigate('ListV');
+  }
+  _handlePressWebView = () => {
+    this.props.navigation.navigate('WebV');
+  }
+  _handlePressTabNavigator = () => {
+    this.props.navigation.navigate('TabNav');
   }
 }
 
@@ -42,5 +59,11 @@ export default StackNavigator({
   },
   Movie :{
       screen: Movie
+  },
+  WebV:{
+    screen: WebV
+  },
+  TabNav:{
+    screen: TabNav
   }
 });

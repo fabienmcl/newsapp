@@ -24,6 +24,7 @@ export default class Movie extends React.Component {
     render({ movie } = this.props) {
       // Extract values from movie object
       console.log("render movie");
+      console.log(this.props);
       //const { title, rating, large, plot } = movie;
       return (
         <View style={styles.container}>
@@ -61,7 +62,7 @@ export default class Movie extends React.Component {
               <TouchableOpacity
                 // Go to the previous screen
                 onPress={() => /*{this.props.navigator.pop();}*/
-                        console.log(this.props.navigation.state.params)
+                        this.props.navigation.goBack()
                         }  
                 // Dim button a little bit when pressed
                 activeOpacity={0.7}
