@@ -1,42 +1,58 @@
 import React, { Component } from 'react';
 import {
-  Image,              // Renders background image
+  ImageBackground,              // Renders background image
   ScrollView,         // Scrollable container
   StyleSheet,         // CSS-like styles
   Text,               // Renders text
   TouchableOpacity,   // Handles button presses
   View                // Container component
 } from 'react-native';
+import {
+  NavigationActions ,
+} from 'react-navigation';
 
-export default class Movie extends Component {
+export default class Movie extends React.Component {
+  constructor(props)
+  {
+      super(props);
 
+  }
+  static navigationOptions = {
+      title: "DetailsScreen"
+  }
     // Extract movie object passed as a prop from Row component
     render({ movie } = this.props) {
       // Extract values from movie object
-      const { title, rating, large, plot } = movie;
+      console.log("render movie");
+      //const { title, rating, large, plot } = movie;
       return (
         <View style={styles.container}>
-          {/* Background image with large image */}
-          <Image source={{uri: large}} style={styles.imageBackground}>
+          {/* Background image with large image 
+          <Image source={{uri: large}} style={styles.imageBackground}>*/}
+          <ImageBackground source={{uri: this.props.navigation.state.params.large}} style={styles.imageBackground}>
             {/* Use ScrollView in case plot is too large to fit on the screen */}
             <ScrollView
               style={{flex: 1}}
             >
-              {/* Title */}
-              <Text style={[styles.text, styles.title]}>{title.toUpperCase()}</Text>
+              {/* Title 
+              <Text style={[styles.text, styles.title]}>{title.toUpperCase()}</Text>*/}
+              <Text style={[styles.text, styles.title]}>{this.props.navigation.state.params.title}</Text>
               {/* Rating */}
               <View style={styles.rating}>
                 {/* Icon */}
-                <Image
+                <ImageBackground
                   source={{uri: 'https://staticv2.rottentomatoes.com/static/images/icons/cf-lg.png'}}
                   style={styles.icon}
                 />
-                {/* Value */}
-                <Text style={[styles.text, styles.value]}>{rating}%</Text>
+                {/* Value 
+                <Text style={[styles.text, styles.value]}>{rating}%</Text>*/}
+                <Text style={[styles.text, styles.value]}>{this.props.navigation.state.params.rating}%</Text>
               </View>
               {/* Plot */}
               <View style={styles.plot}>
-                <Text style={styles.plotText}>{plot}</Text>
+                {/* Plot 
+                <Text style={styles.plotText}>{plot}</Text>*/}
+                <Text style={styles.plotText}>{this.props.navigation.state.params.plot}</Text>
               </View>
             </ScrollView>
             {/* Button container */}
@@ -44,7 +60,9 @@ export default class Movie extends Component {
               {/* Press handler */}
               <TouchableOpacity
                 // Go to the previous screen
-                onPress={() => {this.props.navigator.pop();}}
+                onPress={() => /*{this.props.navigator.pop();}*/
+                        console.log(this.props.navigation.state.params)
+                        }  
                 // Dim button a little bit when pressed
                 activeOpacity={0.7}
                 // Pass button style
@@ -53,7 +71,7 @@ export default class Movie extends Component {
                 <Text style={styles.buttonText}>CLOSE</Text>
               </TouchableOpacity>
             </View>
-          </Image>
+          </ImageBackground>
         </View>
       );
     }

@@ -2,12 +2,14 @@ import React from 'react';
 import {
   Text,
   View,
+  Button
 } from 'react-native';
 
 import {
   StackNavigator,
 } from 'react-navigation';
 import ListV from './ListView';
+import Movie from './Movie';
 
 class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -17,7 +19,11 @@ class HomeScreen extends React.Component {
   render() {
     return (
       <View style={{alignItems: 'center', justifyContent: 'center', flex: 1}}>
-        <Text onPress={this._handlePress}>HomeScreen!</Text>
+        <Text>Welcome to the Native News APP!</Text>
+        <Button
+          title="Go to second screen"
+          onPress={this._handlePress}
+        />
       </View>
     )
   }
@@ -33,5 +39,8 @@ export default StackNavigator({
   },
   ListV: {
       screen: ListV
+  },
+  Movie :{
+      screen: Movie
   }
 });

@@ -151,10 +151,13 @@ const demoData = [
                   movie: movie,
                 });*/
                 //this.alertItemName(movie)
-                this.props.navigation.navigate('Home');
-                //navigate("WelcomeView", {screen: "WelcomeView"})
+                this.props.navigation.navigate('Movie', movie);
+                console.log(movie.title)
+                //this.props.navigation.state.params.returnData('123', 'Name of item');
+                //alert(movie.plot)
+                
+                
                 //https://codeburst.io/getting-started-with-expo-react-native-and-styled-components-using-a-netflix-clone-example-652c7cb2a794
-                //const { navigate } = this.props.navigation;
                 //navigate('Movie', { name: 'movie', movie : movie })
               }}
           />
