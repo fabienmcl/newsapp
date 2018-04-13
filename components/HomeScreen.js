@@ -12,6 +12,8 @@ import ListV from './ListView';
 import Movie from './Movie';
 import WebV from './WebV';
 import TabNav from './TabNavigator';
+import SampleBridgeWV from './SampleBridgeWV';
+import SampleBridgeWVCustom from './MessageWebView'
 class HomeScreen extends React.Component {
   static navigationOptions = {
     title: 'FirstScreen'
@@ -33,7 +35,14 @@ class HomeScreen extends React.Component {
           title="Go to React Native TabNavigator"
           onPress={this._handlePressTabNavigator}
         />
-      
+        <Button
+          title="Go to React Native webview-bridge-sample"
+          onPress={this._handlePressSampleBridgeWV}
+        />
+        <Button
+          title="Go to React Native webview-bridge-sample custom"
+          onPress={this._handlePressSampleBridgeWVCustom}
+        />
       </View>
       
     )
@@ -47,6 +56,12 @@ class HomeScreen extends React.Component {
   }
   _handlePressTabNavigator = () => {
     this.props.navigation.navigate('TabNav');
+  }
+  _handlePressSampleBridgeWV = () => {
+    this.props.navigation.navigate('SampleBridgeWV');
+  }
+  _handlePressSampleBridgeWVCustom = () => {
+    this.props.navigation.navigate('SampleBridgeWVCustom');
   }
 }
 
@@ -65,5 +80,11 @@ export default StackNavigator({
   },
   TabNav:{
     screen: TabNav
+  },
+  SampleBridgeWV:{
+    screen: SampleBridgeWV
+  },
+  SampleBridgeWVCustom:{
+    screen: SampleBridgeWVCustom
   }
 });
