@@ -14,6 +14,10 @@ import WebV from './WebV';
 import TabNav from './TabNavigator';
 import SampleBridgeWV from './SampleBridgeWV';
 import SampleBridgeWVCustom from './MessageWebView'
+import Location from './Location';
+import Accelerometer from './Accelerometer';
+import Gyroscope from './Gyroscope';
+import Localization from './Localization';
 class HomeScreen extends React.Component {
   static navigationOptions = {
     title: 'FirstScreen'
@@ -43,6 +47,22 @@ class HomeScreen extends React.Component {
           title="Go to React Native webview-bridge-sample custom"
           onPress={this._handlePressSampleBridgeWVCustom}
         />
+        <Button
+          title="Go to React Native Location"
+          onPress={this._handlePressLocation}
+        />
+        <Button
+          title="Go to React Native Accelerometer + netInfo"
+          onPress={this._handlePressAccelerometer}
+        />
+        <Button
+          title="Go to React Native Gyroscope"
+          onPress={this._handlePressGyroscope}
+        />
+        <Button
+          title="Go to React Native Localization"
+          onPress={this._handlePressLocalization}
+        />
       </View>
       
     )
@@ -62,6 +82,18 @@ class HomeScreen extends React.Component {
   }
   _handlePressSampleBridgeWVCustom = () => {
     this.props.navigation.navigate('SampleBridgeWVCustom');
+  }
+  _handlePressLocation = () => {
+    this.props.navigation.navigate('SampleLocation');
+  }
+  _handlePressAccelerometer = () => {
+    this.props.navigation.navigate('SampleAccelerometer');
+  }
+  _handlePressGyroscope = () => {
+    this.props.navigation.navigate('SampleGyroscope');
+  }
+  _handlePressLocalization = () => {
+    this.props.navigation.navigate('Localization');
   }
 }
 
@@ -86,5 +118,17 @@ export default StackNavigator({
   },
   SampleBridgeWVCustom:{
     screen: SampleBridgeWVCustom
+  },
+  SampleLocation:{
+    screen : Location 
+  },
+  SampleAccelerometer:{
+    screen : Accelerometer 
+  },
+  SampleGyroscope:{
+    screen : Gyroscope 
+  },
+  Localization:{
+    screen : Localization
   }
 });

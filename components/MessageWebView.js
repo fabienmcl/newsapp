@@ -38,7 +38,7 @@ const patchPostMessageJsCode = `(${String(function() {
         return String(Object.hasOwnProperty).replace('hasOwnProperty', 'postMessage')
     }
     window.postMessage = patchedPostMessage
-})})();`
+})})();` 
  
 export default class MessageWebView extends React.Component {
     constructor(props) {
