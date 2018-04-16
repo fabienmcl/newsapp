@@ -14,9 +14,10 @@ export default class App extends Component {
     this.state = {
       text: "ReactNative WebView Sample"
     };
-
+    
     this.onWebViewMessage = this.onWebViewMessage.bind(this);
   }
+  
 
   handleDataReceived(msgData) {
     this.setState({

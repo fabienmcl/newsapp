@@ -2,12 +2,16 @@ import React from 'react';
 import {
   Text,
   View,
-  Button
+  Button,
+  NetInfo
 } from 'react-native';
 
 import {
   StackNavigator,
+  DrawerNavigator
 } from 'react-navigation';
+
+
 import ListV from './ListView';
 import Movie from './Movie';
 import WebV from './WebV';
@@ -18,11 +22,12 @@ import Location from './Location';
 import Accelerometer from './Accelerometer';
 import Gyroscope from './Gyroscope';
 import Localization from './Localization';
-import Empty from './Empty'
-import Magnetometer from './Magnetometer'
+import Magnetometer from './Magnetometer';
+import FlatListDemo from './FlatListDemo';
+
 class HomeScreen extends React.Component {
   static navigationOptions = {
-    title: 'FirstScreen'
+    title: 'HomeScren'
   };
 
   render() {
@@ -65,14 +70,13 @@ class HomeScreen extends React.Component {
           title="Go to React Native Gyroscope"
           onPress={this._handlePressGyroscope}
         />
-        
         <Button
           title="Go to React Native Magnetometer"
           onPress={this._handlePressMagnetometer}
         />
         <Button
-          title="Go to Empty screen with NetInfo"
-          onPress={this._handlePressEmpty}
+          title="Go to React Native FlatListDemo"
+          onPress={this._handlePressFlatListDemo}
         />
       </View>
       
@@ -109,11 +113,11 @@ class HomeScreen extends React.Component {
   _handlePressLocalization = () => {
     this.props.navigation.navigate('Localization');
   }
-  _handlePressEmpty = () => {
-    this.props.navigation.navigate('Empty');
-  }
   _handlePressMagnetometer = () => {
     this.props.navigation.navigate('Magnetometer');
+  }
+  _handlePressFlatListDemo = () => {
+    this.props.navigation.navigate('FlatListDemo');
   }
 }
 
@@ -147,14 +151,28 @@ export default StackNavigator({
   },
   Magnetometer:{
     screen: Magnetometer
-  },
+  }, 
   SampleGyroscope:{
     screen : Gyroscope 
   },
   Localization:{
     screen : Localization
   },
-  Empty :{
-    screen : Empty
+  FlatListDemo:{
+    screen : FlatListDemo
   }
 });
+NetInfo.getConnectionInfo().then((connectionInfo) => {
+  console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
+});
+function handleFirstConnectivityChange(connectionInfo) {
+  console.log('First change, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
+  NetInfo.removeEventListener(
+    'connectionChange',
+    handleFirstConnectivityChange
+  );
+}
+NetInfo.addEventListener(
+  'connectionChange',
+  handleFirstConnectivityChange
+); 

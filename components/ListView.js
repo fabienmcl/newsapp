@@ -91,7 +91,7 @@ const demoData = [
 
     }
     static navigationOptions = {
-        title: "SecondScreen"
+        title: "ListViewScreen"
       }
     
     /**
