@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Gyroscope,
+  Magnetometer,
 } from 'expo';
 import {
   StyleSheet,
@@ -9,9 +9,9 @@ import {
   View
 } from 'react-native';
 
-export default class GyroscopeSensor extends React.Component {
+export default class MagnetometerSensor extends React.Component {
   state = {
-    gyroscopeData: {},
+    MagnetometerData: {},
   }
 
   componentDidMount() {
@@ -31,16 +31,16 @@ export default class GyroscopeSensor extends React.Component {
   }
 
   _slow = () => {
-    Gyroscope.setUpdateInterval(1000);
+    Magnetometer.setUpdateInterval(1000);
   }
 
   _fast = () => {
-    Gyroscope.setUpdateInterval(16);
+    Magnetometer.setUpdateInterval(16);
   }
 
   _subscribe = () => {
-    this._subscription = Gyroscope.addListener((result) => {
-      this.setState({gyroscopeData: result});
+    this._subscription = Magnetometer.addListener((result) => {
+      this.setState({MagnetometerData: result});
     });
   }
 
@@ -50,13 +50,12 @@ export default class GyroscopeSensor extends React.Component {
   }
 
   render() {
-    let { x, y, z } = this.state.gyroscopeData;
+    let { x, y, z } = this.state.MagnetometerData;
 
     return (
       <View style={styles.sensor}>
-        <Text>Gyroscope:</Text>
-        <Text>Mesure le taux de rotation sur chacun des trois axes en radian par seconde (rad/s).
-            Permet de détecter l'orientation de l'appareil. </Text>
+        <Text>Magnetometer:</Text>
+        <Text>Mesure le champ géomagnétique sur les trois axes en microtesla (μT). </Text>
         <Text>x: {round(x)} y: {round(y)} z: {round(z)}</Text>
 
         <View style={styles.buttonContainer}>

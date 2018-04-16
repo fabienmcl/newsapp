@@ -48,6 +48,8 @@ export default class AccelerometerSensor extends React.Component {
     return (
       <View style={styles.sensor}>
         <Text>Accelerometer:</Text>
+        <Text>Mesure la force d'accélération appliquée au terminal sur les trois axes (x, y et z), donc la force de gravitation (m/s²).
+            Permet de détecter les mouvements.</Text>
         <Text>x: {round(x)} y: {round(y)} z: {round(z)}</Text>
 
         <View style={styles.buttonContainer}>
@@ -100,18 +102,3 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
 });
-
-NetInfo.getConnectionInfo().then((connectionInfo) => {
-    console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
-  });
-  function handleFirstConnectivityChange(connectionInfo) {
-    console.log('First change, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
-    NetInfo.removeEventListener(
-      'connectionChange',
-      handleFirstConnectivityChange
-    );
-  }
-  NetInfo.addEventListener(
-    'connectionChange',
-    handleFirstConnectivityChange
-  ); 

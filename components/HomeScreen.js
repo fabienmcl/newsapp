@@ -18,6 +18,8 @@ import Location from './Location';
 import Accelerometer from './Accelerometer';
 import Gyroscope from './Gyroscope';
 import Localization from './Localization';
+import Empty from './Empty'
+import Magnetometer from './Magnetometer'
 class HomeScreen extends React.Component {
   static navigationOptions = {
     title: 'FirstScreen'
@@ -48,20 +50,29 @@ class HomeScreen extends React.Component {
           onPress={this._handlePressSampleBridgeWVCustom}
         />
         <Button
-          title="Go to React Native Location"
+          title="Go to React Native Location w/ MapView"
           onPress={this._handlePressLocation}
         />
         <Button
-          title="Go to React Native Accelerometer + netInfo"
+          title="Go to React Native Localization w/ TXT"
+          onPress={this._handlePressLocalization}
+        />
+        <Button
+          title="Go to React Native Accelerometer"
           onPress={this._handlePressAccelerometer}
         />
         <Button
           title="Go to React Native Gyroscope"
           onPress={this._handlePressGyroscope}
         />
+        
         <Button
-          title="Go to React Native Localization"
-          onPress={this._handlePressLocalization}
+          title="Go to React Native Magnetometer"
+          onPress={this._handlePressMagnetometer}
+        />
+        <Button
+          title="Go to Empty screen with NetInfo"
+          onPress={this._handlePressEmpty}
         />
       </View>
       
@@ -92,8 +103,17 @@ class HomeScreen extends React.Component {
   _handlePressGyroscope = () => {
     this.props.navigation.navigate('SampleGyroscope');
   }
+  _handlePressGyroscope = () => {
+    this.props.navigation.navigate('SampleGyroscope');
+  }
   _handlePressLocalization = () => {
     this.props.navigation.navigate('Localization');
+  }
+  _handlePressEmpty = () => {
+    this.props.navigation.navigate('Empty');
+  }
+  _handlePressMagnetometer = () => {
+    this.props.navigation.navigate('Magnetometer');
   }
 }
 
@@ -125,10 +145,16 @@ export default StackNavigator({
   SampleAccelerometer:{
     screen : Accelerometer 
   },
+  Magnetometer:{
+    screen: Magnetometer
+  },
   SampleGyroscope:{
     screen : Gyroscope 
   },
   Localization:{
     screen : Localization
+  },
+  Empty :{
+    screen : Empty
   }
 });
