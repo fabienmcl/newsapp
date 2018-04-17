@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ListView, RefreshControl, Text } from 'react-native';
+import { ListView, RefreshControl, Text, TouchableWithoutFeedback, Dimensions  } from 'react-native';
 import Row from './Row';
 import {
     NavigationActions ,
@@ -84,6 +84,8 @@ const demoData = [
       plot: 'The tender, heartbreaking story of a young man\'s struggle to find himself, told across three defining chapters in his life as he experiences the ecstasy, pain, and beauty of falling in love, while grappling with his own sexuality.',
     },
   ];
+const {width, height} = Dimensions.get('window')
+console.log(width, height)
   export default class List extends React.Component {
     constructor(props)
     {
@@ -93,6 +95,7 @@ const demoData = [
     static navigationOptions = {
         title: "ListViewScreen"
       }
+    
     
     /**
      * Store the data for ListView
@@ -105,13 +108,19 @@ const demoData = [
         // Used for RefreshControl
         isRefreshing: false,
       }
-  
+      
     /**
      * Call _fetchData after component has been mounted
      */
     componentDidMount() {
         // Fetch Data
         this._fetchData();
+
+        setInterval( () => {
+          this.setState({
+            curTime : new Date().toLocaleString()
+          })
+        },1000)
       }
   
     /**
@@ -125,6 +134,8 @@ const demoData = [
           dataSource: this.state.dataSource.cloneWithRows(demoData),
           // Data has been refreshed by now
           isRefreshing: false,
+          // set Date 
+          curTime : new Date().toLocaleString(),
         });
       }
   
@@ -163,12 +174,48 @@ const demoData = [
           />
         );
       }
-    /**
+      _handleScroll = (event) => {
+        const oneRow = (height/3)+5;
+        console.log("##################################");
+        //console.log(event.nativeEvent);
+        //console.log(this.state); 
+        console.log(this.state.curTime)
+        console.log("La position du scroll :"+event.nativeEvent.contentOffset.y)
+        console.log("ta taille de la listView :"+event.nativeEvent.contentSize.height)
+        console.log("le nombre de row:"+this.state.dataSource._cachedRowCount);
+        console.log("la taille d'un seul row:"+(event.nativeEvent.contentSize.height/this.state.dataSource._cachedRowCount));
+        //sachant que l'ecran fait 603
+        if(event.nativeEvent.contentOffset.y > (event.nativeEvent.contentSize.height/this.state.dataSource._cachedRowCount)){
+          console.log("current : "+event.nativeEvent.contentOffset.y/(event.nativeEvent.contentSize.height/this.state.dataSource._cachedRowCount));
+          //split('-')[0]
+          const logRow = event.nativeEvent.contentOffset.y/(event.nativeEvent.contentSize.height/this.state.dataSource._cachedRowCount)+" ";
+          const logRowPercent = "0."+logRow.split('.')[1];
+          const logRowID = logRow.split('.')[0]
+          console.log("% du premier article afficher : "+(1-logRowPercent));
+  
+        }else{
+          //cas le scroll a pas encore dépassé un article
+          //console.log("id du premier article afficher : "+(event.nativeEvent.contentSize.height/this.state.dataSource._cachedRowCount))
+          console.log("% du premier article afficher : "+(1-(event.nativeEvent.contentOffset.y/(event.nativeEvent.contentSize.height/this.state.dataSource._cachedRowCount))));
+  
+        }
+        
+       
+        console.log("##################################");
+
+        //si event.nativeEvent.contentOffset.y + layoutMeasurement.height = contentSize.height
+          // > alors l'utilisateur est la fin de la page. 
+        //console.log("nb de px affiché : "+height+" postion px haut :"+event.nativeEvent.contentOffset.y);
+       } 
+    /** 
      * Renders the list
      */
+    
     render() {
         return (
-          <ListView
+          <TouchableWithoutFeedback >
+          <ListView height={height}
+            onScroll={this._handleScroll}
             // Data source from state
             dataSource={this.state.dataSource}
             // Row renderer method
@@ -181,6 +228,8 @@ const demoData = [
               />
             }
           />
+          </TouchableWithoutFeedback>
+
         );
       }
   }
