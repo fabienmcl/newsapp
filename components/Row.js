@@ -41,18 +41,16 @@ export default class Row extends React.Component {
           {/* Background image */}
           <ImageBackground source={{uri: image}} style={styles.imageBackground}>
             {/* Title */}
-            <Text style={[styles.text, styles.title]}>{title.toUpperCase()}</Text>
-            {/* Rating */}
-            <View style={styles.rating}>
-              {/* Icon */}
-              <ImageBackground
-                source={{uri: 'https://staticv2.rottentomatoes.com/static/images/icons/cf-lg.png'}}
-                style={styles.icon}
-              />
-              {/* Value */}
-              <Text style={[styles.text, styles.value]}>{rating}%</Text>
+            <View style={[styles.bloc]}>
+              <Text style={[styles.text, styles.title]}>{title.toUpperCase()}</Text>
+              {/* Rating */}
+              <View style={styles.rating}>
+              {/* Icon */}    
+                <Text style={[styles.text, styles.value]}>{rating}</Text>
+              </View>
             </View>
           </ImageBackground>
+          
         </TouchableOpacity>
       );
     }
@@ -65,24 +63,27 @@ export default class Row extends React.Component {
     },
     // Background image
     imageBackground: {
-      height: screen.height / 3,          // Divide screen height by 3
+      height: screen.height / 4,          // Divide screen height by 3
       justifyContent: 'center',           // Center vertically
       alignItems: 'center',               // Center horizontally
     },
     // Shared text style
     text: {
+      width: '100%',
       color: '#fff',                      // White text color
-      backgroundColor: 'transparent',     // No background
+      backgroundColor: 'black',     // No background
       fontFamily: 'Avenir',               // Change default font
       fontWeight: 'bold',                 // Bold font
+      textAlign: 'center',
       // Add text shadow
       textShadowColor: '#222',
       textShadowOffset: { width: 1, height: 1 },
       textShadowRadius: 4,
+
     },
     // Movie title
     title: {
-      fontSize: 22,                       // Bigger font size
+      fontSize: 16,                       // Bigger font size
     },
     // Rating row
     rating: {
@@ -96,6 +97,12 @@ export default class Row extends React.Component {
     },
     // Rating value
     value: {
-      fontSize: 16,                       // Smaller font size
+      fontSize: 12,                       // Smaller font size
+      textAlign: 'left',
     },
+    bloc:{
+      position: 'absolute',
+      bottom: 0,
+      width: '100%'
+    }
   });
