@@ -16,7 +16,7 @@ export default class Login extends Component<{}> {
 
 	signup() {
 		Actions.signup()
-	}
+  }
 
 	render() {
 		return(

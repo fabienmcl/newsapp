@@ -13,7 +13,10 @@ export default class Logo extends Component<{}> {
 
   listview() {
 		Actions.listview()
-	}
+  }
+  anim() {
+    Actions.anim()
+  }
 	render(){
 		return(
 			<View style={styles.container}>
@@ -32,7 +35,7 @@ export default class Logo extends Component<{}> {
               placeholderTextColor = "#ffffff"
               ref={(input) => this.password = input}
               />  
-           <TouchableOpacity style={styles.button} onPress={this.listview}>
+           <TouchableOpacity style={styles.button} onPress={this.anim}>
              <Text style={styles.buttonText}>{this.props.type}</Text>
              
            </TouchableOpacity>     

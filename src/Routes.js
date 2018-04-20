@@ -5,7 +5,7 @@ import {Router, Stack, Scene} from 'react-native-router-flux';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Listview from './pages/ListView';
-import Animation from './pages/Animation';
+import Anim from './pages/Anim';
 import Webviewcustom from './pages/MessageWebView'
 
 export default class Routes extends Component<{}> {
@@ -17,7 +17,7 @@ export default class Routes extends Component<{}> {
 			      	<Scene key="signup" component={Signup} title="Register"/>
 					<Scene back={true} key="listview" component={Listview} title="Listview" panHandlers={null} />
 					<Scene key="webviewcustom" component={Webviewcustom} title="Webviewcustom"  />
-					<Scene key="animation" component={Animation} title="Animation"  />
+					<Scene key="anim" component={Anim} title="Anim"  />
 				</Stack>
 			 </Router>
 			)

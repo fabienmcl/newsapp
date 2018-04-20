@@ -1,5 +1,6 @@
 import React from 'react'
-import { WebView, View, StyleSheet } from 'react-native'
+import { WebView, View, StyleSheet, Text } from 'react-native'
+
 
 // fix https://github.com/facebook/react-native/issues/10865
 // thx https://github.com/kyle-ilantzis !
@@ -66,12 +67,13 @@ export default class MessageWebView extends React.Component {
                 ref={x => {this.WebView = x}}
                 onMessage={e => console.log(JSON.parse(JSON.stringify(e.nativeEvent.data)))}
             />
+            <Text> swipe </Text>
             </View>
         )
     }
 }
 const styles = StyleSheet.create({
     container: {
-       height: 603,
+       height: '92%',
     }
  })
