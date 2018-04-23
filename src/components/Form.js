@@ -17,8 +17,8 @@ export default class Logo extends Component<{}> {
   anim() {
     Actions.anim()
   }
-  ub(){
-    Actions.ub()
+  demoFlatList(){
+    Actions.demoFlatList()
   }
   expandPage(){
     Actions.expandPage()
@@ -47,7 +47,7 @@ export default class Logo extends Component<{}> {
            <TouchableOpacity style={styles.button} onPress={this.anim}>
              <Text style={styles.buttonText}>swipe</Text>
            </TouchableOpacity>
-           <TouchableOpacity style={styles.button} onPress={this.ub}>
+           <TouchableOpacity style={styles.button} onPress={this.demoFlatList}>
              <Text style={styles.buttonText}>click</Text>
            </TouchableOpacity> 
            <TouchableOpacity style={styles.button} onPress={this.expandPage}>

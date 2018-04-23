@@ -6,19 +6,21 @@ import {
     ImageBackground,
     TextInput,
     TouchableOpacity,
+    TouchableHighlight,
     Image,
     Animated,
     Dimensions,
     Keyboard,
     Platform,
-    
+    FlatList
 } from "react-native";
 
 import { Icon } from 'native-base'
 const SCREEN_HEIGHT = Dimensions.get('window').height
 const SCREEN_WIDTH  = Dimensions.get('window').width
-import * as Animatable from 'react-native-animatable'
-
+import * as Animatable from 'react-native-animatable';
+import {Actions} from 'react-native-router-flux';
+import FlatListDemo from './FlatListDemo';
 
 export default class Prototype extends Component {
     static navigationOptions = {
@@ -118,6 +120,21 @@ export default class Prototype extends Component {
                         <Text style={{ fontWeight: 'bold', fontSize: 22 }}>Recommandations d'articles : </Text>
                     </View>
                 </Animated.View>
+                <Animated.View
+                    style={{
+                        position: 'absolute',
+                        height: 210, width: SCREEN_WIDTH,
+                        top: 250,
+                        zIndex: 270,
+                        opacity: backOpacity//animated
+
+                    }}
+                >
+                    <FlatListDemo>
+                    </FlatListDemo>
+                    
+                </Animated.View>
+
 
                 <ImageBackground style={{flex:1}} source={require('../images/login_bg.jpg')}>
                    
