@@ -17,6 +17,12 @@ export default class Logo extends Component<{}> {
   anim() {
     Actions.anim()
   }
+  ub(){
+    Actions.ub()
+  }
+  expandPage(){
+    Actions.expandPage()
+  }
 	render(){
 		return(
 			<View style={styles.container}>
@@ -35,10 +41,18 @@ export default class Logo extends Component<{}> {
               placeholderTextColor = "#ffffff"
               ref={(input) => this.password = input}
               />  
-           <TouchableOpacity style={styles.button} onPress={this.anim}>
+           <TouchableOpacity style={styles.button} onPress={this.listview}>
              <Text style={styles.buttonText}>{this.props.type}</Text>
-             
-           </TouchableOpacity>     
+           </TouchableOpacity> 
+           <TouchableOpacity style={styles.button} onPress={this.anim}>
+             <Text style={styles.buttonText}>swipe</Text>
+           </TouchableOpacity>
+           <TouchableOpacity style={styles.button} onPress={this.ub}>
+             <Text style={styles.buttonText}>click</Text>
+           </TouchableOpacity> 
+           <TouchableOpacity style={styles.button} onPress={this.expandPage}>
+             <Text style={styles.buttonText}>ExpandPage</Text>
+           </TouchableOpacity>   
   		</View>
 			)
 	}
