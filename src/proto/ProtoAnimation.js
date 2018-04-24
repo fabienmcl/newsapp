@@ -21,6 +21,8 @@ const SCREEN_WIDTH  = Dimensions.get('window').width
 import * as Animatable from 'react-native-animatable';
 import {Actions} from 'react-native-router-flux';
 import FlatListDemo from './FlatListDemo';
+import HorizontalFlatListDemo from './HorizontalFlatList';
+import Swipe from './Swipe';
 
 export default class Prototype extends Component {
     static navigationOptions = {
@@ -66,12 +68,29 @@ export default class Prototype extends Component {
                         <Icon name="md-close" style={{ color: 'black' }} />
                     </TouchableOpacity>
                 </Animated.View>
+
                 <Animated.View
                     style={{
                         position: 'absolute',
-                        height: 60, width: SCREEN_WIDTH,
-                        top: 60,
+                        height: 25, width: SCREEN_WIDTH,
+                        top: 100,
                         zIndex: 100,
+                        backgroundColor : 'orange',
+                        opacity: backOpacity//animated
+                    }}
+                >
+                    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-end' }}>
+                        <Text style={{ fontWeight: 'bold', fontSize: 22 }}>Ton avis sur l'article : </Text>
+                    </View>
+                </Animated.View>
+
+                <Animated.View
+                    style={{
+                        position: 'absolute',
+                        height: 25, width: SCREEN_WIDTH,
+                        top: 210,
+                        zIndex: 100,
+                        backgroundColor : 'orange',
                         opacity: backOpacity//animated
                     }}
                 >
@@ -83,11 +102,13 @@ export default class Prototype extends Component {
                     style={{
                         position: 'absolute',
                         height: 60, width: SCREEN_WIDTH,
-                        top: 130,
+                        top: 240,
                         zIndex: 150,
+                        backgroundColor : 'red',
                         opacity: backOpacity//animated
                     }}
                 >
+                    
                     <View style={{ flex: 2, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' }}>
                         <TouchableOpacity onPress={this.decreaseHeight}>
                             <Image style={{ width: 60, height: 60 }}
@@ -106,13 +127,16 @@ export default class Prototype extends Component {
                                 source={require('../images/whatsapp.png')}/>
                         </TouchableOpacity> 
                     </View>
+                    
+                    
                 </Animated.View>
                 <Animated.View
                     style={{
                         position: 'absolute',
-                        height: 60, width: SCREEN_WIDTH,
-                        top: 160,
+                        height: 25, width: SCREEN_WIDTH,
+                        top: 305,
                         zIndex: 170,
+                        backgroundColor : 'orange',
                         opacity: backOpacity//animated
                     }}
                 >
@@ -124,17 +148,19 @@ export default class Prototype extends Component {
                     style={{
                         position: 'absolute',
                         height: 210, width: SCREEN_WIDTH,
-                        top: 250,
-                        zIndex: 270,
+                        top: 390,
+                        zIndex: 370,
+                        backgroundColor:'grey',
                         opacity: backOpacity//animated
 
                     }}
                 >
-                    <FlatListDemo>
-                    </FlatListDemo>
+                    <Swipe>
+                    </Swipe>
                     
                 </Animated.View>
 
+               
 
                 <ImageBackground style={{flex:1}} source={require('../images/login_bg.jpg')}>
                    
