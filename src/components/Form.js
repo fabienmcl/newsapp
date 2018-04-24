@@ -14,14 +14,8 @@ export default class Logo extends Component<{}> {
   listview() {
 		Actions.listview()
   }
-  anim() {
-    Actions.anim()
-  }
-  demoFlatList(){
-    Actions.demoFlatList()
-  }
-  expandPage(){
-    Actions.expandPage()
+  webviewAnim(){
+    Actions.webviewAnim()
   }
 	render(){
 		return(
@@ -43,15 +37,9 @@ export default class Logo extends Component<{}> {
               />  
            <TouchableOpacity style={styles.button} onPress={this.listview}>
              <Text style={styles.buttonText}>{this.props.type}</Text>
-           </TouchableOpacity> 
-           <TouchableOpacity style={styles.button} onPress={this.anim}>
-             <Text style={styles.buttonText}>swipe</Text>
            </TouchableOpacity>
-           <TouchableOpacity style={styles.button} onPress={this.demoFlatList}>
-             <Text style={styles.buttonText}>click</Text>
-           </TouchableOpacity> 
-           <TouchableOpacity style={styles.button} onPress={this.expandPage}>
-             <Text style={styles.buttonText}>ExpandPage</Text>
+           <TouchableOpacity style={styles.button} onPress={this.webviewAnim}>
+             <Text style={styles.buttonText}>webView+animation</Text>
            </TouchableOpacity>   
   		</View>
 			)

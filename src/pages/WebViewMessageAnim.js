@@ -14,7 +14,8 @@ import {
     Platform,
     FlatList,
     Slider,
-    ScrollView 
+    ScrollView,
+    WebView 
 } from "react-native";
 
 import { Icon } from 'native-base'
@@ -24,8 +25,6 @@ const SCREEN_WIDTH_CUSTOM_PADDING = SCREEN_WIDTH*0.43;
 const SCREEN_HEIGHT_CUSTOM = SCREEN_HEIGHT-(SCREEN_HEIGHT/14);
 import * as Animatable from 'react-native-animatable';
 import {Actions} from 'react-native-router-flux';
-import FlatListDemo from './FlatListDemo';
-import HorizontalFlatListDemo from './HorizontalFlatList';
 import CardSwipe from '../components/CardSwipe';
 
 export default class Prototype extends Component {
@@ -236,13 +235,16 @@ export default class Prototype extends Component {
 
                
 
-                <ImageBackground style={{flex:1}} source={require('../images/login_bg.jpg')}>
+                <View style={{flex:1, backgroundColor:'white'}} >
                    
-                   <View style={{flex:1, backgroundColor:'#EEEEEE', justifyContent:'center', alignItems:'center'}}>
-                        
-                    </View>
-
-
+                   
+                   <WebView
+                        source={{uri:'https://www.francetvinfo.fr/economie/transports/sncf/greve-a-la-sncf/sncf-la-reprise-progressive-de-la-dette-par-l-etat-demandera-un-effort-supplementaire-des-contribuables-annonce-edouard-philippe_2721309.html'}}
+                        ref={x => {this.WebView = x}}
+                       
+                    />    
+                    
+                    
 
                     {/* bottom */}
                     <Animatable.View 
@@ -277,7 +279,7 @@ export default class Prototype extends Component {
 
                     </Animatable.View>
                     </Animatable.View>
-                </ImageBackground>
+                </View>
             </View>
         );
     }

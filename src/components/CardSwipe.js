@@ -16,7 +16,7 @@ import {
 import CardStack, { Card } from 'react-native-card-stack-swiper';
 
 
-export default class App extends Component<{}> {
+export default class CardSwipe extends Component<{}> {
   render() {
     return (
       <View style={{flex:1}}>
@@ -34,7 +34,7 @@ export default class App extends Component<{}> {
           onSwipedLeft={() => console.log('onSwipedLeft')}
         >
           <Card style={[styles.card, styles.card1]}><Text style={styles.label}>A</Text></Card>
-          <Card style={[styles.card, styles.card2]} onSwipedLeft={() => alert('onSwipedLeft')}><Text style={styles.label}>B</Text></Card>
+          <Card style={[styles.card, styles.card2]} onSwipedLeft={() => console.log('onSwipedLeft')}><Text style={styles.label}>B</Text></Card>
           <Card style={[styles.card, styles.card1]}><Text style={styles.label}>C</Text></Card>
           <Card style={[styles.card, styles.card2]}><Text style={styles.label}>D</Text></Card>
           <Card style={[styles.card, styles.card1]}><Text style={styles.label}>E</Text></Card>
@@ -47,17 +47,17 @@ export default class App extends Component<{}> {
             <TouchableOpacity style={[styles.button,styles.red]} onPress={()=>{
               this.swiper.swipeLeft();
             }}>
-              <Image source={require('./assets/red.png')} resizeMode={'contain'} style={{ height: 62, width: 62 }} />
+              <Image source={require('../images/red.png')} resizeMode={'contain'} style={{ height: 62, width: 62 }} />
             </TouchableOpacity>
             <TouchableOpacity style={[styles.button,styles.orange]} onPress={() => {
               this.swiper.goBackFromLeft();
             }}>
-              <Image source={require('./assets/back.png')} resizeMode={'contain'} style={{ height: 32, width: 32, borderRadius: 5 }} />
+              <Image source={require('../images/back.png')} resizeMode={'contain'} style={{ height: 32, width: 32, borderRadius: 5 }} />
             </TouchableOpacity>
             <TouchableOpacity style={[styles.button,styles.green]} onPress={()=>{
               this.swiper.swipeRight();
             }}>
-              <Image source={require('./assets/green.png')} resizeMode={'contain'} style={{ height: 62, width: 62 }} />
+              <Image source={require('../images/green.png')} resizeMode={'contain'} style={{ height: 62, width: 62 }} />
             </TouchableOpacity>
           </View>
 
