@@ -39,11 +39,11 @@ export default class Prototype extends Component {
     increaseHeight = () =>{
         Animated.timing(this.bottomHeight,{
             toValue:SCREEN_HEIGHT_CUSTOM,
-            duration:300
+            duration:1000
         }).start()
         Animated.timing(this.bottomWidth,{
             toValue:SCREEN_WIDTH,
-            duration:300
+            duration:1000
         }).start()
         Animated.timing(this.bottomPaddingLeft,{
             toValue:0,
@@ -235,7 +235,7 @@ export default class Prototype extends Component {
 
                
 
-                <View style={{flex:1, backgroundColor:'white'}} >
+                <View style={{flex:1, backgroundColor:'orange'}} >
                    
                    
                    <WebView
@@ -259,7 +259,7 @@ export default class Prototype extends Component {
                         height:this.bottomHeight,
                         width:this.bottomWidth,
                         alignItems : 'center',
-                        backgroundColor:'white',
+                        backgroundColor:'grey',
                         justifyContent: 'center',
                         //borderTopColor : '#e8e8ec', 
                         //borderWidth : 1,

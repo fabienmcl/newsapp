@@ -17,6 +17,9 @@ export default class Logo extends Component<{}> {
   webviewAnim(){
     Actions.webviewAnim()
   }
+  webviewScroll(){
+    Actions.webviewScroll()
+  }
 	render(){
 		return(
 			<View style={styles.container}>
@@ -35,12 +38,15 @@ export default class Logo extends Component<{}> {
               placeholderTextColor = "#ffffff"
               ref={(input) => this.password = input}
               />  
-           <TouchableOpacity style={styles.button} onPress={this.listview}>
-             <Text style={styles.buttonText}>{this.props.type}</Text>
-           </TouchableOpacity>
-           <TouchableOpacity style={styles.button} onPress={this.webviewAnim}>
-             <Text style={styles.buttonText}>webView+animation</Text>
-           </TouchableOpacity>   
+          <TouchableOpacity style={styles.button} onPress={this.listview}>
+            <Text style={styles.buttonText}>{this.props.type}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={this.webviewAnim}>
+            <Text style={styles.buttonText}>webView+animation</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={this.webviewScroll}>
+            <Text style={styles.buttonText}>webView+ScrollView</Text>
+          </TouchableOpacity>  
   		</View>
 			)
 	}

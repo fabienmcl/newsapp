@@ -227,7 +227,7 @@ console.log(width, height)
                 
                 // le truc qui marche this.props.navigation.navigate('Movie', movie);
                 console.log(movie.url)
-                Actions.webviewcustom(movie.url)
+                Actions.webviewcustom(movie)
                 //this.props.navigation.state.params.returnData('123', 'Name of item');
                 //alert(movie.plot)
                 
