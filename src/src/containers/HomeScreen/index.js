@@ -10,11 +10,8 @@ export default class HomeScreen extends Component {
   constructor(props) {
     super(props)
   }
-  listview() {
-    Actions.listview();
-  }
-  cardImageExample(){
-    Actions.cardImageExample();
+  flatListViewArticle(){
+    Actions.flatListViewArticle();
   }
   
   render () {
@@ -28,13 +25,7 @@ export default class HomeScreen extends Component {
         />
         <CustomButton
           text={'ListView'}
-          onPress={()=>this.listview()}
-          buttonStyle={styles.button}
-          textStyle={styles.buttonText}
-        />
-        <CustomButton
-          text={'Card'}
-          onPress={()=>this.cardImageExample()}
+          onPress={()=>this.flatListViewArticle()}
           buttonStyle={styles.button}
           textStyle={styles.buttonText}
         />

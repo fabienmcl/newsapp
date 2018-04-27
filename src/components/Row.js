@@ -3,10 +3,12 @@ import {
   ImageBackground,              // Renders background image
   StyleSheet,         // CSS-like styles
   Text,               // Renders text
+  Image,              // renders img
   TouchableOpacity,   // Handles row presses
   View                // Container component
 } from 'react-native';
 import Dimensions from 'Dimensions';
+import { Icon } from 'native-base'
 import {
   StackNavigator,
   NavigationActions 
@@ -24,10 +26,12 @@ export default class Row extends React.Component {
       // Extract values from movie object
       const { title, rating, image } = movie;
       return (
+        <View
+          // Pass row style
+          style={styles.row}>
         // Row press handler
         <TouchableOpacity
-          // Pass row style
-          style={styles.row}
+          
           // Call onPress function passed from List component when pressed
           onPress={onPress}
           //onPress={() => {this.props.rootNavigation.navigation.navigate('Vide');
@@ -39,47 +43,39 @@ export default class Row extends React.Component {
           //onPress={() => this.props.navigation.navigate("Vide", {screen: "Vide"})}>
           >
           {/* Background image */}
-          <ImageBackground source={{uri: image}} style={styles.imageBackground}>
+          <ImageBackground source={{uri: image}}  style={styles.imageStyle} blurRadius={0}>
             {/* Title */}
-            <View style={[styles.bloc]}>
-              <Text style={[styles.text, styles.title]}>{title.toUpperCase()}</Text>
-              {/* Rating */}
-              <View style={styles.rating}>
-              {/* Icon */}    
-                <Text style={[styles.text, styles.value]}>{rating}</Text>
-              </View>
-            </View>
           </ImageBackground>
           
         </TouchableOpacity>
+          <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width:screen.width, height : (screen.height/5)/2.5, backgroundColor:'white' }}>
+          <Text  adjustsFontSizeToFitWidth={true} style={styles.text}  >{title.toUpperCase()}</Text>
+        </View>
+        </View>
       );
     }
   }
+
 
   const styles = StyleSheet.create({
     // Row
     row: {
       paddingBottom: 4,                   // Add padding at the bottom
+      backgroundColor:'black'
     },
     // Background image
     imageBackground: {
       height: screen.height / 4,          // Divide screen height by 3
+    },
+    imageStyle: {
+      height: screen.height / 5,          // Divide screen height by 3
       justifyContent: 'center',           // Center vertically
-      alignItems: 'center',               // Center horizontally
+      alignItems: 'center',
     },
     // Shared text style
     text: {
       width: '100%',
-      color: '#fff',                      // White text color
-      backgroundColor: 'black',     // No background
-      fontFamily: 'Avenir',               // Change default font
-      fontWeight: 'bold',                 // Bold font
       textAlign: 'center',
-      // Add text shadow
-      textShadowColor: '#222',
-      textShadowOffset: { width: 1, height: 1 },
-      textShadowRadius: 4,
-
     },
     // Movie title
     title: {

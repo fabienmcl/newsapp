@@ -25,7 +25,8 @@ const SCREEN_WIDTH  = Dimensions.get('window').width
 const SCREEN_WIDTH_CUSTOM_PADDING = SCREEN_WIDTH*0.47;
 const SCREEN_HEIGHT_CUSTOM = SCREEN_HEIGHT-(SCREEN_HEIGHT/20);
 import CardSwipe from '../components/CardSwipe';
-
+import  FlatListDemo from '../proto/FlatListDemo';
+import TimerMixin from 'react-timer-mixin';
 const SCREEN_HEIGHT_CUSTOM_HEADER = SCREEN_HEIGHT/20;
 const SCREEN_HEIGHT_CUSTOM_REST= SCREEN_HEIGHT - SCREEN_HEIGHT_CUSTOM_HEADER;
 
@@ -72,7 +73,7 @@ export default class MessageWebView extends React.Component {
     constructor(props) {
         super(props)
         this.postMessage = this.postMessage.bind(this)
-        this.state = {isOpen: false, title : this.props.navigation.state.params.title};
+        this.state = {isOpen: false, title : this.props.navigation.state.params.title, icon : "md-arrow-dropup", scrollEventAnimation : false};
     }
 
     static navigationOptions = ({ navigation }) => {
@@ -96,35 +97,61 @@ export default class MessageWebView extends React.Component {
         }
     }
     _onPress= (event) => {
-        console.log(event.nativeEvent)
-        this.scrollView.scrollTo({x: 0, y: SCREEN_HEIGHT_CUSTOM_REST - SCREEN_HEIGHT_CUSTOM_HEADER , animated: true})
+        //console.log(event.nativeEvent)
+        if(this.state.isOpen == false){
+            this.scrollView.scrollTo({x: 0, y: SCREEN_HEIGHT_CUSTOM_REST - (SCREEN_HEIGHT_CUSTOM_HEADER*1.5) , animated: true})
+            this.setState(previousState => {
+                return {icon: "md-arrow-dropdown", isOpen: true  };
+            });
+            console.log("this.state.isOpen == "+this.state.isOpen+"  && this.state.scrollEventAnimation == "+this.state.scrollEventAnimation);
+            //setTimeout(() => {this.setState({icon: "md-arrow-dropdown"})}, 0)
+            //setTimeout(() => {this.setState({isOpen: true})}, 500)
+            
+        }else{
+            this.scrollView.scrollTo({x: 0, y: 0, animated: true})
+            //setTimeout(() => {this.setState({})}, 0)
+            this.setState(previousState => {
+                return { icon: "md-arrow-dropup", isOpen: false };
+              });
+            //setTimeout(() => {this.setState({isOpen: false})}, 500)
+            //setTimeout(() => {this.setState({icon: "md-arrow-dropup", isOpen: false})}, 1000)
+        }
+        
       }
       _handleScroll = (event) => {
-        if(this.state.isOpen == false){
-          console.log(event.nativeEvent.layoutMeasurement.height);
-          console.log(event.nativeEvent.contentOffset.y);
-          console.log(this.state.isOpen)
-          this.setState(previousState => {
-            return { isOpen: true };
-          });
-          //event.nativeEvent.contentOffset = { y: SCREEN_HEIGHT_CUSTOM }
-          this.scrollView.scrollTo({x: 0, y: SCREEN_HEIGHT_CUSTOM_HEADER, animated: true})
+          //lors du scroll detect scroll si le scroll est au dessus de la moitier de la page 
+        if(this.state.isOpen == false && this.state.scrollEventAnimation ==false){
+            console.log("this.state.isOpen == "+this.state.isOpen+"  && this.state.scrollEventAnimation == "+this.state.scrollEventAnimation);
+           /* this.setState(previousState => {
+                return {scrollEventAnimation : true  };
+            });
+            this._onPress(event);
+            setTimeout(() => {this.setState({scrollEventAnimation: false})}, 1000)
+            */
+            //this._onPress(event)
+          //this.scrollView.scrollTo({x: 0, y: SCREEN_HEIGHT_CUSTOM_REST - (SCREEN_HEIGHT_CUSTOM_HEADER*1.5) , animated: true})
+          //setTimeout(() => {this.setState({icon: "md-arrow-dropdown"})}, 0)
+          //setTimeout(() => {this.setState({isOpen: true})}, 300)
         }else{
-          console.log("is open true")
+            console.log("this.state.isOpen == "+this.state.isOpen+"  && this.state.scrollEventAnimation == "+this.state.scrollEventAnimation);
+          /*console.log("is open true")
           console.log(event.nativeEvent.contentOffset.y);
           this.setState(previousState => {
             return { isOpen: false };
           });
-          
+          this.scrollView.scrollTo({x: 0, y: 0, animated: true})
+          setTimeout(() => {this.setState({icon: "md-arrow-dropup"})}, 100)
+          setTimeout(() => {this.setState({isOpen: true})}, 300)
+          */
         }
       }
     render() {
         //console.log(this.props.navigation.state.params.data); 
         const { html, source, url, onMessage, ...props } = this.props
-        console.log(this.props)
-        this.props.navigation.setParams({otherParam: this.props.navigation.state.params.title})
+        //console.log(this.props)
+        //this.props.navigation.setParams({otherParam: this.props.navigation.state.params.title})
         return (
-            <ScrollView scrollEnabled={true} ref={x => {this.scrollView = x}} //onScroll={this._handleScroll} 
+            <ScrollView scrollEnabled={true} ref={x => {this.scrollView = x}} onScroll={this._handleScroll} 
             >  
             <WebView
                 {...props}
@@ -138,7 +165,7 @@ export default class MessageWebView extends React.Component {
             />
             <View> 
                 <TouchableOpacity onPress={this._onPress}>
-                    <Icon name="md-arrow-dropup" style={{ color: 'black', marginLeft:SCREEN_WIDTH_CUSTOM_PADDING}}/>
+                    <Icon name={this.state.icon} style={{ color: 'black', marginLeft:SCREEN_WIDTH_CUSTOM_PADDING}}/>
                 </TouchableOpacity>
                 <View style={{ alignItems: 'center', justifyContent: 'flex-end' }}>
                     <Text style={{ fontWeight: 'bold', fontSize: 22 }}>Ton avis sur l'article : </Text>
@@ -148,7 +175,7 @@ export default class MessageWebView extends React.Component {
                         <TouchableOpacity onPress={() => this.increaseHeight()}> 
                             <Icon name="md-heart-outline" style={{ color: 'black' }} />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={()=>console.log("slider")}>
+                        <TouchableOpacity>
                             <Slider
                                 style={{ width: 150 }}
                                 step={1}
@@ -165,7 +192,7 @@ export default class MessageWebView extends React.Component {
                         <TouchableOpacity onPress={() => this.increaseHeight()}> 
                             <Icon name="md-sad" style={{ color: 'black' }} />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={()=>console.log("slider")}>
+                        <TouchableOpacity>
                             <Slider
                                 style={{ width: 150 }}
                                 step={1}
@@ -178,7 +205,7 @@ export default class MessageWebView extends React.Component {
                             <Icon name="md-happy" style={{ color: 'black' }} />
                         </TouchableOpacity>
                 </View>
-                <View style={{ alignItems: 'center', justifyContent: 'flex-end' }}>
+                <View style={{ alignItems: 'center', justifyContent: 'flex-end'}}>
                     <Text style={{ fontWeight: 'bold', fontSize: 22 }}>Partage l'article : </Text>
                 </View>
                 <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around' }}>
@@ -199,12 +226,14 @@ export default class MessageWebView extends React.Component {
                                 source={require('../images/whatsapp.png')}/>
                         </TouchableOpacity> 
                 </View>
-                <View style={{ alignItems: 'center', justifyContent: 'flex-end' }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 22, paddingBottom:SCREEN_HEIGHT/6 }}>Recommandations d'articles : </Text>
+                <View style={{ alignItems: 'center', justifyContent: 'flex-end'}}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 22 }}>Recommandations d'articles :</Text>
+                </View>
+                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', height: SCREEN_HEIGHT/2 }}>
+                    <FlatListDemo>
+                    </FlatListDemo>
                 </View>
             </View>
-            <CardSwipe>
-            </CardSwipe>
       
             </ScrollView>
             

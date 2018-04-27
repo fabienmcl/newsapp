@@ -11,7 +11,8 @@ import Webviewcustom from './pages/MessageWebView';
 import WebviewScroll from './pages/WebviewScroll';
 import DemoFlatList from './proto/FlatListDemo';
 import Loginapp from './src/LoginAnimation';
-import CardImageExample from './proto/CardImageExample';
+import FlatListData from './proto/FlatListData'
+import FlatListViewArticle from './proto/FlatListViewArticle'
 
 export default class Routes extends Component<{}> {
 	render() {
@@ -24,8 +25,11 @@ export default class Routes extends Component<{}> {
 					<Scene key="webviewcustom" component={Webviewcustom} title="Webviewcustom"  />
 					<Scene key="webviewAnim" component={WebviewAnim} title="WebviewAnim"  initial ={false} />
 					<Scene key="webviewScroll" component={WebviewScroll} title="WebviewScroll"  initial ={false} />
-					<Scene key="loginapp" component={Loginapp} title="Loginapp"  initial ={true} /> 
-					<Scene key="cardImageExample" component={CardImageExample} title="CardImageExample"  initial ={false} />
+					<Scene key="loginapp" component={Loginapp} title="Loginapp"  initial ={false} /> 
+					<Scene key="flatListData" component={FlatListData} title="FlatListData"  initial ={false} /> 
+
+
+					<Scene key="flatListViewArticle" component={FlatListViewArticle} title="FlatListViewArticle"  initial ={true} /> 
 				</Stack>
 			 </Router>
 			)
