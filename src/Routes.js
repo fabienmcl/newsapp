@@ -11,25 +11,23 @@ import Webviewcustom from './pages/MessageWebView';
 import WebviewScroll from './pages/WebviewScroll';
 import DemoFlatList from './proto/FlatListDemo';
 import Loginapp from './src/LoginAnimation';
-import FlatListData from './proto/FlatListData'
-import FlatListViewArticle from './proto/FlatListViewArticle'
+import FlatListViewArticle from './proto/FlatListViewArticle';
 
 export default class Routes extends Component<{}> {
 	render() {
 		return(
 			<Router>
 				<Stack key="root" hideNavBar={true}>
-			    	<Scene key="login" component={Login} title="Login" initial={false}/> 
-			      	<Scene key="signup" component={Signup} title="Register"/>
+			    	{/*old login page 
+					<Scene key="login" component={Login} title="Login" initial={false}/> 
+					<Scene key="signup" component={Signup} title="Register"/> */}
+					{ /* new login page with animation */}
+					<Scene key="loginapp" component={Loginapp} title="Loginapp"  initial ={true} /> 
+					{/* old listview 
 					<Scene back={true} key="listview" component={Listview} title="Listview" initial={false}/>{/* panHandlers={null} /> */}
-					<Scene key="webviewcustom" component={Webviewcustom} title="Webviewcustom"  />
-					<Scene key="webviewAnim" component={WebviewAnim} title="WebviewAnim"  initial ={false} />
-					<Scene key="webviewScroll" component={WebviewScroll} title="WebviewScroll"  initial ={false} />
-					<Scene key="loginapp" component={Loginapp} title="Loginapp"  initial ={false} /> 
-					<Scene key="flatListData" component={FlatListData} title="FlatListData"  initial ={false} /> 
-
-
-					<Scene key="flatListViewArticle" component={FlatListViewArticle} title="FlatListViewArticle"  initial ={true} /> 
+					{/* new listview pages */}
+					<Scene key="flatListViewArticle" component={FlatListViewArticle} title="FlatListViewArticle"  title="Renewal" initial ={false} panHandlers={null} /> 
+					<Scene key="webviewcustom" component={Webviewcustom} title="Webviewcustom"  />	
 				</Stack>
 			 </Router>
 			)

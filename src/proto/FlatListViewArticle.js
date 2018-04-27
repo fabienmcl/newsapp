@@ -1,11 +1,23 @@
 import React, { Component } from 'react';
- 
-import { StyleSheet, Platform, View, ActivityIndicator, FlatList, Text, Image, Alert, YellowBox, Button } from 'react-native';
- 
-
+import { 
+  StyleSheet, 
+  Platform, 
+  View, 
+  ActivityIndicator, 
+  FlatList, 
+  Text, 
+  Image,
+  Alert, 
+  YellowBox, 
+  TouchableOpacity, 
+  Dimensions
+} from 'react-native';
 import {Actions} from 'react-native-router-flux';
-
-
+import { Icon } from 'native-base';
+import { Button, Header } from 'react-native-elements';
+import SideMenu from 'react-native-side-menu';
+import Menu from './Menu';
+const screen = Dimensions.get('window');
 const demoDataNews = [
   {
     title: 'À lui seul, l’iPhone X a compté pour 35 % des bénéfices de l’industrie au Q4 2017',
@@ -93,14 +105,14 @@ const demoDataNews = [
 export default class Project extends Component {
   constructor(props) {
     super(props);
-    this.state = { isLoading: true }
-    YellowBox.ignoreWarnings(
-      ['Warning: componentWillMount is deprecated',
-    'Warning: componentWillReceiveProps is deprecated',]);
+    this.toggle = this.toggle.bind(this);
+    this.state = { isLoading: true, isOpen: false, selectedItem: 'About',}
+    YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
   }
-
+  //Renewal 
   GetItem (item) {
     //Alert.alert(item.title);
+    console.log(item.title);
     Actions.webviewcustom(item);
   }
   FlatListItemSeparator = () => {
@@ -140,6 +152,25 @@ export default class Project extends Component {
     //this.webCall();
     this.loadDataLocal();
   }
+  _sideMenuPress(){
+    console.log("le menu le menu le menu");
+    this.toggle();
+  }
+  toggle() {
+    this.setState({
+      isOpen: !this.state.isOpen,
+    });
+  }
+
+  updateMenuState(isOpen) {
+    this.setState({ isOpen });
+  }
+
+  onMenuItemSelected = item =>
+    this.setState({
+      isOpen: false,
+      selectedItem: item,
+  });
   render() {
     if (this.state.isLoading) {
       return (
@@ -148,27 +179,37 @@ export default class Project extends Component {
         </View>
       );
     }
+    const menu = <Menu onItemSelected={this.onMenuItemSelected} />;
     return (
+      
+      
+      <SideMenu
+      menu={menu}
+      isOpen={this.state.isOpen}
+      onChange={isOpen => this.updateMenuState(isOpen)}
+      >
+      
       <View style={styles.MainContainer}>
+      <Header
+        leftComponent={{ icon: 'menu', color: '#fff', onPress:()=>this._sideMenuPress()}}
+        centerComponent={{ text: 'Renewal', style: { color: '#fff' } }} 
+        outerContainerStyles={{ backgroundColor: 'black' }}
+      />
         <FlatList
           data={ this.state.dataSource }
           ItemSeparatorComponent = {this.FlatListItemSeparator}
           renderItem={({item}) => 
-            <View style={{flex:1, }}>
-              <Image source = {{ uri: item.image }} style={styles.imageView} />
-              <Text onPress={this.GetItem.bind(this, item)} style={styles.textView} >{item.title}</Text>
-              <Button
-                 onPress={()=>console.log("dfg")}
-                  title="Learn More"
-                  color="#841584"
-                accessibilityLabel="Learn more about this purple button"
-              />
-            </View>
-            
+            <TouchableOpacity onPress={this.GetItem.bind(this, item)} >
+              <View style={{flex:1, }}>
+                <Image source = {{ uri: item.image }} style={styles.imageView} />
+                <Text  style={styles.textView} >{item.title}</Text>
+              </View>
+            </TouchableOpacity>   
           }
           keyExtractor={(item, index) => index.toString()}
           />
       </View>
+      </SideMenu>
    );
   }
 }
@@ -178,19 +219,20 @@ const styles = StyleSheet.create({
   MainContainer :{
     justifyContent: 'center',
     flex:1,
-    margin: 5,
-    marginTop: (Platform.OS === 'ios') ? 20 : 0,  
+    backgroundColor : "white"
+    //margin: 5,
+    //marginTop: (Platform.OS === 'ios') ? 20 : 0,  
   },
   imageView: {
- 
-    width: '50%',
-    height: 100 ,
+    height: screen.height / 5,
     margin: 7,
-    borderRadius : 7
+    borderRadius : 7,
+    justifyContent: 'center', 
+    alignItems: 'center',
   },
-  textView: {
-    width:'50%', 
+  textView: { 
     textAlignVertical:'center',
+    textAlign: 'center',
     padding:10,
     color: '#000'
   }
@@ -199,4 +241,5 @@ const styles = StyleSheet.create({
 /**
  * 
  * https://medium.com/@elieslama/responsive-design-in-react-native-876ea9cd72a8
+ * https://github.com/SoftZen/react-native-bouncy-drawer
  */
