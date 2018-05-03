@@ -12,6 +12,7 @@ import WebviewScroll from './pages/WebviewScroll';
 import DemoFlatList from './proto/FlatListDemo';
 import Loginapp from './src/LoginAnimation';
 import FlatListViewArticle from './proto/FlatListViewArticle';
+import WebviewFloating from './proto/MessageWebViewFloating';
 
 export default class Routes extends Component<{}> {
 	render() {
@@ -22,12 +23,13 @@ export default class Routes extends Component<{}> {
 					<Scene key="login" component={Login} title="Login" initial={false}/> 
 					<Scene key="signup" component={Signup} title="Register"/> */}
 					{ /* new login page with animation */}
-					<Scene key="loginapp" component={Loginapp} title="Loginapp"  initial ={true} /> 
+					<Scene key="loginapp" component={Loginapp} title="Loginapp"  initial ={false} /> 
 					{/* old listview 
 					<Scene back={true} key="listview" component={Listview} title="Listview" initial={false}/>{/* panHandlers={null} /> */}
 					{/* new listview pages */}
-					<Scene key="flatListViewArticle" component={FlatListViewArticle} title="FlatListViewArticle"  title="Renewal" initial ={false} panHandlers={null} /> 
-					<Scene key="webviewcustom" component={Webviewcustom} title="Webviewcustom"  />	
+					<Scene key="flatListViewArticle" component={FlatListViewArticle} title="FlatListViewArticle"  title="Renewal" initial ={true} panHandlers={null} /> 
+					<Scene key="webviewcustom" component={Webviewcustom} title="Webviewcustom"  />
+					<Scene key="webviewFloating" component={WebviewFloating} title="WebviewFloating" initial={false} />		
 				</Stack>
 			 </Router>
 			)

@@ -5,6 +5,7 @@ import {
   View, 
   ActivityIndicator, 
   FlatList, 
+  Text, 
   Image,
   Alert, 
   YellowBox, 
@@ -12,7 +13,8 @@ import {
   Dimensions
 } from 'react-native';
 import {Actions} from 'react-native-router-flux';
-import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text, List, ListItem } from 'native-base';
+import { Icon } from 'native-base';
+import { Button, Header } from 'react-native-elements';
 import SideMenu from 'react-native-side-menu';
 import Menu from './Menu';
 const screen = Dimensions.get('window');
@@ -179,38 +181,7 @@ export default class Project extends Component {
     }
     const menu = <Menu onItemSelected={this.onMenuItemSelected} />;
     return (
-      
-      
-      <SideMenu
-      menu={menu}
-      isOpen={this.state.isOpen}
-      onChange={isOpen => this.updateMenuState(isOpen)}
-      >
-      
-      <View style={styles.MainContainer}>
-      {/*<Header
-        leftComponent={{ icon: 'menu', color: '#fff', onPress:()=>this._sideMenuPress()}}
-        centerComponent={{ text: 'Renewal', style: { color: '#fff' } }} 
-        outerContainerStyles={{ backgroundColor: '#212121' }}
-      />*/}
-      <Header style={{backgroundColor: '#212121'}}>
-          <Left>
-              
-            <Button transparent>
-              <Icon name='menu' style={{ color: '#fff'}}   onPress={()=>this._sideMenuPress()} />
-            </Button>
-              
-          </Left>
-          <Body>
-            <Title style={{color:'white'}}>Renewal</Title>
-          </Body>
-          <Right>
-            {/*
-            <Button transparent>
-              <Icon name='ios-settings-outline' style={{color:'white'}}/>
-            </Button> */}
-           </Right>
-        </Header>
+      <View style={styles.MainContainer}> 
         <FlatList
           data={ this.state.dataSource }
           ItemSeparatorComponent = {this.FlatListItemSeparator}
@@ -225,7 +196,6 @@ export default class Project extends Component {
           keyExtractor={(item, index) => index.toString()}
           />
       </View>
-      </SideMenu>
    );
   }
 }

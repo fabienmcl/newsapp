@@ -13,11 +13,10 @@ import {
     FlatList,
     Slider,
     ScrollView,
-    WebView,
-    View
+    WebView
 } from "react-native";
 import {Actions} from 'react-native-router-flux';
-import * as Animatable from 'react-native-animatable';
+import { View } from 'react-native-animatable';
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text, List, ListItem } from 'native-base';
 {/*import { Header } from 'react-native-elements';*/}
 const SCREEN_HEIGHT = Dimensions.get('window').height
@@ -77,24 +76,6 @@ export default class MessageWebView extends React.Component {
         super(props)
         this.postMessage = this.postMessage.bind(this)
         this.state = {isOpen: false, isOpenB:false, title : this.props.navigation.state.params.title, icon : "md-arrow-dropup", scrollEventAnimation : false};
-        this.springValue = new Animated.Value(1)
-    }
-    spring () {
-        this.springValue.setValue(0.3)
-        setTimeout(() => {
-            Animated.spring(
-                this.springValue,
-                {
-                  toValue: 1.3,
-                  friction: 1,
-                  tension: 1
-                }
-              ).start()
-        }
-        
-        
-        , 300)
-        
     }
     /*
     static navigationOptions = ({ navigation }) => {
@@ -203,27 +184,7 @@ export default class MessageWebView extends React.Component {
         
         const menu = <Menu onItemSelected={this.onMenuItemSelected} />;
         return (
-            <SideMenu
-                menu={menu}
-                isOpen={this.state.isOpen}
-                disableGestures={false}
-                
-                onChange={isOpen => this.updateMenuState(isOpen)}
-            >
-            <View  style={styles.MainContainer} >
-            {/*
-            <Header
-                leftComponent={
-                    <Header
-                        leftComponent={{ icon: 'chevron-left', color: '#fff', onPress:()=>this.props.navigation.goBack() }}
-                        rightComponent={{ icon: 'menu', color: '#fff', onPress:()=>this._sideMenuPress() }}
-                        outerContainerStyles={{ backgroundColor: '#212121', padding : 0, margin : 0, borderBottomColor:'black', borderBottomWidth:0}}
-                    />
-                }
-                centerComponent={{ text: this.props.navigation.state.params.title , style: { color: '#fff' } }}
-                outerContainerStyles={{ backgroundColor: '#212121', borderBottomWidth:0 }}
-            />
-            */}
+          <Container style={{backgroundColor:'red'}}>
             <Header style={{backgroundColor: '#212121'}}>
             <Left>
                 <Button transparent>
@@ -239,6 +200,7 @@ export default class MessageWebView extends React.Component {
                 </Button>
            </Right>
         </Header>
+        <Content  style={{backgroundColor:'orange'}} >
             <ScrollView  scrollEnabled={true} ref={x => {this.scrollView = x}} onScroll={this._handleScroll} 
             >  
             
@@ -246,21 +208,18 @@ export default class MessageWebView extends React.Component {
                 {...props}
                 javaScriptEnabled
                 injectedJavaScript={patchPostMessageJsCode}
-                source={{uri:this.props.navigation.state.params.url}}
+                source={{uri:'https://www.youtube.com/watch?v=mu7hOcE6cAU'}}
             
                 ref={x => {this.WebView = x}}
                 onMessage={e => console.log(JSON.parse(JSON.stringify(e.nativeEvent.data)))}
-                style={{height: SCREEN_HEIGHT_CUSTOM_REST-(SCREEN_HEIGHT_CUSTOM_HEADER+(SCREEN_HEIGHT_CUSTOM_HEADER)) }}
+                style={{height: SCREEN_HEIGHT }}
             />
             
-            <View> 
-                <Animatable.View animation="bounce" easing="ease-in-out" iterationCount="infinite" >
-                <TouchableOpacity onPress={this._onPress} style={{ marginLeft:SCREEN_WIDTH_CUSTOM_PADDING, width:'5%'}} onPress={this._onPress} >
-                    
-                    <Icon name={this.state.icon} style={{ color: 'black'}}/> 
-    
+                <TouchableOpacity activeOpacity={0.5} onPress={this._onPress} style={styles.TouchableOpacityStyle} >
+                  <Image source={{uri : 'https://reactnativecode.com/wp-content/uploads/2017/11/Floating_Button.png'}} 
+                    style={styles.FloatingButtonStyle} />
                 </TouchableOpacity>
-                </Animatable.View>
+                <View>
                 <View style={{ alignItems: 'center', justifyContent: 'flex-end' }}>
                     <Text style={{ fontWeight: 'bold', fontSize: 22 }}>Ton avis sur l'article : </Text>
                 </View>
@@ -327,11 +286,11 @@ export default class MessageWebView extends React.Component {
                     <FlatListViewArticle>
                     </FlatListViewArticle>
                 </View>
-            </View>
+                </View>
       
             </ScrollView>
-            </View>
-            </SideMenu>
+            </Content>
+          </Container>
         )
     }
 }
@@ -339,12 +298,30 @@ const styles = StyleSheet.create({
     MainContainer :{
         justifyContent: 'center',
         flex:1,
-        backgroundColor : "white"
+        backgroundColor : "orange"
         //margin: 5,
         //marginTop: (Platform.OS === 'ios') ? 20 : 0,  
     },
     container: {
        height: '92%',
+    },
+    TouchableOpacityStyle:{
+ 
+      position: 'relative',
+      width: 50,
+      height: 50,
+      alignItems: 'center',
+      justifyContent: 'center',
+      right: 0,
+      bottom: 150,
+    },
+   
+    FloatingButtonStyle: {
+   
+      //resizeMode: 'contain',
+      width: 50,
+      height: 50,
+      zIndex: 999
     }
  })
 /*

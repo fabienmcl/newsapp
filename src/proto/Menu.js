@@ -6,89 +6,100 @@ import {
   ScrollView,
   View,
   Image,
-  Text,
+  TouchableOpacity
 } from 'react-native';
-
+import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text, List, ListItem } from 'native-base';
+import {Actions} from 'react-native-router-flux';
 const window = Dimensions.get('window');
 const uri = 'https://icon-icons.com/icons2/933/PNG/512/settings-cogwheel-button_icon-icons.com_72559.png';
 
-const styles = StyleSheet.create({
-  menu: {
-    flex: 1,
-    width: window.width,
-    height: window.height,
-    backgroundColor: 'white',
-    padding: 20,
-  },
-  avatarContainer: {
-    marginBottom: 20,
-    marginTop: 20,
-  },
-  avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    flex: 1,
-  },
-  name: {
-    position: 'absolute',
-    left: 70,
-    top: 20,
-  },
-  item: {
-    fontSize: 14,
-    fontWeight: '300',
-    paddingTop: 5,
-  },
-});
+
 function onPressItem(item){
     console.log("item du menu pressed is : "+item)
     //onItemSelected('Favoris')
 }
 export default function Menu({ onItemSelected }) {
   return (
-    <ScrollView scrollsToTop={false} style={styles.menu}>
-      <View style={styles.avatarContainer}>
-        {/*<Text style={styles.name}>Recommandation d'article </Text> */}
-        <Image
-          style={styles.avatar}
-          source={{ uri }}
-        />
-      </View>
-      <Text
-        onPress={() => onPressItem('recommandation d article')}
-        style={styles.item}
-      >
-        Recommandation d'article
-      </Text>
-      <Text
-        onPress={() => onItemSelected('Favoris')}
-        style={styles.item}
-      >
-        Favoris
-      </Text>
-      <Text
-        onPress={() => onItemSelected('Favoris')}
-        style={styles.item}
-      >
-        Historique
-      </Text>
-      <Text
-        onPress={() => onItemSelected('Favoris')}
-        style={styles.item}
-      >
-        Mon compte
-      </Text>
-      <Text
-        onPress={() => onItemSelected('Favoris')}
-        style={styles.item}
-      >
-        le concept
-      </Text> 
-    </ScrollView>
+    <Container style={{backgroundColor:'#212121'}}>
+        <Header style={styles.header}>
+          <Left>
+              {/*
+            <Button transparent>
+              <Icon name='menu' />
+            </Button>
+              */}
+          </Left>
+          <Body>
+            <Title style={{color:'white'}}>Renewal</Title>
+          </Body>
+          <Right>
+            <Button transparent>
+              <Icon name='ios-settings-outline' style={{color:'white'}}/>
+            </Button>
+           </Right>
+        </Header>
+        <Content  style={{backgroundColor:'#212121'}} >
+            <List style={{backgroundColor:'#424242', marginTop:5}}>
+                <ListItem iconLeft onPress={() =>Actions.webviewFloating()}>
+                    <Icon name="ios-trending-up-outline" style={styles.iconItem} />
+                        <Text style={styles.textItem} >Recommandation d'article</Text>
+                </ListItem>
+                <ListItem iconLeft onPress={() => onItemSelected('fav')}>
+                    <Icon name="ios-star-outline" style={styles.iconItem} />
+                    <Text style={styles.textItem}  >Favoris</Text>
+                </ListItem>
+                <ListItem iconLeft onPress={() => onItemSelected('histo')}>
+                    <Icon name="ios-stats-outline" style={styles.iconItem} />
+                    <Text style={styles.textItem}  >Historique</Text>
+                </ListItem>
+                <ListItem iconLeft onPress={() => onItemSelected('mon compte')}>
+                    <Icon name="ios-person" style={styles.iconItem} />
+                    <Text style={styles.textItem} >Mon compte</Text>
+                </ListItem>
+            </List>
+           
+        </Content>
+        <Footer style={{ backgroundColor: '#212121'}} >
+          <FooterTab>
+            <Button full onPress={() => onItemSelected('concept')}>
+              <Text >Le concept</Text>
+            </Button>
+          </FooterTab>
+        </Footer>
+      </Container>
   );
 }
 
 Menu.propTypes = {
   onItemSelected: PropTypes.func.isRequired,
 };
+const styles = StyleSheet.create({
+    iconItem:{
+        color: 'white', 
+        marginRight:10
+    },
+    textItem:{
+        color: 'white', 
+    },
+    header:{
+        backgroundColor: '#212121',
+        marginBottom:5
+    },
+    TouchableOpacityStyle:{
+ 
+        position: 'absolute',
+        width: 50,
+        height: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+        right: 30,
+        bottom: 30,
+      },
+     
+      FloatingButtonStyle: {
+     
+        resizeMode: 'contain',
+        width: 50,
+        height: 50,
+      }
+});
