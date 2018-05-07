@@ -4,15 +4,16 @@ import {Router, Stack, Scene} from 'react-native-router-flux';
 
 import Login from './pages/Login';
 import Signup from './pages/Signup';
-import Listview from './pages/ListView';
-import Anim from './proto/Anim';
-import WebviewAnim from './pages/WebViewMessageAnim';
-import Webviewcustom from './pages/MessageWebView';
-import WebviewScroll from './pages/WebviewScroll';
-import DemoFlatList from './proto/FlatListDemo';
 import Loginapp from './src/LoginAnimation';
+
+import Listview from './pages/ListView';
 import FlatListViewArticle from './proto/FlatListViewArticle';
-import WebviewFloating from './proto/MessageWebViewFloating';
+import DemoFlatList from './proto/FlatListDemo'; 
+
+import Webviewcustom from './pages/MessageWebView';
+import WebviewcustomProto from './pages/MessageWebViewCustom';
+
+
 
 export default class Routes extends Component<{}> {
 	render() {
@@ -29,7 +30,7 @@ export default class Routes extends Component<{}> {
 					{/* new listview pages */}
 					<Scene key="flatListViewArticle" component={FlatListViewArticle} title="FlatListViewArticle"  title="Renewal" initial ={true} panHandlers={null} /> 
 					<Scene key="webviewcustom" component={Webviewcustom} title="Webviewcustom"  />
-					<Scene key="webviewFloating" component={WebviewFloating} title="WebviewFloating" initial={false} />		
+					<Scene key="webviewcustomProto" component={WebviewcustomProto} title="WebviewcustomProto" initial={false} />		
 				</Stack>
 			 </Router>
 			)

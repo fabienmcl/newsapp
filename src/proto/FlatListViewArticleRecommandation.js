@@ -185,6 +185,7 @@ export default class Project extends Component {
         <FlatList
           data={ this.state.dataSource }
           ItemSeparatorComponent = {this.FlatListItemSeparator}
+          onScrollBeginDrag={()=>console.log("dsf")}
           renderItem={({item}) => 
             <TouchableOpacity onPress={this.GetItem.bind(this, item)} >
               <View style={{flex:1, }}>

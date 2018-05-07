@@ -87,9 +87,7 @@ export default class MessageWebView extends React.Component {
             isScrollToDown : false,
             title : this.props.navigation.state.params.title, 
             icon : "md-arrow-dropup", 
-            scrollEventAnimation : false,
-            scrollIsEnabled : true,
-            scrollStartFrom : "bottom"
+            scrollEventAnimation : false
         };
         this.springValue = new Animated.Value(1)
     }
@@ -134,7 +132,7 @@ export default class MessageWebView extends React.Component {
     _onPress= (event) => {
         //console.log(event.nativeEvent)
         this.setState(previousState => {
-            return {isClickScroll: true, scrollIsEnabled:false  };
+            return {isClickScroll: true  };
         });
         console.log(this.state.isClickScroll)
         if(this.state.isOpenB == false){
@@ -151,14 +149,16 @@ export default class MessageWebView extends React.Component {
             this.scrollView.scrollTo({x: 0, y: 0, animated: true})
             //setTimeout(() => {this.setState({})}, 0)
             this.setState(previousState => {
-                return { icon: "md-arrow-dropup", isOpenB: false, scrollIsEnabled:true };
+                return { icon: "md-arrow-dropup", isOpenB: false };
               });
             //setTimeout(() => {this.setState({isOpen: false})}, 500)
             //setTimeout(() => {this.setState({icon: "md-arrow-dropup", isOpen: false})}, 1000)
         }
         
+        
       }
     _handleScroll = (event) => {
+        console.log("scroll")
         if(this.state.isInScroll == true){
             console.log("scroll detect position: "+event.nativeEvent.contentOffset.y+" isInScroll: "+this.state.isInScroll )
             const positionY = event.nativeEvent.contentOffset.y+" ";
@@ -180,15 +180,6 @@ export default class MessageWebView extends React.Component {
             this.setState(previousState => {
                 return { isScrollPositionY: splitPositionY };
             });
-            if(Number.parseInt(this.state.isScrollPositionY, 10) > SCREEN_HEIGHT_CUSTOM_REST/2){
-                this.setState(previousState => {
-                    return {icon: "md-arrow-dropdown", isOpenB: true  };
-                });
-            }else{
-                this.setState(previousState => {
-                    return { icon: "md-arrow-dropup", isOpenB: false };
-                });
-            }
         
         }
         
@@ -205,7 +196,6 @@ export default class MessageWebView extends React.Component {
                     isScrollPositionY:"0",
                     isScrollToDown : false,
                     icon : "md-arrow-dropup",
-                    scrollStartFrom : "bottom"
                 };
             });
         }else{
@@ -215,7 +205,6 @@ export default class MessageWebView extends React.Component {
                     isScrollPositionY:SCREEN_HEIGHT_CUSTOM_REST -(SCREEN_HEIGHT_CUSTOM_HEADER*2),
                     isScrollToDown:true,
                     icon : "md-arrow-dropdown",
-                    scrollStartFrom: "top"
                 };
             });
         }
@@ -226,24 +215,25 @@ export default class MessageWebView extends React.Component {
     }
     _handleScrollEnd = (event) =>{
         console.log("END scroll _position:"+event.nativeEvent.contentOffset.y);
+        this.setState(previousState => {
+            return {isInScroll:false};
+        });
         if(this.state.isScrollToDown == true){
             this.scrollView.scrollTo({x: 0, y: 0, animated: true})
             //_.delay(() => this.scrollView.scrollTo({x: 0, y: 0, animated: true}), 2000);
             
-            //this.scrollView.scrollEnabled=true
+            this.scrollView.scrollEnabled=true
             this.setState(previousState => {
-                return {isInScroll:false, icon: "md-arrow-dropup", isOpenB: false };
+                return { icon: "md-arrow-dropup", isOpenB: false };
             });
         }else{
             this.scrollView.scrollTo({x: 0, y: SCREEN_HEIGHT_CUSTOM_REST -(SCREEN_HEIGHT_CUSTOM_HEADER*2) , animated: true})
             //_.delay(() => this.scrollView.scrollTo({x: 0, y: SCREEN_HEIGHT_CUSTOM_REST -(SCREEN_HEIGHT_CUSTOM_HEADER*2) , animated: true}), 2000);
             this.setState(previousState => {
-                return {isInScroll:false, icon: "md-arrow-dropdown", isOpenB: true, scrollIsEnabled:false  };
+                return {icon: "md-arrow-dropdown", isOpenB: true  };
             });
-            //this.scrollView.scrollEnabled=true
+            this.scrollView.scrollEnabled=true
         }
-        
-        //setTimeout(() => {this.setState({scrollIsEnabled: true})}, 5000)
         
     }
    
@@ -277,179 +267,60 @@ export default class MessageWebView extends React.Component {
         
         const menu = <Menu onItemSelected={this.onMenuItemSelected} />;
         return (
-            <SideMenu
-                menu={menu}
-                isOpen={this.state.isOpen}
-                disableGestures={true}
-                menuPosition={'left'}
-                onChange={isOpen => this.updateMenuState(isOpen)}
-            >
-            <View  style={styles.MainContainer} >
-            {/*
-            <Header
-                leftComponent={
-                    <Header
-                        leftComponent={{ icon: 'chevron-left', color: '#fff', onPress:()=>this.props.navigation.goBack() }}
-                        rightComponent={{ icon: 'menu', color: '#fff', onPress:()=>this._sideMenuPress() }}
-                        outerContainerStyles={{ backgroundColor: '#212121', padding : 0, margin : 0, borderBottomColor:'black', borderBottomWidth:0}}
+            <Container style={styles.MainContainer}>
+                <Header style={{backgroundColor: '#212121'}}>
+                    <StatusBar barStyle="light-content"/>
+                    <Left style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
+                        <Button transparent>
+                            <Icon name='ios-arrow-back-outline' style={{ color: '#fff'}}   onPress={()=>this.props.navigation.goBack()} />
+                        </Button>
+                        <Button transparent>
+                            <Icon name='menu' style={{ color: '#fff'}}   onPress={()=>this._sideMenuPress()} />
+                        </Button>
+                    </Left>
+                    <Body>
+                        <Title style={{color:'white'}}>{this.props.navigation.state.params.title}</Title>
+                    </Body>
+                    <Right>
+                        {/*<Button transparent>
+                        <Icon name='menu' style={{ color: '#fff'}}   onPress={()=>this._sideMenuPress()} />
+                        </Button>
+                        */}
+                    </Right>
+                </Header>
+                <ScrollView  
+                style={{flex:1}} scrollEnabled={true} ref={x => {this.scrollView = x}} >
+                    <WebView
+                        {...props}
+                        javaScriptEnabled
+                        injectedJavaScript={patchPostMessageJsCode}
+                        source={{uri:this.props.navigation.state.params.url}}
+                        ref={x => {this.WebView = x}}
+                        onMessage={e => console.log(JSON.parse(JSON.stringify(e.nativeEvent.data)))}
+                        style={{height: SCREEN_HEIGHT_CUSTOM_REST-(SCREEN_HEIGHT_CUSTOM_HEADER+(SCREEN_HEIGHT_CUSTOM_HEADER)), width:'100%' }}
                     />
-                }
-                centerComponent={{ text: this.props.navigation.state.params.title , style: { color: '#fff' } }}
-                outerContainerStyles={{ backgroundColor: '#212121', borderBottomWidth:0 }}
-            />
-            */}
-            <Header style={{backgroundColor: '#212121'}}>
-                <StatusBar barStyle="light-content"/>
-                <Left style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
-                    <Button transparent>
-                        <Icon name='ios-arrow-back-outline' style={{ color: '#fff'}}   onPress={()=>this.props.navigation.goBack()} />
-                    </Button>
-                    <Button transparent>
-                        <Icon name='menu' style={{ color: '#fff'}}   onPress={()=>this._sideMenuPress()} />
-                    </Button>
-                </Left>
-                <Body>
-                    <Title style={{color:'white'}}>{this.props.navigation.state.params.title}</Title>
-                </Body>
-                <Right>
-                    {/*<Button transparent>
-                        <Icon name='menu' style={{ color: '#fff'}}   onPress={()=>this._sideMenuPress()} />
-                    </Button>
-                    */}
-                </Right>
-            </Header>
-            <ScrollView  style={{flex:1}} scrollEnabled={this.state.scrollIsEnabled} ref={x => {this.scrollView = x}} keyboardShouldPersistTaps="always"
-                onScroll={this._handleScroll} 
-                scrollEventThrottle={100} //min 1 et max 16 (+de scroll detect)
-                onScrollBeginDrag={this._handleScrollBegin.bind(this)}
-                onScrollEndDrag={this._handleScrollEnd.bind(this)}
+                    <View  style={styles.MainContainer} > 
+                        <ScrollView style={{backgroundColor:'red', flex:1}}
+                            onScroll={()=>console.log("scroll putain de merde")}
+                        >
+                            <Animatable.View animation="bounce" easing="ease-in-out" iterationCount="infinite" >
+                                <TouchableOpacity onPress={this._onPress} style={{ paddingLeft:SCREEN_WIDTH_CUSTOM_PADDING, backgroundColor:'orange', width:'20%' }} onPress={this._onPress} >
+                                    <Icon name={this.state.icon} style={{ color: 'black'}}/> 
+                                </TouchableOpacity>
+                            </Animatable.View>
+                        </ScrollView>
+                        <ScrollView style={{flex: 1,  height:SCREEN_HEIGHT/3, backgroundColor:'green'}} horizontal showsHorizontalScrollIndicator={false} >
+                            <FlatListViewArticle>
+                            </FlatListViewArticle>
+                        </ScrollView>
+                        <View style={{flex:1, height:SCREEN_HEIGHT/2 }} >
+                            <FlatListViewArticle>
+                            </FlatListViewArticle>
+                        </View>
+                    </View>
+                </ScrollView>
+            </Container>
 
-                onTouchStart={ () => console.log( 'touch start' ) }
-
-                onTouchMove={ () => console.log( 'touch move' ) }
-                
-                onTouchEnd={ () => console.log( 'touch end' ) }
-                
-                //onScrollBeginDrag={ () => console.log( 'scroll begin' ) }
-                
-                //onScrollEndDrag={ () => console.log( 'scroll end' ) }
-                
-                onMomentumScrollBegin={ () => console.log( 'momentum begin' ) }
-                
-                onMomentumScrollEnd={ () => console.log( 'momentum end' ) }
-                
-                onStartShouldSetResponder={ () => console.log( 'on start' ) }
-                
-                onStartShouldSetResponderCapture={ () => console.log( 'on start capture' ) }
-                
-                onScrollShouldSetResponder={ () => console.log( 'on scroll' ) }
-                
-                onResponderGrant={ () => console.log( 'granted' ) }
-                
-                onResponderTerminationRequest={ () => console.log( 'term req' ) }
-                
-                onResponderTerminate={ () => console.log( 'term' ) }
-                
-                onResponderRelease={ () => console.log( 'release' ) }
-                
-                onResponderReject={ () => console.log( 'reject' ) }
-                
-                onScrollAnimationEnd={ () => console.log( 'anim end' ) }
-                
-                //scrollEventThrottle={ 100 }
-               
-            >  
-            
-            <WebView
-                {...props}
-                javaScriptEnabled
-                injectedJavaScript={patchPostMessageJsCode}
-                source={{uri:this.props.navigation.state.params.url}}
-            
-                ref={x => {this.WebView = x}}
-                onMessage={e => console.log(JSON.parse(JSON.stringify(e.nativeEvent.data)))}
-                style={{height: SCREEN_HEIGHT_CUSTOM_REST-(SCREEN_HEIGHT_CUSTOM_HEADER+(SCREEN_HEIGHT_CUSTOM_HEADER)), width:'100%' }}
-            />
-            
-            <View  style={styles.MainContainer} > 
-                <Animatable.View animation="bounce" easing="ease-in-out" iterationCount="infinite" >
-                <TouchableOpacity onPress={this._onPress} style={{ paddingLeft:SCREEN_WIDTH_CUSTOM_PADDING, width:'100%'}} onPress={this._onPress} >
-                    
-                    <Icon name={this.state.icon} style={{ color: 'black'}}/> 
-    
-                </TouchableOpacity>
-                </Animatable.View>
-                <View style={{ alignItems: 'center', justifyContent: 'flex-end' }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 22 }}>Ton avis sur l'article : </Text>
-                </View>
-
-                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', flex:1 }}>
-                        <TouchableOpacity onPress={() => this.increaseHeight()}> 
-                            <Icon name="md-heart-outline" style={{ color: 'black' }} />
-                        </TouchableOpacity>
-                        <TouchableOpacity>
-                            <Slider
-                                style={{ width: 150 }}
-                                step={1}
-                                minimumValue={0}
-                                maximumValue={100}
-                                value={50}
-                            />
-                        </TouchableOpacity>  
-                        <TouchableOpacity onPress={() => this.increaseHeight()}> 
-                            <Icon name="md-heart" style={{ color: 'black' }} />
-                        </TouchableOpacity>
-                </View>
-                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', flex:1 }} onScroll={()=>this.decreaseHeight()} >
-                        <TouchableOpacity onPress={() => this.increaseHeight()}> 
-                            <Icon name="md-sad" style={{ color: 'black' }} />
-                        </TouchableOpacity>
-                        <TouchableOpacity>
-                            <Slider
-                                style={{ width: 150 }}
-                                step={1}
-                                minimumValue={0}
-                                maximumValue={100}
-                                value={50}
-                            />
-                        </TouchableOpacity>  
-                        <TouchableOpacity  > 
-                            <Icon name="md-happy" style={{ color: 'black' }} />
-                        </TouchableOpacity>
-                </View>
-                <View style={{ alignItems: 'center', justifyContent: 'flex-end'}}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 22 }}>Partage l'article : </Text>
-                </View>
-                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', flex:1 }}>
-                        <TouchableOpacity onPress={this.decreaseHeight}>
-                            <Image style={{ width: 60, height: 60 }}
-                                source={require('../images/facebook.png')}/>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={()=>console.log("twitter")}>
-                            <Image style={{ width: 60, height: 60 }}
-                                source={require('../images/twitter.png')}/>
-                            </TouchableOpacity>  
-                        <TouchableOpacity onPress={()=>console.log("linkedin")}>
-                            <Image style={{ width: 60, height: 60 }}
-                                source={require('../images/linkedin.png')}/>
-                            </TouchableOpacity>  
-                        <TouchableOpacity onPress={()=>console.log("whatsapp")}>
-                            <Image style={{ width: 60, height: 60 }}
-                                source={require('../images/whatsapp.png')}/>
-                        </TouchableOpacity> 
-                </View>
-                <View style={{ alignItems: 'center', justifyContent: 'flex-end'}}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 22 }}>Recommandations d'articles :</Text>
-                </View>
-                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', height: SCREEN_HEIGHT/2 }}>
-                    <FlatListViewArticle style={{flex: 1}}  ref={x => {this.child = x}}>
-                    </FlatListViewArticle>
-                </View>
-            </View>
-      
-            </ScrollView>
-            </View>
-            </SideMenu>
         )
     }
 }
