@@ -115,7 +115,7 @@ export default class Project extends Component {
   constructor(props) {
     super(props);
     this.toggle = this.toggle.bind(this);
-    this.state = { isLoading: true, isOpen: false, selectedItem: 'About'}
+    this.state = { isLoading: true, isOpen: false, selectedItem: 'recommandation'}
     YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
   }
  
@@ -190,6 +190,23 @@ export default class Project extends Component {
 
   updateMenuState(isOpen) {
     this.setState({ isOpen });
+    if(this.state.selectedItem != 'recommandation'){
+      console.log("chargement de la page "+this.state.selectedItem)
+      switch(this.state.selectedItem){
+        case 'favoris' : Actions.favoris() 
+          break;
+        case 'historique' : Actions.historique()
+          break;
+        case 'compte' : Actions.monCompte()
+          break;
+        case 'concept' : Actions.concept()
+          break;
+      }
+      this.setState({
+        selectedItem: 'recommandation',
+      });
+    }
+    
   }
 
   onMenuItemSelected = item =>
@@ -219,9 +236,9 @@ export default class Project extends Component {
       
       
       <SideMenu
-      menu={menu}
-      isOpen={this.state.isOpen}
-      onChange={isOpen => this.updateMenuState(isOpen)}
+        menu={menu}
+        isOpen={this.state.isOpen}
+        onChange={isOpen => this.updateMenuState(isOpen)}
       
       >
       

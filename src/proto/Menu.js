@@ -15,8 +15,8 @@ const uri = 'https://icon-icons.com/icons2/933/PNG/512/settings-cogwheel-button_
 
 
 function onPressItem(item){
-    console.log("item du menu pressed is : "+item)
-    //onItemSelected('Favoris')
+    //console.log("item du menu pressed is : "+item)
+    onItemSelected('Favoris')
 }
 export default function Menu({ onItemSelected }) {
   return (
@@ -33,26 +33,26 @@ export default function Menu({ onItemSelected }) {
             <Title style={{color:'white'}}>Renewal</Title>
           </Body>
           <Right>
-            <Button transparent>
+            <Button transparent onPress={()=>console.log("parametre")}>
               <Icon name='ios-settings-outline' style={{color:'white'}}/>
             </Button>
            </Right>
         </Header>
         <Content  style={{backgroundColor:'#212121'}} >
             <List style={{backgroundColor:'#424242', marginTop:5}}>
-                <ListItem iconLeft onPress={() =>Actions.webviewFloating()}>
+                <ListItem iconLeft onPress={() =>  onItemSelected('recommandation')}>
                     <Icon name="ios-trending-up-outline" style={styles.iconItem} />
                         <Text style={styles.textItem} >Recommandation d'article</Text>
                 </ListItem>
-                <ListItem iconLeft onPress={() => onItemSelected('fav')}>
+                <ListItem iconLeft onPress={() => onItemSelected('favoris')}>
                     <Icon name="ios-star-outline" style={styles.iconItem} />
                     <Text style={styles.textItem}  >Favoris</Text>
                 </ListItem>
-                <ListItem iconLeft onPress={() => onItemSelected('histo')}>
+                <ListItem iconLeft onPress={() => onItemSelected('historique')}>
                     <Icon name="ios-stats-outline" style={styles.iconItem} />
                     <Text style={styles.textItem}  >Historique</Text>
                 </ListItem>
-                <ListItem iconLeft onPress={() => onItemSelected('mon compte')}>
+                <ListItem iconLeft onPress={() => onItemSelected('compte')}>
                     <Icon name="ios-person" style={styles.iconItem} />
                     <Text style={styles.textItem} >Mon compte</Text>
                 </ListItem>
