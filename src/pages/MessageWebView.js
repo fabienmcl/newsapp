@@ -246,7 +246,19 @@ export default class MessageWebView extends React.Component {
         //setTimeout(() => {this.setState({scrollIsEnabled: true})}, 5000)
         
     }
-   
+    _touchScrollStartIcon = (event) => {
+        console.log( '################ touch start' )
+    }
+    _touchScrollStartIcon = (event) => {
+        console.log( '################ touch end' )
+        
+    }
+    touchStartIcon(){
+        console.log("touch start")
+        this.setState(previousState => {
+            return {isInScroll:true, scrollIsEnabled:true  };
+        });
+    }
     _onMomentumScrollEnd = (event) => {
         console.log("jn")
     }
@@ -323,18 +335,18 @@ export default class MessageWebView extends React.Component {
                 scrollEventThrottle={100} //min 1 et max 16 (+de scroll detect)
                 onScrollBeginDrag={this._handleScrollBegin.bind(this)}
                 onScrollEndDrag={this._handleScrollEnd.bind(this)}
+                /*
+                //onTouchStart={ () => console.log( 'touch start' ) }
 
-                onTouchStart={ () => console.log( 'touch start' ) }
-
-                onTouchMove={ () => console.log( 'touch move' ) }
+                //onTouchMove={ () => console.log( 'touch move' ) }
                 
-                onTouchEnd={ () => console.log( 'touch end' ) }
+                //onTouchEnd={ () => console.log( 'touch end' ) }
                 
                 //onScrollBeginDrag={ () => console.log( 'scroll begin' ) }
                 
                 //onScrollEndDrag={ () => console.log( 'scroll end' ) }
                 
-                onMomentumScrollBegin={ () => console.log( 'momentum begin' ) }
+                //onMomentumScrollBegin={ () => console.log( 'momentum begin' ) }
                 
                 onMomentumScrollEnd={ () => console.log( 'momentum end' ) }
                 
@@ -356,7 +368,7 @@ export default class MessageWebView extends React.Component {
                 
                 onScrollAnimationEnd={ () => console.log( 'anim end' ) }
                 
-                //scrollEventThrottle={ 100 }
+                //scrollEventThrottle={ 100 }*/
                
             >  
             
@@ -372,6 +384,18 @@ export default class MessageWebView extends React.Component {
             />
             
             <View  style={styles.MainContainer} > 
+                <ScrollView 
+                
+                onTouchStart={()=>this.touchStartIcon() }
+
+                //onTouchMove={ () => console.log( '################## touch move' ) }
+                
+                //onTouchEnd={ () => console.log( '################# touch end' ) }
+                onScroll={this._handleScroll} 
+                scrollEventThrottle={100} //min 1 et max 16 (+de scroll detect)
+                onScrollBeginDrag={this._handleScrollBegin.bind(this)}
+                onScrollEndDrag={this._handleScrollEnd.bind(this)}
+                >
                 <Animatable.View animation="bounce" easing="ease-in-out" iterationCount="infinite" >
                 <TouchableOpacity onPress={this._onPress} style={{ paddingLeft:SCREEN_WIDTH_CUSTOM_PADDING, width:'100%'}} onPress={this._onPress} >
                     
@@ -379,12 +403,13 @@ export default class MessageWebView extends React.Component {
     
                 </TouchableOpacity>
                 </Animatable.View>
+                </ScrollView>
                 <View style={{ alignItems: 'center', justifyContent: 'flex-end' }}>
                     <Text style={{ fontWeight: 'bold', fontSize: 22 }}>Ton avis sur l'article : </Text>
                 </View>
 
                 <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', flex:1 }}>
-                        <TouchableOpacity onPress={() => this.increaseHeight()}> 
+                        <TouchableOpacity> 
                             <Icon name="md-heart-outline" style={{ color: 'black' }} />
                         </TouchableOpacity>
                         <TouchableOpacity>
@@ -396,12 +421,12 @@ export default class MessageWebView extends React.Component {
                                 value={50}
                             />
                         </TouchableOpacity>  
-                        <TouchableOpacity onPress={() => this.increaseHeight()}> 
+                        <TouchableOpacity> 
                             <Icon name="md-heart" style={{ color: 'black' }} />
                         </TouchableOpacity>
                 </View>
-                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', flex:1 }} onScroll={()=>this.decreaseHeight()} >
-                        <TouchableOpacity onPress={() => this.increaseHeight()}> 
+                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', flex:1 }} >
+                        <TouchableOpacity> 
                             <Icon name="md-sad" style={{ color: 'black' }} />
                         </TouchableOpacity>
                         <TouchableOpacity>
@@ -421,7 +446,7 @@ export default class MessageWebView extends React.Component {
                     <Text style={{ fontWeight: 'bold', fontSize: 22 }}>Partage l'article : </Text>
                 </View>
                 <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', flex:1 }}>
-                        <TouchableOpacity onPress={this.decreaseHeight}>
+                        <TouchableOpacity onPress={()=>console.log("facebook")}>
                             <Image style={{ width: 60, height: 60 }}
                                 source={require('../images/facebook.png')}/>
                         </TouchableOpacity>

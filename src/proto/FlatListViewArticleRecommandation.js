@@ -188,7 +188,7 @@ export default class Project extends Component {
           onScrollBeginDrag={()=>console.log("dsf")}
           renderItem={({item}) => 
             <TouchableOpacity onPress={this.GetItem.bind(this, item)} >
-              <View style={{flex:1, }}>
+              <View style={{flex:1, flexDirection: 'row' }}>
                 <Image source = {{ uri: item.image }} style={styles.imageView} />
                 <Text  style={styles.textView} >{item.title}</Text>
               </View>
@@ -211,16 +211,18 @@ const styles = StyleSheet.create({
     //marginTop: (Platform.OS === 'ios') ? 20 : 0,  
   },
   imageView: {
-    height: screen.height / 5,
+    height: screen.height / 8,
+    width : screen.width/4,
     margin: 7,
     borderRadius : 7,
     justifyContent: 'center', 
     alignItems: 'center',
   },
   textView: { 
+    width: screen.width-screen.width/4,
     textAlignVertical:'center',
-    textAlign: 'center',
-    padding:10,
+    textAlign: 'left',
+    paddingTop:screen.height / 20,
     color: '#000'
   }
 });
