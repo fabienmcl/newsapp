@@ -81,6 +81,7 @@ export default class MessageWebView extends React.Component {
         this.state = {
             isOpen: false, 
             isOpenB:false,
+            selectedItem: 'wv',
             isClickScroll : false,
             isInScroll:false,
             isScrollPositionY:"0",
@@ -274,6 +275,24 @@ export default class MessageWebView extends React.Component {
     
       updateMenuState(isOpen) {
         this.setState({ isOpen });
+        if(this.state.selectedItem != 'wv'){
+            console.log("chargement de la page "+this.state.selectedItem)
+            switch(this.state.selectedItem){
+                case 'favoris' : Actions.favoris() 
+                    break;
+                case 'historique' : Actions.historique()
+                    break;
+                case 'compte' : Actions.monCompte()
+                    break;
+                case 'recommandation' : Actions.flatListViewArticle()
+                    break;
+                case 'concept' : Actions.concept()
+                    break;    
+            }
+            this.setState({
+              selectedItem: 'wv',
+            });
+          }
       }
     
       onMenuItemSelected = item =>
