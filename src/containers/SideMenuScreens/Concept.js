@@ -75,7 +75,7 @@ export default class Concept extends Component {
         menu={menu}
         isOpen={this.state.isOpen}
         onChange={isOpen => this.updateMenuState(isOpen)}
-        disableGestures={true}
+        disableGestures={false}
       
       >
       
@@ -83,10 +83,7 @@ export default class Concept extends Component {
       
       <Header style={{backgroundColor: '#212121'}}>
         <StatusBar barStyle="light-content"/>
-        <Left style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
-          <Button transparent>
-            <Icon name='ios-arrow-back-outline' style={{ color: '#fff'}}   onPress={()=>this.props.navigation.goBack()} />
-          </Button>
+        <Left >
           <Button transparent>
             <Icon name='menu' style={{ color: '#fff'}}   onPress={()=>this._sideMenuPress()} />
           </Button>
