@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import {Router, Stack, Scene} from 'react-native-router-flux';
 
 {/*login*/}
-import Loginapp from './login/LoginAnimation';
+import Loginapp from './containers/LoginAnimation';
+import HomeSreen from './containers/HomeScreen/HomeScreen';
 {/*home*/}
 import FlatListViewArticle from './containers/ListOfArticles/FlatListViewArticle';
 {/*webview*/}
