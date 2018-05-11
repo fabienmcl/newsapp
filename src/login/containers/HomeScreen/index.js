@@ -29,6 +29,42 @@ export default class HomeScreen extends Component {
           buttonStyle={styles.button}
           textStyle={styles.buttonText}
         />
+        <CustomButton
+          text={'Accelerometer'}
+          onPress={()=>Actions.accelerometer()}
+          buttonStyle={styles.button}
+          textStyle={styles.buttonText}
+        />
+        <CustomButton
+          text={'gyroscope'}
+          onPress={()=>Actions.gyroscope()}
+          buttonStyle={styles.button}
+          textStyle={styles.buttonText}
+        />
+        <CustomButton
+          text={'magnetometer'}
+          onPress={()=>Actions.magnetometer()}
+          buttonStyle={styles.button}
+          textStyle={styles.buttonText}
+        />
+        <CustomButton
+          text={'localization'}
+          onPress={()=>Actions.localization()}
+          buttonStyle={styles.button}
+          textStyle={styles.buttonText}
+        />
+        <CustomButton
+          text={'location'}
+          onPress={()=>Actions.location()}
+          buttonStyle={styles.button}
+          textStyle={styles.buttonText}
+        />
+        <CustomButton
+          text={'ma première liste <3'}
+          onPress={()=>Actions.listView()}
+          buttonStyle={styles.button}
+          textStyle={styles.buttonText}
+        />
       </View>
     )
   }
