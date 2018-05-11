@@ -15,14 +15,14 @@ import {
 import {Actions} from 'react-native-router-flux';
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text, List, ListItem } from 'native-base';
 import SideMenu from 'react-native-side-menu';
-import Menu from '../proto/Menu';
+import Menu from '../SideMenu/Menu';
 const screen = Dimensions.get('window');
 
-export default class Favoris extends Component {
+export default class Concept extends Component {
   constructor(props) {
     super(props);
     this.toggle = this.toggle.bind(this);
-    this.state = { isLoading: true, isOpen: false, selectedItem: 'favoris'}
+    this.state = { isLoading: true, isOpen: false, selectedItem: 'concept'}
     YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
   }
  
@@ -40,20 +40,20 @@ export default class Favoris extends Component {
 
   updateMenuState(isOpen) {
     this.setState({ isOpen });
-    if(this.state.selectedItem != 'favoris'){
+    if(this.state.selectedItem != 'concept'){
       console.log("chargement de la page "+this.state.selectedItem)
       switch(this.state.selectedItem){
-        case 'compte' : Actions.compte() 
-          break;
-        case 'concept' : Actions.concept()
+        case 'favoris' : Actions.favoris() 
           break;
         case 'historique' : Actions.historique()
+          break;
+        case 'compte' : Actions.monCompte()
           break;
         case 'recommandation' : Actions.flatListViewArticle()
           break;
       }
       this.setState({
-        selectedItem: 'compte',
+        selectedItem: 'concept',
       });
     }
     
@@ -91,10 +91,8 @@ export default class Favoris extends Component {
             <Icon name='menu' style={{ color: '#fff'}}   onPress={()=>this._sideMenuPress()} />
           </Button>
         </Left>
-        <Body style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }} >
-          <Button transparent>
-            <Icon name='ios-star' style={{ color: '#fff'}}   onPress={()=>this._sideMenuPress()} />
-          </Button>
+        <Body >
+         
           <Title style={{color:'white'}}>{this.props.navigation.state.params.title}</Title>
         </Body>
         <Right>

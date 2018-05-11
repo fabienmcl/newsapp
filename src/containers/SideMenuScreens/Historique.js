@@ -15,14 +15,14 @@ import {
 import {Actions} from 'react-native-router-flux';
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text, List, ListItem } from 'native-base';
 import SideMenu from 'react-native-side-menu';
-import Menu from '../proto/Menu';
+import Menu from '../SideMenu/Menu';
 const screen = Dimensions.get('window');
 
-export default class Concept extends Component {
+export default class Historique extends Component {
   constructor(props) {
     super(props);
     this.toggle = this.toggle.bind(this);
-    this.state = { isLoading: true, isOpen: false, selectedItem: 'concept'}
+    this.state = { isLoading: true, isOpen: false, selectedItem: 'historique'}
     YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
   }
  
@@ -40,12 +40,12 @@ export default class Concept extends Component {
 
   updateMenuState(isOpen) {
     this.setState({ isOpen });
-    if(this.state.selectedItem != 'concept'){
+    if(this.state.selectedItem != 'historique'){
       console.log("chargement de la page "+this.state.selectedItem)
       switch(this.state.selectedItem){
         case 'favoris' : Actions.favoris() 
           break;
-        case 'historique' : Actions.historique()
+        case 'concept' : Actions.concept()
           break;
         case 'compte' : Actions.monCompte()
           break;
@@ -53,7 +53,7 @@ export default class Concept extends Component {
           break;
       }
       this.setState({
-        selectedItem: 'concept',
+        selectedItem: 'historique',
       });
     }
     
@@ -91,8 +91,10 @@ export default class Concept extends Component {
             <Icon name='menu' style={{ color: '#fff'}}   onPress={()=>this._sideMenuPress()} />
           </Button>
         </Left>
-        <Body >
-         
+        <Body style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }} >
+          <Button transparent>
+            <Icon name='ios-stats' style={{ color: '#fff'}}   onPress={()=>this._sideMenuPress()} />
+          </Button>
           <Title style={{color:'white'}}>{this.props.navigation.state.params.title}</Title>
         </Body>
         <Right>

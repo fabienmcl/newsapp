@@ -15,14 +15,14 @@ import {
 import {Actions} from 'react-native-router-flux';
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text, List, ListItem } from 'native-base';
 import SideMenu from 'react-native-side-menu';
-import Menu from '../proto/Menu';
+import Menu from '../SideMenu/Menu';
 const screen = Dimensions.get('window');
 
-export default class MonCompte extends Component {
+export default class Favoris extends Component {
   constructor(props) {
     super(props);
     this.toggle = this.toggle.bind(this);
-    this.state = { isLoading: true, isOpen: false, selectedItem: 'compte'}
+    this.state = { isLoading: true, isOpen: false, selectedItem: 'favoris'}
     YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
   }
  
@@ -40,10 +40,10 @@ export default class MonCompte extends Component {
 
   updateMenuState(isOpen) {
     this.setState({ isOpen });
-    if(this.state.selectedItem != 'compte'){
+    if(this.state.selectedItem != 'favoris'){
       console.log("chargement de la page "+this.state.selectedItem)
       switch(this.state.selectedItem){
-        case 'favoris' : Actions.favoris() 
+        case 'compte' : Actions.compte() 
           break;
         case 'concept' : Actions.concept()
           break;
@@ -75,7 +75,7 @@ export default class MonCompte extends Component {
         menu={menu}
         isOpen={this.state.isOpen}
         onChange={isOpen => this.updateMenuState(isOpen)}
-        disableGestures={true}
+        disableGestures={false}
       
       >
       
@@ -85,15 +85,12 @@ export default class MonCompte extends Component {
         <StatusBar barStyle="light-content"/>
         <Left style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
           <Button transparent>
-            <Icon name='ios-arrow-back-outline' style={{ color: '#fff'}}   onPress={()=>this.props.navigation.goBack()} />
-          </Button>
-          <Button transparent>
             <Icon name='menu' style={{ color: '#fff'}}   onPress={()=>this._sideMenuPress()} />
           </Button>
         </Left>
         <Body style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }} >
           <Button transparent>
-            <Icon name='ios-person' style={{ color: '#fff'}}   onPress={()=>this._sideMenuPress()} />
+            <Icon name='ios-star' style={{ color: '#fff'}}   onPress={()=>this._sideMenuPress()} />
           </Button>
           <Title style={{color:'white'}}>{this.props.navigation.state.params.title}</Title>
         </Body>

@@ -16,7 +16,7 @@ const uri = 'https://icon-icons.com/icons2/933/PNG/512/settings-cogwheel-button_
 
 function onPressItem(item){
     //console.log("item du menu pressed is : "+item)
-    onItemSelected('Favoris')
+    onItemSelected(item)
 }
 export default function Menu({ onItemSelected }) {
   return (

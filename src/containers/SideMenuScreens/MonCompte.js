@@ -15,14 +15,14 @@ import {
 import {Actions} from 'react-native-router-flux';
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text, List, ListItem } from 'native-base';
 import SideMenu from 'react-native-side-menu';
-import Menu from '../proto/Menu';
+import Menu from '../SideMenu/Menu';
 const screen = Dimensions.get('window');
 
-export default class Historique extends Component {
+export default class MonCompte extends Component {
   constructor(props) {
     super(props);
     this.toggle = this.toggle.bind(this);
-    this.state = { isLoading: true, isOpen: false, selectedItem: 'historique'}
+    this.state = { isLoading: true, isOpen: false, selectedItem: 'compte'}
     YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
   }
  
@@ -40,20 +40,20 @@ export default class Historique extends Component {
 
   updateMenuState(isOpen) {
     this.setState({ isOpen });
-    if(this.state.selectedItem != 'historique'){
+    if(this.state.selectedItem != 'compte'){
       console.log("chargement de la page "+this.state.selectedItem)
       switch(this.state.selectedItem){
         case 'favoris' : Actions.favoris() 
           break;
         case 'concept' : Actions.concept()
           break;
-        case 'compte' : Actions.monCompte()
+        case 'historique' : Actions.historique()
           break;
         case 'recommandation' : Actions.flatListViewArticle()
           break;
       }
       this.setState({
-        selectedItem: 'historique',
+        selectedItem: 'compte',
       });
     }
     
@@ -93,7 +93,7 @@ export default class Historique extends Component {
         </Left>
         <Body style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }} >
           <Button transparent>
-            <Icon name='ios-stats' style={{ color: '#fff'}}   onPress={()=>this._sideMenuPress()} />
+            <Icon name='ios-person' style={{ color: '#fff'}}   onPress={()=>this._sideMenuPress()} />
           </Button>
           <Title style={{color:'white'}}>{this.props.navigation.state.params.title}</Title>
         </Body>

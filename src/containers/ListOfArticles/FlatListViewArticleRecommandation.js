@@ -16,7 +16,7 @@ import {Actions} from 'react-native-router-flux';
 import { Icon } from 'native-base';
 import { Button, Header } from 'react-native-elements';
 import SideMenu from 'react-native-side-menu';
-import Menu from './Menu';
+import Menu from '../SideMenu/Menu';
 const screen = Dimensions.get('window');
 const demoDataNews = [
   {
