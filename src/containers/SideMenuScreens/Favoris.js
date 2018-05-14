@@ -1,3 +1,4 @@
+import Expo, { SQLite } from 'expo';
 import React, { Component } from 'react';
 import { 
   StyleSheet, 
@@ -17,16 +18,24 @@ import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Rig
 import SideMenu from 'react-native-side-menu';
 import Menu from '../SideMenu/Menu';
 const screen = Dimensions.get('window');
+const db = SQLite.openDatabase('db.db');
 
 export default class Favoris extends Component {
   constructor(props) {
     super(props);
     this.toggle = this.toggle.bind(this);
-    this.state = { isLoading: true, isOpen: false, selectedItem: 'favoris'}
+    this.state = { 
+      isLoading: true, 
+      isOpen: false, 
+      selectedItem: 'favoris', 
+      items:null,
+      refreshing: false
+    }
     YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
   }
- 
-  
+  componentDidMount(){
+    this.update();
+  }
   
   _sideMenuPress(){
     console.log("le menu le menu le menu");
@@ -66,7 +75,6 @@ export default class Favoris extends Component {
   });
  
   render() {
-   
     const menu = <Menu onItemSelected={this.onMenuItemSelected} />;
     return (
       
@@ -98,9 +106,35 @@ export default class Favoris extends Component {
         </Right>
       </Header>
       <Content  style={{backgroundColor:'#212121'}} >
+      <FlatList
+          data={ this.state.items }
+          extraData={this.state}
+          renderItem={({item, index}) => 
+          <View style={{backgroundColor:'white'}}>
+            <TouchableOpacity onPress={()=> Actions.webviewcustom(item)} >
+              <Image source = {{ uri: item.image }} style={styles.imageView}/>
+            </TouchableOpacity>
+            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width:'100%', }}>
+            <TouchableOpacity
+              key={item.id}
+              onPress={()=> Actions.webviewcustom(item)}
+              style={{
+                padding: 5,
+                backgroundColor: 'white',}}
+            >
+            <Text>{item.title}</Text>
+            </TouchableOpacity>
+                  <Icon name='ios-close' style={styles.iconStyle}  onPress={() => this.remove(item.id)} />
+            </View>
             
-        </Content>
-        <Footer style={{ backgroundColor: '#212121'}} >
+        </View>
+          }
+          keyExtractor={(item, index) => index.toString()}
+          onRefresh={this.handleRefresh}
+          refreshing={this.state.refreshing}
+          />
+      </Content>
+      <Footer style={{ backgroundColor: '#212121'}} >
           <FooterTab>
             <Button full>
               <Text >footer </Text>
@@ -111,6 +145,44 @@ export default class Favoris extends Component {
       </SideMenu>
    );
   }
+  update() {
+    console.log("je suis dans update")
+    db.transaction(tx => {
+      tx.executeSql(
+        `select * from items;`,
+        [],
+        (_, { rows: { _array } }) => this.setState({ items: _array })
+      );
+    });
+    console.log(this.state.items)
+  }
+  remove(id) {
+    console.log("je suis dans remove")
+    db.transaction(
+      tx => {
+        tx.executeSql('delete from items  where id = ?', [id]);
+        tx.executeSql('select * from items', [], (_, { rows }) =>
+          console.log(JSON.stringify(rows))
+        );
+      }
+    );
+    this.update();
+    //console.log(this.state.items)
+    //setTimeout(() => {Actions.refresh({items: this.state.items})}, 500)
+    
+  }
+  handleRefresh = () => {
+    this.setState(
+      {
+        refreshing: true
+      },
+      () => {
+        this.update();
+      }
+    );
+   
+  };
+  
 }
 
  
@@ -134,7 +206,7 @@ const styles = StyleSheet.create({
     textAlignVertical:'center',
     textAlign: 'center',
     padding:10,
-    color: '#000',
+    color: '#fff',
     width : '80%',
 
   },
@@ -144,7 +216,13 @@ const styles = StyleSheet.create({
     paddingLeft: '3%',
     alignItems: 'center',
     justifyContent: 'center',
-  }
+  },
+  paragraph: {
+    margin: 24,
+    fontSize: 18,
+    textAlign: 'center',
+    color :'#fff'
+  },
 });
 
 /**

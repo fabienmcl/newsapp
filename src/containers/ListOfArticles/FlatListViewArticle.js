@@ -1,3 +1,4 @@
+import Expo, { SQLite } from 'expo';
 import React, { Component } from 'react';
 import { 
   StyleSheet, 
@@ -17,6 +18,7 @@ import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Rig
 import SideMenu from 'react-native-side-menu';
 import Menu from '../SideMenu/Menu';
 const screen = Dimensions.get('window');
+const db = SQLite.openDatabase('db.db');
 const demoDataNews = [
   {
     title: 'À lui seul, l’iPhone X a compté pour 35 % des bénéfices de l’industrie au Q4 2017',
@@ -115,7 +117,7 @@ export default class Project extends Component {
   constructor(props) {
     super(props);
     this.toggle = this.toggle.bind(this);
-    this.state = { isLoading: true, isOpen: false, selectedItem: 'recommandation'}
+    this.state = { isLoading: true, isOpen: false, selectedItem: 'recommandation', items: null}
     YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
   }
  
@@ -134,7 +136,14 @@ export default class Project extends Component {
 
     // Then reset the 'state.posts' property
     this.setState({ posts });
+    if(targetPost.clicked == true){
+      this.add(targetPost);
+    }else{
+      this.remove(targetPost)
+    }
   }
+  
+  
   GetItem (item) {
     //Alert.alert(item.title);
     console.log(item.title);
@@ -174,9 +183,65 @@ export default class Project extends Component {
       dataSource : demoDataNews,
     })
   }
+  /*
+  title: 'Snappables : Snapchat veut que vous grimaciez pour jouer',
+    rating: 'mer 11:51:16',
+    image: 'https://www.numerama.com/content/uploads/2018/04/snappables-hero-shot.jpg',
+    large: 'https://www.numerama.com/content/uploads/2018/04/snappables-hero-shot.jpg',
+    plot: "Snapchat vient de lancer Snappables, une nouvelle option qui permet de contrôler des jeux en réalité augmentée par les expressions du visage. Ces nouvelles Lenses seront déployées cette semaine sur Android et iOS.",
+    url:
+  */
   componentDidMount(){
     //this.webCall();
     this.loadDataLocal();
+    db.transaction(tx => {
+      tx.executeSql(
+        'DROP TABLE items;'
+      );
+      tx.executeSql(
+        'create table if not exists items (id integer primary key not null, done int, title text,image text,url text);'
+      );
+    });
+    this.update();
+
+  }
+  add(article) {
+    db.transaction(
+      tx => {
+        tx.executeSql('insert into items (done, title, image, url ) values (0, ?, ?, ?)', [article.title, article.image, article.url]);
+        tx.executeSql('select * from items', [], (_, { rows }) =>
+          console.log(JSON.stringify(rows))
+        );
+      },
+      //null,
+      //this.update
+    );
+    this.update()
+  }
+  remove(article) {
+    db.transaction(
+      tx => {
+        tx.executeSql('delete from items  where title = ?', [article.title]);
+        tx.executeSql('select * from items', [], (_, { rows }) =>
+          console.log(JSON.stringify(rows))
+        );
+      },
+      //null,
+      //this.update
+    );
+    this.update()
+  }
+  update() {
+    console.log("update flatlistview")
+    console.log(this.state.items)
+    //update le symbole > clicked for de merde
+    /*db.transaction(tx => {
+      tx.executeSql(
+        `select * from items where done = ?;`,
+        [this.props.done ? 1 : 0],
+        (_, { rows: { _array } }) => this.setState({ items: _array })
+      );
+    });*/
   }
   _sideMenuPress(){
     console.log("le menu le menu le menu");
