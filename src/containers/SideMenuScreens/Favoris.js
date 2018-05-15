@@ -74,6 +74,17 @@ export default class Favoris extends Component {
       selectedItem: item,
   });
  
+  FlatListItemSeparator = () => {
+    return (
+      <View
+        style={{
+          height: .5,
+          width: "100%",
+          backgroundColor: "#000",
+        }}
+      />
+    );
+  }
   render() {
     const menu = <Menu onItemSelected={this.onMenuItemSelected} />;
     return (
@@ -109,18 +120,21 @@ export default class Favoris extends Component {
       <FlatList
           data={ this.state.items }
           extraData={this.state}
+          ItemSeparatorComponent = {this.FlatListItemSeparator}
           renderItem={({item, index}) => 
           <View style={{backgroundColor:'white'}}>
             <TouchableOpacity onPress={()=> Actions.webviewcustom(item)} >
               <Image source = {{ uri: item.image }} style={styles.imageView}/>
             </TouchableOpacity>
-            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width:'100%', }}>
+            <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', width:'100%', }}>
             <TouchableOpacity
               key={item.id}
               onPress={()=> Actions.webviewcustom(item)}
               style={{
                 padding: 5,
-                backgroundColor: 'white',}}
+                backgroundColor: 'white',
+                width:'90%'
+              }}
             >
             <Text>{item.title}</Text>
             </TouchableOpacity>
@@ -201,6 +215,8 @@ const styles = StyleSheet.create({
     borderRadius : 7,
     justifyContent: 'center', 
     alignItems: 'center',
+   // tintColor: 'gray', 
+    opacity: 0.3
   },
   textView: { 
     textAlignVertical:'center',
