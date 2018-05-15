@@ -28,7 +28,8 @@ export default class Favoris extends Component {
       isLoading: true, 
       isOpen: false, 
       selectedItem: 'favoris', 
-      items:null,
+      //items:null,
+      newscastSavedState:null,
       refreshing: false
     }
     YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
@@ -118,7 +119,7 @@ export default class Favoris extends Component {
       </Header>
       <Content  style={{backgroundColor:'#212121'}} >
       <FlatList
-          data={ this.state.items }
+          data={ this.state.newscastSavedState }
           extraData={this.state}
           ItemSeparatorComponent = {this.FlatListItemSeparator}
           renderItem={({item, index}) => 
@@ -163,19 +164,19 @@ export default class Favoris extends Component {
     console.log("je suis dans update")
     db.transaction(tx => {
       tx.executeSql(
-        `select * from items;`,
+        `select * from newscastSaved;`,
         [],
-        (_, { rows: { _array } }) => this.setState({ items: _array })
+        (_, { rows: { _array } }) => this.setState({ newscastSavedState: _array })
       );
     });
-    console.log(this.state.items)
+    console.log(this.state.newscastSavedState)
   }
   remove(id) {
     console.log("je suis dans remove")
     db.transaction(
       tx => {
-        tx.executeSql('delete from items  where id = ?', [id]);
-        tx.executeSql('select * from items', [], (_, { rows }) =>
+        tx.executeSql('delete from newscastSaved  where id = ?', [id]);
+        tx.executeSql('select * from newscastSaved', [], (_, { rows }) =>
           console.log(JSON.stringify(rows))
         );
       }
@@ -216,7 +217,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center', 
     alignItems: 'center',
    // tintColor: 'gray', 
-    opacity: 0.3
   },
   textView: { 
     textAlignVertical:'center',
@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
 
   },
   iconStyle:{
-    color: 'black',
+    color: 'red',
     width :'10%',
     paddingLeft: '3%',
     alignItems: 'center',
