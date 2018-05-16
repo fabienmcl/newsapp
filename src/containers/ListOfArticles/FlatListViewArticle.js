@@ -475,7 +475,7 @@ export default class Project extends Component {
       
       >
       
-      <View style={{justifyContent: 'center', flex:1, backgroundColor : "white",paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight}}>
+      <View style={{ justifyContent: 'center', flex:1,backgroundColor : "white",paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight}} >
       {/*<Header
         leftComponent={{ icon: 'menu', color: '#fff', onPress:()=>this._sideMenuPress()}}
         centerComponent={{ text: 'Renewal', style: { color: '#fff' } }} 
