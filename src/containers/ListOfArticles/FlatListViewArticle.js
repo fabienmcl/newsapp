@@ -19,6 +19,8 @@ import SideMenu from 'react-native-side-menu';
 import Menu from '../SideMenu/Menu';
 const screen = Dimensions.get('window');
 const db = SQLite.openDatabase('db.db');
+
+
 const demoDataNews = [
   {
     title: 'À lui seul, l’iPhone X a compté pour 35 % des bénéfices de l’industrie au Q4 2017',
@@ -171,6 +173,8 @@ export default class Project extends Component {
       refreshing: false,
       selectedItem: 'recommandation', 
       items: null,
+      newscastsState : null,
+      newscastSavedState : null
     }
     YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
   }
@@ -300,24 +304,27 @@ export default class Project extends Component {
     //this.createSqlTable();
     await Font.loadAsync({
       Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
     });
     this.update();
-    
+    this.init();
+  
   }
   reloadDataLocalToSQL(){
-    console.log("reload en cours")
+    console.log("############################ begin reload ####################################")
     //console.log(demoDataNews)
     this.createSqlTable();
     for (item in demoDataNews){
       const post = demoDataNews[item]
-      console.log(post)
+      console.log(post["title"])
       db.transaction(tx => {
         tx.executeSql('insert into newscasts (title, image, url, isSaved, isRejected) values (?, ?, ?,0,0)', [post["title"], post["image"], post["url"]]);
+        tx.executeSql('select * from newscasts', [], (_, { rows }) => console.log(JSON.stringify(rows)));
       }); 
     }
     this.update();
     this.setState({ refreshing: false })
+    console.log("############################ end reload ####################################")
   }
   loadMoreData(){
     console.log("load more en cours")
@@ -330,6 +337,31 @@ export default class Project extends Component {
     }
     this.update();
     this.setState({ refreshing: false })
+    console.log(this.state)
+  }
+  //#async for android
+
+  //componentWillMount () {this.init()
+  init = async () => {
+    await this.executeSql('create table if not exists newscastSaved (id integer primary key not null, done int, title text,image text,url text);');
+    await this.executeSql("create table if not exists newscasts ( id integer primary key not null, title text not null,image text not null,url text not null,isSaved integer default 0, isRejected integer default 0 );");
+    this.insert()
+    this.select()
+    console.log(this.state)
+  }
+  insert = async () => {
+    await this.executeSql('insert into newscasts (title, image, url, isSaved, isRejected) values (?, ?, ?,0,0)', ["post", "image", "url"]);//'insert into locations (latitude, longitude) values (?, ?)', [-23.426498, -51.938130]);
+    //await this.executeSql('insert into locations (latitude, longitude) values (?, ?)', [null, null]);
+    //await this.executeSql('insert into locations (latitude, longitude) values (?, ?)', [-23.410068, -51.937695]);
+    return true
+  }
+  select = () => {
+    this.executeSql('select * from newscasts', []).then(newscastsState => this.setState({newscastsState})  );//then((_, { rows: { _array } }) => this.setState({ newscastsState: _array }));
+  }
+  executeSql = async (sql, params = []) => {
+    return new Promise((resolve, reject) => db.transaction(tx => {
+      tx.executeSql(sql, params, (_, { rows }) => resolve(rows._array), reject)
+    }))
   }
   createSqlTable(){
     db.transaction(tx => {
@@ -340,9 +372,10 @@ export default class Project extends Component {
         'DROP TABLE newscasts;'
       );
       tx.executeSql('create table if not exists newscastSaved (id integer primary key not null, done int, title text,image text,url text);');
-      tx.executeSql(
-        "create table if not exists newscasts ( id integer primary key not null, title text not null,image text not null,url text not null,isSaved integer default 0, isRejected integer default 0 );"
-      );
+      //tx.executeSql('create table if not exists newscastSaved (id integer primary key not null, done int, title text,image text,url text);',[], console.log("sucess create newssaved"), console.log("error create ns saved")); 
+      tx.executeSql("create table if not exists newscasts ( id integer primary key not null, title text not null,image text not null,url text not null,isSaved integer default 0, isRejected integer default 0 );");
+      //tx.executeSql("create table if not exists newscasts ( id integer primary key not null, title text not null,image text not null,url text not null,isSaved integer default 0, isRejected integer default 0 );",[], console.log("sucess create nexs saved"), console.log("error create ns"));
+   
     });
   }
   add(article) {
@@ -374,11 +407,12 @@ export default class Project extends Component {
   
   update() {
     console.log("je suis dans update")
+    SQLite.openDatabase('db.db') == null ? console.log("c'est null") : console.log("c'est autre chose");
     db.transaction(tx => {
       tx.executeSql(
         `select * from newscastSaved;`,
         [],
-        (_, { rows: { _array } }) => this.setState({ newscastSavedState: _array })
+        (_, { rows: { _array } }) => this.setState({ newscastSavedState: _array }), console.log("error")
       );
       tx.executeSql('select * from newscastSaved', [], (_, { rows }) =>
           console.log(JSON.stringify(rows))
@@ -386,7 +420,7 @@ export default class Project extends Component {
       tx.executeSql(
         `select * from newscasts;`,
         [],
-        (_, { rows: { _array } }) => this.setState({ newscastsState: _array })
+        (_, { rows: { _array } }) => this.setState({ newscastsState: _array }),console.log("error")
       );
       tx.executeSql('select * from newscasts', [], (_, { rows }) =>
           console.log(JSON.stringify(rows))
@@ -496,7 +530,7 @@ export default class Project extends Component {
           </Body>
           <Right>
             <Button transparent>
-              <Icon name='ios-refresh' style={{ color: '#fff'}}   onPress={()=>Actions.flatDemo()}/>
+              <Icon name='ios-refresh' style={{ color: '#fff'}}   onPress={()=>this.reloadDataLocalToSQL()}/>
             </Button>
           </Right>
         </Header>
