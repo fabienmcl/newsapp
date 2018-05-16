@@ -242,6 +242,19 @@ export default class Project extends Component {
     this.update();
     
   }
+  reloadDataLocalToSQL(){
+    console.log("reload en cours")
+    //console.log(demoDataNews)
+    //this.createSqlTable();
+    for (item in demoDataNews){
+      const post = demoDataNews[item]
+      console.log(post)
+      db.transaction(tx => {
+        tx.executeSql('insert into newscasts (title, image, url, isSaved, isRejected) values (?, ?, ?,0,0)', [post["title"], post["image"], post["url"]]);
+      }); 
+    }
+    this.update();
+  }
   createSqlTable(){
     db.transaction(tx => {
       tx.executeSql(
@@ -255,12 +268,17 @@ export default class Project extends Component {
         "create table if not exists newscasts ( id integer primary key not null, title text not null,image text not null,url text not null,isSaved integer default 0, isRejected integer default 0 );"
       );
     });
+    this.insertDataInNewscasts();
+    this.update();
   }
   insertDataInNewscasts(){
-    const posts = this.state.dataSource;
+    const posts = demoDataNews;
     for(item in posts){
-      //console.log(item)
-      this.insertRow(posts[item])
+      const post = posts[item]
+      console.log(post)
+      db.transaction(tx => {
+        tx.executeSql('insert into newscasts (title, image, url, isSaved, isRejected) values (?, ?, ?,0,0)', [post["title"], post["image"], post["url"]]);
+      });
     }
     /*
     db.transaction(tx => {
@@ -316,11 +334,17 @@ export default class Project extends Component {
         [],
         (_, { rows: { _array } }) => this.setState({ newscastSavedState: _array })
       );
+      tx.executeSql('select * from newscastSaved', [], (_, { rows }) =>
+          console.log(JSON.stringify(rows))
+        );
       tx.executeSql(
         `select * from newscasts;`,
         [],
         (_, { rows: { _array } }) => this.setState({ newscastsState: _array })
       );
+      tx.executeSql('select * from newscasts', [], (_, { rows }) =>
+          console.log(JSON.stringify(rows))
+        );
     });
     this.setState({
       isLoading : false,
@@ -411,11 +435,10 @@ export default class Project extends Component {
             <Title style={{color:'white'}}>Renewal</Title>
           </Body>
           <Right>
-            {/*
             <Button transparent>
-              <Icon name='ios-settings-outline' style={{color:'white'}}/>
-            </Button> */}
-           </Right>
+              <Icon name='ios-refresh' style={{ color: '#fff'}}   onPress={()=>this.reloadDataLocalToSQL()} />
+            </Button>
+          </Right>
         </Header>
         <FlatList
           data={ this.state.newscastsState }
