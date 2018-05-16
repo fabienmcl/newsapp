@@ -6,6 +6,7 @@ import Loginapp from './containers/LoginAnimation';
 import HomeSreen from './containers/HomeScreen/HomeScreen';
 {/*home*/}
 import FlatListViewArticle from './containers/ListOfArticles/FlatListViewArticle';
+import FlatDemo from './containers/ListOfArticles/FlatListDemo';
 {/*webview*/}
 import Webviewcustom from './containers/WebView/MessageWebView';
 {/*sidemenu*/}
@@ -33,6 +34,7 @@ export default class Routes extends Component<{}> {
 					<Scene key="loginapp" component={Loginapp} title="Loginapp"  initial ={false} /> 
 					{/*home*/}
 					<Scene key="flatListViewArticle" component={FlatListViewArticle} title="FlatListViewArticle"  title="Renewal" initial ={true} panHandlers={null} /> 
+					<Scene key="flatDemo" component={FlatDemo} title="FlatDemo"  title="Renewal" initial ={false} /> 
 					{/*webview*/}
 					<Scene key="webviewcustom" component={Webviewcustom} title="Webviewcustom"  />
 					{/* sidemenu */}
