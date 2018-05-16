@@ -1,4 +1,4 @@
-import Expo, { SQLite } from 'expo';
+import Expo, { SQLite, Font, AppLoading } from 'expo';
 import React, { Component } from 'react';
 import { 
   StyleSheet, 
@@ -295,9 +295,13 @@ export default class Project extends Component {
     plot: "Snapchat vient de lancer Snappables, une nouvelle option qui permet de contrôler des jeux en réalité augmentée par les expressions du visage. Ces nouvelles Lenses seront déployées cette semaine sur Android et iOS.",
     url:
   */
-  componentDidMount(){
+ async componentDidMount(){
     //this.webCall();
     //this.createSqlTable();
+    await Font.loadAsync({
+      Roboto: require("native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
+    });
     this.update();
     
   }
@@ -471,7 +475,7 @@ export default class Project extends Component {
       
       >
       
-      <View style={styles.MainContainer}>
+      <View style={{justifyContent: 'center', flex:1, backgroundColor : "white",paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight}}>
       {/*<Header
         leftComponent={{ icon: 'menu', color: '#fff', onPress:()=>this._sideMenuPress()}}
         centerComponent={{ text: 'Renewal', style: { color: '#fff' } }} 
@@ -528,7 +532,8 @@ export default class Project extends Component {
           keyExtractor={(item, index) => index.toString()}
           onRefresh={this.handleRefresh}
           refreshing={this.state.refreshing}
-          onEndReached={this.handleLoadMore}
+          //onEndReached={this.handleLoadMore}
+          //onEndReachedThreshold={20}
           />
       </View>
       </SideMenu>

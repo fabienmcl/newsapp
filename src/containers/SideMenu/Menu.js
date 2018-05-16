@@ -6,6 +6,7 @@ import {
   ScrollView,
   View,
   Image,
+  Platform, 
   TouchableOpacity
 } from 'react-native';
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text, List, ListItem } from 'native-base';
@@ -20,7 +21,7 @@ function onPressItem(item){
 }
 export default function Menu({ onItemSelected }) {
   return (
-    <Container style={{backgroundColor:'#212121'}}>
+    <Container style={{backgroundColor:'#212121', paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight}}>
         <Header style={styles.header}>
           <Left>
               {/*
