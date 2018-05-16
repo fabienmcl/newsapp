@@ -139,7 +139,7 @@ export default class Favoris extends Component {
             >
             <Text>{item.title}</Text>
             </TouchableOpacity>
-                  <Icon name='ios-close' style={styles.iconStyle}  onPress={() => this.remove(item.id)} />
+                  <Icon name='ios-close' style={styles.iconStyle}  onPress={() => this.remove(item)} />
             </View>
             
         </View>
@@ -169,14 +169,18 @@ export default class Favoris extends Component {
         (_, { rows: { _array } }) => this.setState({ newscastSavedState: _array })
       );
     });
-    console.log(this.state.newscastSavedState)
+    //console.log(this.state.newscastSavedState)
   }
-  remove(id) {
+  remove(item) {
     console.log("je suis dans remove")
     db.transaction(
       tx => {
-        tx.executeSql('delete from newscastSaved  where id = ?', [id]);
+        tx.executeSql('delete from newscastSaved  where id = ?', [item.id]);
         tx.executeSql('select * from newscastSaved', [], (_, { rows }) =>
+          console.log(JSON.stringify(rows))
+        );
+        tx.executeSql('update  newscasts set isSaved = ? where title = ?', [0, item.title]);
+        tx.executeSql('select * from newscasts', [], (_, { rows }) =>
           console.log(JSON.stringify(rows))
         );
       }

@@ -111,33 +111,17 @@ export default class Project extends Component {
       isLoading: true, 
       isOpen: false, 
       selectedItem: 'recommandation', 
-      items: null,
+      items: null, 
+      newscastSaved : null,
+      newscasts : null,
     }
     YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
   }
  
-  /*
-  le pb est pris a l'envers 
-  // step 1 : mettre a jours le sql
-  // step 2 : mettre a jours le state depuis le sql
-  // step 3 : listen OOA-Hight horse [metalcore] or petit biscuit - problem (taska black remix) [EDM] > w/ beer or pot 
-  */
   SaveItem( { item, index } ){
     console.log(item.title);
-    db.transaction(
-      tx => {
-        tx.executeSql('update  newscasts set isSaved = ? where title = ?', [!item.isSaved, item.title]);
-        /*tx.executeSql('select * from newscasts', [], (_, { rows }) =>
-          console.log(JSON.stringify(rows))
-        );*/
-      }
-    );
-    !item.isSaved ? this.add(item) : this.remove(item);
-    this.update()
-        
-    /*
     //https://stackoverflow.com/questions/46994262/how-to-update-a-single-item-in-flatlist-in-react-native
-    const posts = this.state.newscastsState;
+    const posts = this.state.dataSource;
     const targetPost = posts[index];
 
     // Flip the 'clicled' property of the targetPost
@@ -153,7 +137,7 @@ export default class Project extends Component {
       this.add(targetPost);
     }else{
       this.remove(targetPost)
-    }*/
+    }
   }
   
   RejectItemLocal( { item, index } ){
@@ -177,8 +161,6 @@ export default class Project extends Component {
     db.transaction(
       tx => {
         tx.executeSql('update  newscasts set isRejected = ? where title = ?', [!item.isRejected, item.title]);
-        //tx.executeSql('insert into newscastSaved (title, image, url, isSaved, isRejected) values (?, ?, ?,0,0)', [post["title"], post["image"], post["url"]]);
-    
         /*tx.executeSql('select * from newscasts', [], (_, { rows }) =>
           console.log(JSON.stringify(rows))
         );*/
@@ -238,11 +220,7 @@ export default class Project extends Component {
   */
   componentDidMount(){
     //this.webCall();
-    //this.createSqlTable();
-    this.update();
-    
-  }
-  createSqlTable(){
+    this.loadDataLocal();
     db.transaction(tx => {
       tx.executeSql(
         'DROP TABLE newscastSaved;'
@@ -254,15 +232,17 @@ export default class Project extends Component {
       tx.executeSql(
         "create table if not exists newscasts ( id integer primary key not null, title text not null,image text not null,url text not null,isSaved integer default 0, isRejected integer default 0 );"
       );
+      this.insertDataInNewscasts();
     });
+    this.update();
+    
   }
   insertDataInNewscasts(){
     const posts = this.state.dataSource;
     for(item in posts){
       //console.log(item)
       this.insertRow(posts[item])
-    }
-    /*
+    }/*
     db.transaction(tx => {
       tx.executeSql('select * from newscasts', [], (_, { rows }) =>
         console.log(JSON.stringify(rows))
@@ -312,19 +292,15 @@ export default class Project extends Component {
     console.log("je suis dans update")
     db.transaction(tx => {
       tx.executeSql(
-        `select * from newscastSaved;`,
-        [],
-        (_, { rows: { _array } }) => this.setState({ newscastSavedState: _array })
-      );
-      tx.executeSql(
         `select * from newscasts;`,
         [],
-        (_, { rows: { _array } }) => this.setState({ newscastsState: _array })
+        (_, { rows: { _array } }) => this.setState({ newscasts: _array })
       );
+      tx.executeSql('select * from newscasts', [], (_, { rows }) =>
+          console.log(JSON.stringify(rows))
+        );
     });
-    this.setState({
-      isLoading : false,
-    })
+    console.log(this.state.newscasts)
   }
   _sideMenuPress(){
     console.log("le menu le menu le menu");
@@ -418,7 +394,7 @@ export default class Project extends Component {
            </Right>
         </Header>
         <FlatList
-          data={ this.state.newscastsState }
+          data={ this.state.dataSource }
           extraData={this.state}
           ItemSeparatorComponent = {this.FlatListItemSeparator}
           renderItem={({item, index}) => 
