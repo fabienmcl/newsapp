@@ -170,7 +170,7 @@ export default class Project extends Component {
     this.state = { 
       isLoading: true, 
       isOpen: false, 
-      refreshing: false,
+      refreshing: true,
       selectedItem: 'recommandation', 
       items: null,
       newscastsState : null,
@@ -285,6 +285,7 @@ export default class Project extends Component {
     }))
   }
   _clear = async () => {
+    this.setState({ refreshing: true, isLoading : true, })
     this.executeSql('delete from newscasts').then(
       this.executeSql('delete from newscastSaved').then(
         this.init().then(this.select)));
@@ -311,12 +312,15 @@ export default class Project extends Component {
     //return true
   }
 
-  handleLoadMore = async () => {
+  onEndReached= async () => {
+    console.log("onEndReached")
     for (item in demoDataNewsMore){
       const post = demoDataNewsMore[item]
-      await this.executeSql('insert into newscasts (title, image, url, isSaved, isRejected) values (?, ?, ?,0,0)', [post["title"], post["image"], post["url"]]);
+      //if(this.state.isLoading==false && this.state.refreshing){
+        await this.executeSql('insert into newscasts (title, image, url, isSaved, isRejected) values (?, ?, ?,0,0)', [post["title"], post["image"], post["url"]]);
+      //}    
     }
-    return true
+    this.update()
   };
 
   /*
@@ -464,8 +468,8 @@ export default class Project extends Component {
           keyExtractor={(item, index) => index.toString()}
           onRefresh={this._clear}
           refreshing={this.state.refreshing}
-          //onEndReached={console.log("load more")}
-          //onEndReachedThreshold={0.1}
+          onEndReached={() => this.state.isLoading==false&& this.state.refreshing==false ?  this.onEndReached() : console.log("attend mon bonhomme")}
+          onEndReachedThreshold={0.5} 
           />
       </View>
       </SideMenu>
