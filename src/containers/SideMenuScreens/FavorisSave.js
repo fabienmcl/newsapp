@@ -1,4 +1,4 @@
-import Expo, { SQLite, Font, AppLoading  } from 'expo';
+import Expo, { SQLite } from 'expo';
 import React, { Component } from 'react';
 import { 
   StyleSheet, 
@@ -34,11 +34,7 @@ export default class Favoris extends Component {
     }
     YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
   }
-  async componentDidMount(){
-    await Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
-    });
+  componentDidMount(){
     this.update();
   }
   
@@ -103,9 +99,7 @@ export default class Favoris extends Component {
       
       >
       
-      <View style={{justifyContent: 'center',
-    flex:1,
-    backgroundColor : "#212121",paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight}}>
+      <View style={styles.MainContainer}>
       
       <Header style={{backgroundColor: '#212121'}}>
         <StatusBar barStyle="light-content"/>
@@ -145,7 +139,7 @@ export default class Favoris extends Component {
             >
             <Text>{item.title}</Text>
             </TouchableOpacity>
-                  <Icon name='ios-close' style={styles.iconStyle}  onPress={() => this.remove(item).then(this.update())} />
+                  <Icon name='ios-close' style={styles.iconStyle}  onPress={() => this.remove(item)} />
             </View>
             
         </View>
@@ -166,25 +160,35 @@ export default class Favoris extends Component {
       </SideMenu>
    );
   }
-  executeSql = async (sql, params = []) => {
-    return new Promise((resolve, reject) => db.transaction(tx => {
-      tx.executeSql(sql, params, (_, { rows }) => resolve(rows._array), reject)
-    }))
-  }
-  update= async () => {
+  update() {
     console.log("je suis dans update")
-    await this.executeSql('select * from newscastSaved', []).then(newscastSavedState => this.setState({newscastSavedState})  );
-    this.setState({
-      refreshing: false, 
-      isLoading : false,
-    })
-
+    db.transaction(tx => {
+      tx.executeSql(
+        `select * from newscastSaved;`,
+        [],
+        (_, { rows: { _array } }) => this.setState({ newscastSavedState: _array })
+      );
+    });
+    //console.log(this.state.newscastSavedState)
   }
-  remove = async (item) => {
-    console.log("je suis dans remove avec title:"+item.title)
-    await this.executeSql('delete from newscastSaved  where title = ?', [item.title]);
-    await this.executeSql('update  newscasts set isSaved = ? where title = ?', [0, item.title]);
-    return true;
+  remove(item) {
+    console.log("je suis dans remove")
+    db.transaction(
+      tx => {
+        tx.executeSql('delete from newscastSaved  where id = ?', [item.id]);
+        tx.executeSql('select * from newscastSaved', [], (_, { rows }) =>
+          console.log(JSON.stringify(rows))
+        );
+        tx.executeSql('update  newscasts set isSaved = ? where title = ?', [0, item.title]);
+        tx.executeSql('select * from newscasts', [], (_, { rows }) =>
+          console.log(JSON.stringify(rows))
+        );
+      }
+    );
+    this.update();
+    //console.log(this.state.items)
+    //setTimeout(() => {Actions.refresh({items: this.state.items})}, 500)
+    
   }
   handleRefresh = () => {
     this.setState(

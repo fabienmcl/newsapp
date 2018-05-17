@@ -178,97 +178,27 @@ export default class Project extends Component {
     }
     YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
   }
- 
-  /*
-  le pb est pris a l'envers 
-  // step 1 : mettre a jours le sql
-  // step 2 : mettre a jours le state depuis le sql
-  // step 3 : listen OOA-Hight horse [metalcore] or petit biscuit - problem (taska black remix) [EDM] > w/ beer or pot 
-  */
-  SaveItem( { item, index } ){
-    console.log(item.title);
-    db.transaction(
-      tx => {
-        tx.executeSql('update  newscasts set isSaved = ? where title = ?', [!item.isSaved, item.title]);
-        /*tx.executeSql('select * from newscasts', [], (_, { rows }) =>
-          console.log(JSON.stringify(rows))
-        );*/
-      }
-    );
-    !item.isSaved ? this.add(item) : this.remove(item);
-    this.update()
-        
-    /*
-    //https://stackoverflow.com/questions/46994262/how-to-update-a-single-item-in-flatlist-in-react-native
-    const posts = this.state.newscastsState;
-    const targetPost = posts[index];
-
-    // Flip the 'clicled' property of the targetPost
-    targetPost.isSaved = !targetPost.isSaved;
-
-    // Then update targetPost in 'posts'
-    // You probably don't need the following line.
-    posts[index] = targetPost;
-
-    // Then reset the 'state.posts' property
-    this.setState({ posts });
-    if(targetPost.isSaved == true){
-      this.add(targetPost);
-    }else{
-      this.remove(targetPost)
-    }*/
-  }
-  
-  RejectItemLocal( { item, index } ){
-    console.log(item.title);
-    //https://stackoverflow.com/questions/46994262/how-to-update-a-single-item-in-flatlist-in-react-native
-    const posts = this.state.dataSource;
-    const targetPost = posts[index];
-
-    // Flip the 'clicled' property of the targetPost
-    targetPost.isRejected = !targetPost.isRejected;
-
-    // Then update targetPost in 'posts'
-    // You probably don't need the following line.
-    posts[index] = targetPost;
-    console.log(posts[index])
-    // Then reset the 'state.posts' property
-    this.setState({ posts });
-  }
-  RejectItem({item,index}){
-    console.log(item.title)
-    db.transaction(
-      tx => {
-        tx.executeSql('update  newscasts set isRejected = ? where title = ?', [!item.isRejected, item.title]);
-        //tx.executeSql('insert into newscastSaved (title, image, url, isSaved, isRejected) values (?, ?, ?,0,0)', [post["title"], post["image"], post["url"]]);
+  async componentDidMount(){
+    //this.webCall();
+    //this.createSqlTable();
+    await Font.loadAsync({
+      Roboto: require("native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+    });
+    this.update();
+    //this.init().then(this.select());
     
-        /*tx.executeSql('select * from newscasts', [], (_, { rows }) =>
-          console.log(JSON.stringify(rows))
-        );*/
-      }
-    );
-    //update ok donc il faut maintenat faire passer dans state     
-    this.update() 
   }
+ 
   
   
-  GetItem (item) {
-    //Alert.alert(item.title);
-    console.log(item.title);
-    Actions.webviewcustom(item);
-    //Actions.webviewcustomProto(item);
-  }
-  FlatListItemSeparator = () => {
-    return (
-      <View
-        style={{
-          height: .5,
-          width: "100%",
-          backgroundColor: "#000",
-        }}
-      />
-    );
-  }
+  
+  
+  
+  
+  /*
+    Partie archive
+  */
   webCall=()=>{
     return 
       fetch('https://reactnativecode.000webhostapp.com/FlowersList.php')
@@ -291,145 +221,107 @@ export default class Project extends Component {
       dataSource : demoDataNews,
     })
   }
-  /*
-  title: 'Snappables : Snapchat veut que vous grimaciez pour jouer',
-    rating: 'mer 11:51:16',
-    image: 'https://www.numerama.com/content/uploads/2018/04/snappables-hero-shot.jpg',
-    large: 'https://www.numerama.com/content/uploads/2018/04/snappables-hero-shot.jpg',
-    plot: "Snapchat vient de lancer Snappables, une nouvelle option qui permet de contrôler des jeux en réalité augmentée par les expressions du visage. Ces nouvelles Lenses seront déployées cette semaine sur Android et iOS.",
-    url:
-  */
- async componentDidMount(){
-    //this.webCall();
-    //this.createSqlTable();
-    await Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
-    });
-    this.update();
-    this.init();
   
+ 
+
+
+  /*
+    Partie Storage SQLite
+  */
+
+
+  initData(){
+    this._initSqlTable().then(this._insertDataLocalToSQL());
   }
-  reloadDataLocalToSQL(){
-    console.log("############################ begin reload ####################################")
-    //console.log(demoDataNews)
-    this.createSqlTable();
-    for (item in demoDataNews){
-      const post = demoDataNews[item]
-      console.log(post["title"])
-      db.transaction(tx => {
-        tx.executeSql('insert into newscasts (title, image, url, isSaved, isRejected) values (?, ?, ?,0,0)', [post["title"], post["image"], post["url"]]);
-        tx.executeSql('select * from newscasts', [], (_, { rows }) => console.log(JSON.stringify(rows)));
-      }); 
-    }
-    this.update();
-    this.setState({ refreshing: false })
-    console.log("############################ end reload ####################################")
+  _initSqlTable = async () => {
+    await this.executeSql('DROP TABLE newscastSaved;');
+    await this.executeSql('DROP TABLE newscasts;');
+    await this.executeSql('create table if not exists newscastSaved (id integer primary key , done int, title text,image text,url text);');
+    await this.executeSql('create table if not exists newscasts ( id integer primary key , title text not null,image text not null,url text not null,isSaved integer default 0, isRejected integer default 0 );');
   }
-  loadMoreData(){
-    console.log("load more en cours")
+  _insertDataLocalToSQL = async () =>{
     for (item in demoDataNewsMore){
       const post = demoDataNewsMore[item]
-      console.log(post)
-      db.transaction(tx => {
-        tx.executeSql('insert into newscasts (title, image, url, isSaved, isRejected) values (?, ?, ?,0,0)', [post["title"], post["image"], post["url"]]);
-      }); 
+      //console.log(post)
+      await this.executeSql('insert into newscasts (title, image, url, isSaved, isRejected) values (?, ?, ?,0,0)', [post["title"], post["image"], post["url"]]);
     }
-    this.update();
-    this.setState({ refreshing: false })
-    console.log(this.state)
   }
-  //#async for android
+  
+  update = async () => {
+    console.log("je suis dans update")
+    await this.executeSql('select * from newscastSaved', []).then(newscastSavedState => this.setState({newscastSavedState})  );
+    await this.executeSql('select * from newscasts', []).then(newscastsState => this.setState({newscastsState})  );
+    this.setState({
+      refreshing: false, 
+      isLoading : false,
+    })
+    //console.log(this.state)
+  }
 
-  //componentWillMount () {this.init()
   init = async () => {
-    await this.executeSql('create table if not exists newscastSaved (id integer primary key not null, done int, title text,image text,url text);');
-    await this.executeSql("create table if not exists newscasts ( id integer primary key not null, title text not null,image text not null,url text not null,isSaved integer default 0, isRejected integer default 0 );");
-    this.insert()
-    this.select()
-    console.log(this.state)
+    //await this.executeSql('create table if not exists locations (latitude numeric, longitude numeric);');
+    await this.executeSql('create table if not exists newscastSaved (id integer primary key AUTOINCREMENT, done int, title text,image text,url text);');
+    await this.executeSql('create table if not exists newscasts ( id integer primary key AUTOINCREMENT, title text not null,image text not null,url text not null,isSaved integer default 0, isRejected integer default 0 );');
+    this._insert().then(this.select)
   }
-  insert = async () => {
-    await this.executeSql('insert into newscasts (title, image, url, isSaved, isRejected) values (?, ?, ?,0,0)', ["post", "image", "url"]);//'insert into locations (latitude, longitude) values (?, ?)', [-23.426498, -51.938130]);
-    //await this.executeSql('insert into locations (latitude, longitude) values (?, ?)', [null, null]);
-    //await this.executeSql('insert into locations (latitude, longitude) values (?, ?)', [-23.410068, -51.937695]);
+  
+  _insert = async () => {
+    for (item in demoDataNews){
+      const post = demoDataNews[item]
+      await this.executeSql('insert into newscasts (title, image, url, isSaved, isRejected) values (?, ?, ?,0,0)', [post["title"], post["image"], post["url"]]);
+    }
     return true
   }
-  select = () => {
-    this.executeSql('select * from newscasts', []).then(newscastsState => this.setState({newscastsState})  );//then((_, { rows: { _array } }) => this.setState({ newscastsState: _array }));
+  
+   select = async () => {
+    this.executeSql('select * from newscasts', []).then(newscastsState => this.setState({newscastsState})  );
+    this.executeSql('select * from newscastSaved', []).then(newscastSavedState => this.setState({newscastSavedState})  );
+    console.log(this.state)
+    this.setState({ refreshing: false, isLoading : false, })
   }
   executeSql = async (sql, params = []) => {
     return new Promise((resolve, reject) => db.transaction(tx => {
       tx.executeSql(sql, params, (_, { rows }) => resolve(rows._array), reject)
     }))
   }
-  createSqlTable(){
-    db.transaction(tx => {
-      tx.executeSql(
-        'DROP TABLE newscastSaved;'
-      );
-      tx.executeSql(
-        'DROP TABLE newscasts;'
-      );
-      tx.executeSql('create table if not exists newscastSaved (id integer primary key not null, done int, title text,image text,url text);');
-      //tx.executeSql('create table if not exists newscastSaved (id integer primary key not null, done int, title text,image text,url text);',[], console.log("sucess create newssaved"), console.log("error create ns saved")); 
-      tx.executeSql("create table if not exists newscasts ( id integer primary key not null, title text not null,image text not null,url text not null,isSaved integer default 0, isRejected integer default 0 );");
-      //tx.executeSql("create table if not exists newscasts ( id integer primary key not null, title text not null,image text not null,url text not null,isSaved integer default 0, isRejected integer default 0 );",[], console.log("sucess create nexs saved"), console.log("error create ns"));
-   
-    });
+  _clear = async () => {
+    this.executeSql('delete from newscasts').then(
+      this.executeSql('delete from newscastSaved').then(
+        this.init().then(this.select)));
   }
-  add(article) {
-    db.transaction(
-      tx => {
-        tx.executeSql('insert into newscastSaved (done, title, image, url ) values (0, ?, ?, ?)', [article.title, article.image, article.url]);
-        tx.executeSql('select * from newscastSaved', [], (_, { rows }) =>
-          console.log(JSON.stringify(rows))
-        );
-      },
-      //null,
-      //this.update
-    );
-    //this.update();
-  }
-  remove(article) {
-    db.transaction(
-      tx => {
-        tx.executeSql('delete from newscastSaved  where title = ?', [article.title]);
-        tx.executeSql('select * from newscastSaved', [], (_, { rows }) =>
-          console.log(JSON.stringify(rows))
-        );
-      },
-      //null,
-      //this.update
-    );
+  _toggleFav = async({ item, index })=>{
+    console.log(item.title);
     //this.update()
-  }
+    if(!item.isSaved){
+      await this.executeSql('insert into newscastSaved (done, title, image, url ) values (0, ?, ?, ?)', [item.title, item.image, item.url]).then(
+        await this.executeSql('update  newscasts set isSaved = ? where title = ?', [!item.isSaved, item.title]).then(this.update().then(Actions.refresh()))
+      )
+    }else{
+      await this.executeSql('delete from newscastSaved  where title = ?', [item.title]).then(
+        await this.executeSql('update  newscasts set isSaved = ? where title = ?', [!item.isSaved, item.title]).then(this.update().then(Actions.refresh()))
+      )
+    }
+    
+    //return true
   
-  update() {
-    console.log("je suis dans update")
-    SQLite.openDatabase('db.db') == null ? console.log("c'est null") : console.log("c'est autre chose");
-    db.transaction(tx => {
-      tx.executeSql(
-        `select * from newscastSaved;`,
-        [],
-        (_, { rows: { _array } }) => this.setState({ newscastSavedState: _array }), console.log("error")
-      );
-      tx.executeSql('select * from newscastSaved', [], (_, { rows }) =>
-          console.log(JSON.stringify(rows))
-        );
-      tx.executeSql(
-        `select * from newscasts;`,
-        [],
-        (_, { rows: { _array } }) => this.setState({ newscastsState: _array }),console.log("error")
-      );
-      tx.executeSql('select * from newscasts', [], (_, { rows }) =>
-          console.log(JSON.stringify(rows))
-        );
-    });
-    this.setState({
-      isLoading : false,
-    })
   }
+  _toggleReject = async({ item, index })=>{
+    console.log(item.title);
+    await this.executeSql('update  newscasts set isRejected = ? where title = ?', [!item.isRejected, item.title]).then(this.update().then(Actions.refresh()))
+    //return true
+  }
+
+  handleLoadMore = async () => {
+    for (item in demoDataNewsMore){
+      const post = demoDataNewsMore[item]
+      await this.executeSql('insert into newscasts (title, image, url, isSaved, isRejected) values (?, ?, ?,0,0)', [post["title"], post["image"], post["url"]]);
+    }
+    return true
+  };
+
+  /*
+    Partie side menu
+  */
   _sideMenuPress(){
     console.log("le menu le menu le menu");
     this.toggle();
@@ -477,19 +369,30 @@ export default class Project extends Component {
     console.log("_onPressItem")
   };
 
-  handleRefresh = () => {
-    this.setState(
-      {
-        refreshing: true
-      },
-      () => {
-        this.reloadDataLocalToSQL();
-      },
+  
+  
+
+  /*
+    Partie Flastlist
+  */
+
+  FlatListItemSeparator = () => {
+    return (
+      <View
+        style={{
+          height: .5,
+          width: "100%",
+          backgroundColor: "#000",
+        }}
+      />
     );
-  };
-  handleLoadMore = () => {
-    this.loadMoreData();
-  };
+  }
+  _onPressOnItem (item) {
+    //Alert.alert(item.title);
+    console.log(item.title);
+    Actions.webviewcustom(item);
+    //Actions.webviewcustomProto(item);
+  }
   render() {
     if (this.state.isLoading) {
       return (
@@ -509,12 +412,7 @@ export default class Project extends Component {
       
       >
       
-      <View style={{ justifyContent: 'center', flex:1,backgroundColor : "white",paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight}} >
-      {/*<Header
-        leftComponent={{ icon: 'menu', color: '#fff', onPress:()=>this._sideMenuPress()}}
-        centerComponent={{ text: 'Renewal', style: { color: '#fff' } }} 
-        outerContainerStyles={{ backgroundColor: '#212121' }}
-      />*/}
+      <View style={{ justifyContent: 'center', flex:1,backgroundColor : "#212121",paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight}} >
       
       <Header style={{backgroundColor: '#212121'}}>
         <StatusBar barStyle="light-content"/>
@@ -530,7 +428,7 @@ export default class Project extends Component {
           </Body>
           <Right>
             <Button transparent>
-              <Icon name='ios-refresh' style={{ color: '#fff'}}   onPress={()=>this.reloadDataLocalToSQL()}/>
+              <Icon name='ios-refresh' style={{ color: '#fff'}}   onPress={()=>this.initData()}/>
             </Button>
           </Right>
         </Header>
@@ -542,7 +440,7 @@ export default class Project extends Component {
             
             <View  onPressItem={this._onPressItem}  >
               <View style={{flex:1, backgroundColor: item.isRejected ? "#484848" : "#fff" }}>
-                <TouchableOpacity onPress={item.isRejected? console.log("item isRejected") : this.GetItem.bind(this, item)} >
+                <TouchableOpacity onPress={item.isRejected? console.log("item isRejected") : this._onPressOnItem.bind(this, item)} >
                   <Image source = {{ uri: item.image }} 
                     style={{
                       height: screen.height / 5,
@@ -552,22 +450,22 @@ export default class Project extends Component {
                       justifyContent: 'center', 
                       alignItems: 'center',
                     }}//style={styles.imageView} 
-                    onPress={this.GetItem.bind(this, item)}
+                    onPress={this._onPressOnItem.bind(this, item)}
                      />
                 </TouchableOpacity>
                 <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width:'100%', }}>
-                  <Icon name={item.isSaved ? "ios-download" :"ios-download-outline"} style={styles.iconStyle}    onPress={()=>item.isRejected ? console.log("error") :this.SaveItem( { item, index } )} />
-                    <Text  style={styles.textView} onPress={item.isRejected? console.log("item isRejected") :this.GetItem.bind(this, item)}>{item.title}</Text>
-                  <Icon name={item.isRejected ? "ios-checkmark" :"ios-close"}  style={{color: 'black', width :'10%', paddingLeft: '3%', alignItems: 'center', justifyContent: 'center',color: item.isRejected ? "green" :"red"}}   onPress={()=>this.RejectItem( { item, index } )} />
+                  <Icon name={item.isSaved ? "ios-download" :"ios-download-outline"} style={styles.iconStyle}    onPress={()=>item.isRejected ? console.log("error") :this._toggleFav( { item, index } )} />
+                    <Text  style={styles.textView} onPress={item.isRejected? console.log("item isRejected") :this._onPressOnItem.bind(this, item)}>{item.title}</Text>
+                  <Icon name={item.isRejected ? "ios-checkmark" :"ios-close"}  style={{color: 'black', width :'10%', paddingLeft: '3%', alignItems: 'center', justifyContent: 'center',color: item.isRejected ? "green" :"red"}}   onPress={()=>this._toggleReject( { item, index } )} />
                 </View>
               </View>
             </View>   
           }
           keyExtractor={(item, index) => index.toString()}
-          onRefresh={this.handleRefresh}
+          onRefresh={this._clear}
           refreshing={this.state.refreshing}
-          //onEndReached={this.handleLoadMore}
-          //onEndReachedThreshold={20}
+          //onEndReached={console.log("load more")}
+          //onEndReachedThreshold={0.1}
           />
       </View>
       </SideMenu>

@@ -313,7 +313,7 @@ export default class MessageWebView extends React.Component {
                 menuPosition={'left'}
                 onChange={isOpen => this.updateMenuState(isOpen)}
             >
-            <View  style={styles.MainContainer} >
+            <View  style={{justifyContent: 'center', flex:1, backgroundColor : "#212121", paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight}} >
             {/*
             <Header
                 leftComponent={

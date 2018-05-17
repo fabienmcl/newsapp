@@ -1,4 +1,4 @@
-import Expo, { SQLite } from 'expo';
+import Expo, { SQLite, Font, AppLoading } from 'expo';
 import React, { Component } from 'react';
 import { 
   StyleSheet, 
@@ -19,6 +19,8 @@ import SideMenu from 'react-native-side-menu';
 import Menu from '../SideMenu/Menu';
 const screen = Dimensions.get('window');
 const db = SQLite.openDatabase('db.db');
+
+
 const demoDataNews = [
   {
     title: 'À lui seul, l’iPhone X a compté pour 35 % des bénéfices de l’industrie au Q4 2017',
@@ -103,6 +105,64 @@ const demoDataNews = [
     isRejected : 0
   },
 ];
+const demoDataNewsMore = [
+  {
+    title: "Qu’est-ce qu’un smartphone blockchain ?",
+    plot: "La startup israélienne Sirin Labs souhaite financer un « smartphone blockchain ». Derrière ce projet pas forcément viable, se cache l'enjeu de l'adoption grand public de l'écosystème d'applications qui émerge autour d'Ethereum et d'autres crypto-monnaies. Le 16 mai 2018, HTC a également annoncé un smartphone « blockchain ».",
+    image: "https://www.numerama.com/content/uploads/2017/11/smartblock.jpg",
+    url: "https://www.numerama.com/tech/296090-quest-ce-quun-smartphone-blockchain-du-reve-impossible-a-la-revolution-des-usages.html",
+    isSaved:0,
+    isRejected : 0
+  },
+  {
+    title: "Gmail : comment activer le mode hors ligne",
+    plot: "Gmail a activé la possibilité de consulter vos mails hors connexion. On vous montre comment l'activer en 3 clics.",
+    image: "https://www.numerama.com/content/uploads/2015/09/gmail-ouvrir.jpg",
+    url: "https://www.numerama.com/tech/373481-gmail-comment-activer-le-mode-hors-ligne.html",
+    isSaved:0,
+    isRejected : 0
+  },
+  {
+    title: "MacBook Pro : après la pétition, place à l’action en justice",
+    plot: "Deux utilisateurs de MacBook Pro équipés d'un clavier « papillon » ont déposé un recours collectif auprès d'un tribunal de Californie. Ils réclament des dédommagements pour tous ceux ayant été forcés de passer par le SAV. ",
+    image: "https://www.numerama.com/content/uploads/2016/12/macbook-pro-5.jpg",
+    url: "https://www.numerama.com/tech/372714-claviers-papillon-des-macbook-pro-apres-la-petition-place-a-laction-en-justice.html",
+    isSaved:0,
+    isRejected : 0
+  },
+  {
+    title: "Android P fermera automatiquement les applications plantées ",
+    plot: "Vous n’êtes vous jamais retrouvé face à une application plantée qui vous demande d’attendre ou de la fermer ? Android P n’a plus de patience : il la fermera automatiquement.",
+    image: "http://images.frandroid.com/wp-content/uploads/2018/05/androidp-twitter-630x323.jpg",
+    url: "http://www.frandroid.com/android/mises-a-jour-android/504635_android-p-fermera-automatiquement-les-applications-plantees#",
+    isSaved:0,
+    isRejected : 0
+  },
+  {
+    title: "YouTube teste la navigation privée sur son app",
+    plot: "L’application YouTube est en train de tester un mode de navigation privée qui pourrait être bien pratique. Et ce, sans aucune arrière pensée.",
+    image: "http://images.frandroid.com/wp-content/uploads/2018/05/youtube-navigation-privee-630x354.jpg",
+    url: "http://www.frandroid.com/android/applications/google-apps/504395_youtube-teste-la-navigation-privee-sur-son-app-une-bonne-nouvelle-en-toute-innocence",
+    isSaved:0,
+    isRejected : 0
+  },
+  {
+    title: "Microsoft voudrait concurrencer l'iPad avec des tablettes Surface à partir de 400 $",
+    plot: "Les nouvelles ardoises destinées à se vendre en grand volume auraient un écran 10, des coins plus arrondis que les autres Surface, et un port USB-C. C’est Intel qui fournirait le processeur de ces appareils, qui auraient une autonomie d’environ 9 h 30, soit quatre heures de moins que ce dont est capable la Surface Pro. Un choix qui peut paraître étrange alors que Microsoft s’est associé à Qualcomm pour permettre l’émergence de machines sous Windows plus autonomes.",
+    image: "https://img.igen.fr/2018/5/macgpic-1526473793-113252436470942-sc-jpt.jpg",
+    url: "https://www.igen.fr/ailleurs/2018/05/microsoft-voudrait-concurrencer-lipad-avec-des-tablettes-surface-partir-de-400",
+    isSaved:0,
+    isRejected : 0
+  },/*
+  {
+    title: "?",
+    plot: "",
+    image: "",
+    url: "",
+    isSaved:0,
+    isRejected : 0
+  },*/
+];
 export default class Project extends Component {
   constructor(props) {
     super(props);
@@ -110,18 +170,37 @@ export default class Project extends Component {
     this.state = { 
       isLoading: true, 
       isOpen: false, 
+      refreshing: false,
       selectedItem: 'recommandation', 
-      items: null, 
-      newscastSaved : null,
-      newscasts : null,
+      items: null,
+      newscastsState : null,
+      newscastSavedState : null
     }
     YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
   }
  
+  /*
+  le pb est pris a l'envers 
+  // step 1 : mettre a jours le sql
+  // step 2 : mettre a jours le state depuis le sql
+  // step 3 : listen OOA-Hight horse [metalcore] or petit biscuit - problem (taska black remix) [EDM] > w/ beer or pot 
+  */
   SaveItem( { item, index } ){
     console.log(item.title);
+    db.transaction(
+      tx => {
+        tx.executeSql('update  newscasts set isSaved = ? where title = ?', [!item.isSaved, item.title]);
+        /*tx.executeSql('select * from newscasts', [], (_, { rows }) =>
+          console.log(JSON.stringify(rows))
+        );*/
+      }
+    );
+    !item.isSaved ? this.add(item) : this.remove(item);
+    this.update()
+        
+    /*
     //https://stackoverflow.com/questions/46994262/how-to-update-a-single-item-in-flatlist-in-react-native
-    const posts = this.state.dataSource;
+    const posts = this.state.newscastsState;
     const targetPost = posts[index];
 
     // Flip the 'clicled' property of the targetPost
@@ -137,7 +216,7 @@ export default class Project extends Component {
       this.add(targetPost);
     }else{
       this.remove(targetPost)
-    }
+    }*/
   }
   
   RejectItemLocal( { item, index } ){
@@ -161,6 +240,8 @@ export default class Project extends Component {
     db.transaction(
       tx => {
         tx.executeSql('update  newscasts set isRejected = ? where title = ?', [!item.isRejected, item.title]);
+        //tx.executeSql('insert into newscastSaved (title, image, url, isSaved, isRejected) values (?, ?, ?,0,0)', [post["title"], post["image"], post["url"]]);
+    
         /*tx.executeSql('select * from newscasts', [], (_, { rows }) =>
           console.log(JSON.stringify(rows))
         );*/
@@ -218,9 +299,71 @@ export default class Project extends Component {
     plot: "Snapchat vient de lancer Snappables, une nouvelle option qui permet de contrôler des jeux en réalité augmentée par les expressions du visage. Ces nouvelles Lenses seront déployées cette semaine sur Android et iOS.",
     url:
   */
-  componentDidMount(){
+ async componentDidMount(){
     //this.webCall();
-    this.loadDataLocal();
+    //this.createSqlTable();
+    await Font.loadAsync({
+      Roboto: require("native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+    });
+    this.update();
+    this.init();
+  
+  }
+  reloadDataLocalToSQL(){
+    console.log("############################ begin reload ####################################")
+    //console.log(demoDataNews)
+    this.createSqlTable();
+    for (item in demoDataNews){
+      const post = demoDataNews[item]
+      console.log(post["title"])
+      db.transaction(tx => {
+        tx.executeSql('insert into newscasts (title, image, url, isSaved, isRejected) values (?, ?, ?,0,0)', [post["title"], post["image"], post["url"]]);
+        tx.executeSql('select * from newscasts', [], (_, { rows }) => console.log(JSON.stringify(rows)));
+      }); 
+    }
+    this.update();
+    this.setState({ refreshing: false })
+    console.log("############################ end reload ####################################")
+  }
+  loadMoreData(){
+    console.log("load more en cours")
+    for (item in demoDataNewsMore){
+      const post = demoDataNewsMore[item]
+      console.log(post)
+      db.transaction(tx => {
+        tx.executeSql('insert into newscasts (title, image, url, isSaved, isRejected) values (?, ?, ?,0,0)', [post["title"], post["image"], post["url"]]);
+      }); 
+    }
+    this.update();
+    this.setState({ refreshing: false })
+    console.log(this.state)
+  }
+  //#async for android
+
+  //componentWillMount () {this.init()
+  init = async () => {
+    await this.executeSql('create table if not exists newscastSaved (id integer primary key not null, done int, title text,image text,url text);');
+    await this.executeSql("create table if not exists newscasts ( id integer primary key not null, title text not null,image text not null,url text not null,isSaved integer default 0, isRejected integer default 0 );");
+    this.insert()
+    this.select()
+    console.log(this.state)
+  }
+  insert = async () => {
+    await this.executeSql('insert into newscasts (title, image, url, isSaved, isRejected) values (?, ?, ?,0,0)', ["post", "image", "url"]);//'insert into locations (latitude, longitude) values (?, ?)', [-23.426498, -51.938130]);
+    //await this.executeSql('insert into locations (latitude, longitude) values (?, ?)', [null, null]);
+    //await this.executeSql('insert into locations (latitude, longitude) values (?, ?)', [-23.410068, -51.937695]);
+    return true
+  }
+  select = () => {
+    this.executeSql('select * from newscasts', []).then(newscastsState => this.setState({newscastsState})  );//then((_, { rows: { _array } }) => this.setState({ newscastsState: _array }));
+  }
+  executeSql = async (sql, params = []) => {
+    return new Promise((resolve, reject) => db.transaction(tx => {
+      tx.executeSql(sql, params, (_, { rows }) => resolve(rows._array), reject)
+    }))
+  }
+  createSqlTable(){
     db.transaction(tx => {
       tx.executeSql(
         'DROP TABLE newscastSaved;'
@@ -229,36 +372,10 @@ export default class Project extends Component {
         'DROP TABLE newscasts;'
       );
       tx.executeSql('create table if not exists newscastSaved (id integer primary key not null, done int, title text,image text,url text);');
-      tx.executeSql(
-        "create table if not exists newscasts ( id integer primary key not null, title text not null,image text not null,url text not null,isSaved integer default 0, isRejected integer default 0 );"
-      );
-      this.insertDataInNewscasts();
-    });
-    this.update();
-    
-  }
-  insertDataInNewscasts(){
-    const posts = this.state.dataSource;
-    for(item in posts){
-      //console.log(item)
-      this.insertRow(posts[item])
-    }/*
-    db.transaction(tx => {
-      tx.executeSql('select * from newscasts', [], (_, { rows }) =>
-        console.log(JSON.stringify(rows))
-      );
-    });
-    db.transaction(tx => {
-      tx.executeSql('select * from newscastSaved', [], (_, { rows }) =>
-        console.log(JSON.stringify(rows))
-      );
-    });
-    */
-  }
-  insertRow(post){
-    //console.log(post["title"])
-    db.transaction(tx => {
-      tx.executeSql('insert into newscasts (title, image, url, isSaved, isRejected) values (?, ?, ?,0,0)', [post["title"], post["image"], post["url"]]);
+      //tx.executeSql('create table if not exists newscastSaved (id integer primary key not null, done int, title text,image text,url text);',[], console.log("sucess create newssaved"), console.log("error create ns saved")); 
+      tx.executeSql("create table if not exists newscasts ( id integer primary key not null, title text not null,image text not null,url text not null,isSaved integer default 0, isRejected integer default 0 );");
+      //tx.executeSql("create table if not exists newscasts ( id integer primary key not null, title text not null,image text not null,url text not null,isSaved integer default 0, isRejected integer default 0 );",[], console.log("sucess create nexs saved"), console.log("error create ns"));
+   
     });
   }
   add(article) {
@@ -290,17 +407,28 @@ export default class Project extends Component {
   
   update() {
     console.log("je suis dans update")
+    SQLite.openDatabase('db.db') == null ? console.log("c'est null") : console.log("c'est autre chose");
     db.transaction(tx => {
+      tx.executeSql(
+        `select * from newscastSaved;`,
+        [],
+        (_, { rows: { _array } }) => this.setState({ newscastSavedState: _array }), console.log("error")
+      );
+      tx.executeSql('select * from newscastSaved', [], (_, { rows }) =>
+          console.log(JSON.stringify(rows))
+        );
       tx.executeSql(
         `select * from newscasts;`,
         [],
-        (_, { rows: { _array } }) => this.setState({ newscasts: _array })
+        (_, { rows: { _array } }) => this.setState({ newscastsState: _array }),console.log("error")
       );
       tx.executeSql('select * from newscasts', [], (_, { rows }) =>
           console.log(JSON.stringify(rows))
         );
     });
-    console.log(this.state.newscasts)
+    this.setState({
+      isLoading : false,
+    })
   }
   _sideMenuPress(){
     console.log("le menu le menu le menu");
@@ -348,6 +476,20 @@ export default class Project extends Component {
     });
     console.log("_onPressItem")
   };
+
+  handleRefresh = () => {
+    this.setState(
+      {
+        refreshing: true
+      },
+      () => {
+        this.reloadDataLocalToSQL();
+      },
+    );
+  };
+  handleLoadMore = () => {
+    this.loadMoreData();
+  };
   render() {
     if (this.state.isLoading) {
       return (
@@ -367,7 +509,7 @@ export default class Project extends Component {
       
       >
       
-      <View style={styles.MainContainer}>
+      <View style={{ justifyContent: 'center', flex:1,backgroundColor : "white",paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight}} >
       {/*<Header
         leftComponent={{ icon: 'menu', color: '#fff', onPress:()=>this._sideMenuPress()}}
         centerComponent={{ text: 'Renewal', style: { color: '#fff' } }} 
@@ -387,14 +529,13 @@ export default class Project extends Component {
             <Title style={{color:'white'}}>Renewal</Title>
           </Body>
           <Right>
-            {/*
             <Button transparent>
-              <Icon name='ios-settings-outline' style={{color:'white'}}/>
-            </Button> */}
-           </Right>
+              <Icon name='ios-refresh' style={{ color: '#fff'}}   onPress={()=>this.reloadDataLocalToSQL()}/>
+            </Button>
+          </Right>
         </Header>
         <FlatList
-          data={ this.state.dataSource }
+          data={ this.state.newscastsState }
           extraData={this.state}
           ItemSeparatorComponent = {this.FlatListItemSeparator}
           renderItem={({item, index}) => 
@@ -411,7 +552,8 @@ export default class Project extends Component {
                       justifyContent: 'center', 
                       alignItems: 'center',
                     }}//style={styles.imageView} 
-                    onPress={this.GetItem.bind(this, item)} />
+                    onPress={this.GetItem.bind(this, item)}
+                     />
                 </TouchableOpacity>
                 <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width:'100%', }}>
                   <Icon name={item.isSaved ? "ios-download" :"ios-download-outline"} style={styles.iconStyle}    onPress={()=>item.isRejected ? console.log("error") :this.SaveItem( { item, index } )} />
@@ -422,6 +564,10 @@ export default class Project extends Component {
             </View>   
           }
           keyExtractor={(item, index) => index.toString()}
+          onRefresh={this.handleRefresh}
+          refreshing={this.state.refreshing}
+          //onEndReached={this.handleLoadMore}
+          //onEndReachedThreshold={20}
           />
       </View>
       </SideMenu>
