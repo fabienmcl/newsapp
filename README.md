@@ -1,13 +1,9 @@
 # Renewal
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/0698a1135ab243beba80ae7a86312bb6)](https://www.codacy.com/app/fabienmcl/newsapp?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=fabienmcl/newsapp&amp;utm_campaign=Badge_Grade)
-
 [![npm version](https://badge.fury.io/js/newsapp.svg)](https://badge.fury.io/js/newsapp)
-
 [![GitHub issues](https://img.shields.io/github/issues/fabienmcl/newsapp.svg?style=flat-square)](https://github.com/fabienmcl/newsapp/issues)
-
 [![GitHub forks](https://img.shields.io/github/forks/fabienmcl/newsapp.svg?style=flat-square)](https://github.com/fabienmcl/newsapp/network)
-
 [![GitHub license](https://img.shields.io/github/license/fabienmcl/newsapp.svg?style=flat-square)](https://github.com/fabienmcl/newsapp)
 
 
@@ -26,7 +22,7 @@ You need Expo pre-installed and you’re good to go.
 1.	Clone Repository
 2.	Open folder with Expo
 
-##Built With
+## Built With
 * react native
 * expo
 * react-navigation
