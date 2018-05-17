@@ -75,18 +75,15 @@ export default class Historique extends Component {
         menu={menu}
         isOpen={this.state.isOpen}
         onChange={isOpen => this.updateMenuState(isOpen)}
-        disableGestures={true}
+        disableGestures={false}
       
       >
       
-      <View style={styles.MainContainer}>
+      <View style={{justifyContent: 'center', flex:1, backgroundColor : "#212121",paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight}}>
       
       <Header style={{backgroundColor: '#212121'}}>
         <StatusBar barStyle="light-content"/>
-        <Left style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
-          <Button transparent>
-            <Icon name='ios-arrow-back-outline' style={{ color: '#fff'}}   onPress={()=>this.props.navigation.goBack()} />
-          </Button>
+        <Left>
           <Button transparent>
             <Icon name='menu' style={{ color: '#fff'}}   onPress={()=>this._sideMenuPress()} />
           </Button>

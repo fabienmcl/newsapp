@@ -79,7 +79,7 @@ export default class MonCompte extends Component {
       
       >
       
-      <View style={styles.MainContainer}>
+      <View style={{justifyContent: 'center', flex:1, backgroundColor : "#212121",paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight}}>
       
       <Header style={{backgroundColor: '#212121'}}>
         <StatusBar barStyle="light-content"/>

@@ -156,8 +156,8 @@ export default class Favoris extends Component {
           />
       </Content>
       <Footer style={{ backgroundColor: '#212121'}} >
-          <FooterTab>
-            <Button full>
+          <FooterTab style={{ backgroundColor: '#212121'}}>
+            <Button full style={{ backgroundColor: '#212121'}}>
               <Text >footer </Text>
             </Button>
           </FooterTab>
