@@ -14,6 +14,7 @@ import Favoris from './containers/SideMenuScreens/Favoris';
 import Historique from './containers/SideMenuScreens/Historique';
 import MonCompte from './containers/SideMenuScreens/MonCompte';
 import Concept from './containers/SideMenuScreens/Concept';
+import Param from './containers/SideMenuScreens/Params'
 {/*prototypes*/}
 import ListView from './prototypes/ListView/ListView';
 import Details from './prototypes/ListView/Movie';
@@ -42,6 +43,7 @@ export default class Routes extends Component<{}> {
 					<Scene key="historique" component={Historique} title="Historique" initial={false} panHandlers={null}/>
 					<Scene key="monCompte" component={MonCompte} title="Mon Compte" initial={false} panHandlers={null}/>
 					<Scene key="concept" component={Concept} title="Le Concept" initial={false}  panHandlers={null}/>
+					<Scene key="param" component={Param} title="settings" initial={false}  panHandlers={null}/>
 					{/*prototypes*/}
 					<Scene key="listView" component={ListView} title="ListView" initial={false} />	
 					<Scene key="details" component={Details} title="Details" initial={false} />

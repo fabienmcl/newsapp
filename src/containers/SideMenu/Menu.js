@@ -34,7 +34,7 @@ export default function Menu({ onItemSelected }) {
             <Title style={{color:'white'}}>Renewal</Title>
           </Body>
           <Right>
-            <Button transparent onPress={()=>console.log("parametre")}>
+            <Button transparent onPress={() =>  onItemSelected('param')}>
               <Icon name='ios-settings-outline' style={{color:'white'}}/>
             </Button>
            </Right>

@@ -18,11 +18,11 @@ import SideMenu from 'react-native-side-menu';
 import Menu from '../SideMenu/Menu';
 const screen = Dimensions.get('window');
 
-export default class Concept extends Component {
+export default class Param extends Component {
   constructor(props) {
     super(props);
     this.toggle = this.toggle.bind(this);
-    this.state = { isLoading: true, isOpen: false, selectedItem: 'concept'}
+    this.state = { isLoading: true, isOpen: false, selectedItem: 'param'}
     YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
   }
  
@@ -40,7 +40,7 @@ export default class Concept extends Component {
 
   updateMenuState(isOpen) {
     this.setState({ isOpen });
-    if(this.state.selectedItem != 'concept'){
+    if(this.state.selectedItem != 'param'){
       console.log("chargement de la page "+this.state.selectedItem)
       switch(this.state.selectedItem){
         case 'favoris' : Actions.favoris() 
@@ -51,7 +51,7 @@ export default class Concept extends Component {
           break;
         case 'recommandation' : Actions.flatListViewArticle()
           break;
-        case 'param' : Actions.param()
+        case 'concept' : Actions.concept()
           break;
       }
       this.setState({

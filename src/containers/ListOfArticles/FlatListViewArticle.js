@@ -349,6 +349,8 @@ export default class Project extends Component {
           break;
         case 'concept' : Actions.concept()
           break;
+        case 'param' : Actions.param()
+          break;
       }
       this.setState({
         selectedItem: 'recommandation',

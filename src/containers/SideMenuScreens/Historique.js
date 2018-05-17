@@ -51,6 +51,8 @@ export default class Historique extends Component {
           break;
         case 'recommandation' : Actions.flatListViewArticle()
           break;
+        case 'param' : Actions.param()
+          break;
       }
       this.setState({
         selectedItem: 'historique',
