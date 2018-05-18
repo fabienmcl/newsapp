@@ -57,7 +57,7 @@ export default class Favoris extends Component {
     if(this.state.selectedItem != 'favoris'){
       console.log("chargement de la page "+this.state.selectedItem)
       switch(this.state.selectedItem){
-        case 'compte' : Actions.compte() 
+        case 'compte' : Actions.monCompte() 
           break;
         case 'concept' : Actions.concept()
           break;

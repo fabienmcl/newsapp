@@ -15,7 +15,8 @@ import {
     ScrollView,
     WebView,
     View,
-    StatusBar
+    StatusBar,
+    Share
 } from "react-native";
 import {Actions} from 'react-native-router-flux';
 import * as Animatable from 'react-native-animatable';
@@ -108,6 +109,14 @@ export default class MessageWebView extends React.Component {
         
         , 300)
         
+    }
+    ShareMessage=()=>{
+        Share.share({
+            title: this.props.navigation.state.params.title,
+            message: "Hello world, \n je t'envoi un super article lu sur l'application renewal : ",
+            url: this.props.navigation.state.params.url,
+            subject: "Share Link from Renewal" //  for email 
+        }).then(result => console.log(result)).catch(errorMsg => console.log(errorMsg));
     }
     /*
     static navigationOptions = ({ navigation }) => {
@@ -463,7 +472,7 @@ export default class MessageWebView extends React.Component {
                     <Text style={{ fontWeight: 'bold', fontSize: 22 }}>Partage l'article : </Text>
                 </View>
                 <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', flex:1 }}>
-                        <TouchableOpacity onPress={()=>console.log("facebook")}>
+                        <TouchableOpacity onPress={ this.ShareMessage }>
                             <Image style={{ width: 60, height: 60 }}
                                 source={require('../../images/facebook.png')}/>
                         </TouchableOpacity>
