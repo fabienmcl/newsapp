@@ -469,8 +469,12 @@ export default class MessageWebView extends React.Component {
                         </TouchableOpacity>
                 </View>
                 <View style={{ alignItems: 'center', justifyContent: 'flex-end'}}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 22 }}>Partage l'article : </Text>
+                    <Button iconLeft block light onPress={ this.ShareMessage }>
+                        <Icon name='share' />
+                        <Text>Partage l'article </Text>
+                    </Button>
                 </View>
+                {/*
                 <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', flex:1 }}>
                         <TouchableOpacity onPress={ this.ShareMessage }>
                             <Image style={{ width: 60, height: 60 }}
@@ -489,6 +493,7 @@ export default class MessageWebView extends React.Component {
                                 source={require('../../images/whatsapp.png')}/>
                         </TouchableOpacity> 
                 </View>
+                */}
                 <View style={{ alignItems: 'center', justifyContent: 'flex-end'}}>
                     <Text style={{ fontWeight: 'bold', fontSize: 22 }}>Recommandations d'articles :</Text>
                 </View>
