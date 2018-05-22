@@ -13,18 +13,64 @@ import {
   StatusBar,
   Share
 } from 'react-native';
+import { AuthSession } from 'expo';
 import {Actions} from 'react-native-router-flux';
 import { Container, Header, Title, Content, Footer, FooterTab, Left,Button, Right, Body, Icon, Text, List, ListItem } from 'native-base';
 import SideMenu from 'react-native-side-menu';
 import Menu from '../SideMenu/Menu';
 const screen = Dimensions.get('window');
+const FB_APP_ID = '2073630512892455';
 
 export default class MonCompte extends Component {
   constructor(props) {
     super(props);
     this.toggle = this.toggle.bind(this);
-    this.state = { isLoading: true, isOpen: false, selectedItem: 'compte', visible:false}
+    this.state = { isLoading: true, isOpen: false, selectedItem: 'compte', visible:false, userInfo: null,}
     YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
+  }
+  async logInFB() {
+    const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync('2073630512892455', {
+        permissions: ['public_profile','email','user_birthday', 'user_friends'],
+      });
+    if (type === 'success') {
+      // Get the user's name using Facebook's Graph API
+      const response = await fetch(
+        `https://graph.facebook.com/me?access_token=${token}`);
+        /*Alert.alert(
+          'Logged in!',
+          `Hi ${(await response.json()).name}!`,
+        );
+        const userInfo = await response.json().then(this.setState({ userInfo }));
+        console.log(userInfo);*/
+        let userInfoResponse = await fetch(
+          `https://graph.facebook.com/me?access_token=${token}&fields=id,name,picture.type(large),email,birthday`
+        );
+        const userInfo = await userInfoResponse.json();
+        this.setState({ userInfo });
+        console.log(userInfo)
+        
+    }
+  }
+  async  signInWithGoogleAsync() {
+    try {
+      const result = await Expo.Google.logInAsync({
+        androidClientId: '18527368615-6muuu4pvirifog1ufdei401tsgivm55f.apps.googleusercontent.com',
+        iosClientId: '18527368615-5rkmhp6aum543q94mlrsrftio5naue04.apps.googleusercontent.com',
+        scopes: ['profile', 'email'],
+      });
+
+      if (result.type === 'success') {
+        console.log(result)
+        return result.accessToken;
+      } else {
+        return {cancelled: true};
+      }
+    } catch(e) {
+      return {error: true};
+    }
+  }
+  loginG = async () => {
+    const result = await this.signInWithGoogleAsync()
   }
  
   ShareMessage=()=>
@@ -80,6 +126,18 @@ export default class MonCompte extends Component {
       selectedItem: item,
   });
  
+  _renderUserInfo = () => {
+    return (
+      <View style={{ alignItems: 'center' }}>
+        <Image
+          source={{ uri: this.state.userInfo.picture.data.url }}
+          style={{ width: 100, height: 100, borderRadius: 50 }}
+        />
+        <Text style={{ fontSize: 20 }}>{this.state.userInfo.name}</Text>
+        <Text>ID: {this.state.userInfo.id}</Text>
+      </View>
+    );
+  };
   render() {
    
     const menu = <Menu onItemSelected={this.onMenuItemSelected} />;
@@ -113,13 +171,27 @@ export default class MonCompte extends Component {
         </Right>
       </Header>
       <Content  style={{backgroundColor:'#212121'}} >
+      
         <View style={styles.container}>
           <TouchableOpacity  onPress={ this.ShareMessage }>
             <View style={styles.instructions}>
               <Text>Simple Share</Text>
             </View>
           </TouchableOpacity>
+          
         </View>
+        {!this.state.userInfo ? (
+          <Button iconLeft onPress={()=>this.logInFB()} >
+          <Icon name='people' />
+          <Text>Connect with Facebook </Text>
+          </Button>
+        ) : (
+          this._renderUserInfo()
+        )}
+        <Button iconLeft onPress={()=>this.signInWithGoogleAsync()} >
+          <Icon name='people' />
+          <Text>Connect with Google </Text>
+          </Button>
       </Content>
         
       </View>
