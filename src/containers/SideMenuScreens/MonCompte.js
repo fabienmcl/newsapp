@@ -9,23 +9,26 @@ import {
   Alert, 
   YellowBox, 
   TouchableOpacity, 
+  TouchableHighlight,
   Dimensions,
   StatusBar,
-  Share
-} from 'react-native';
-import { AuthSession } from 'expo';
+  Share,
+  Modal
+} from 'react-native'; 
+import { AuthSession, Constants  } from 'expo';
 import {Actions} from 'react-native-router-flux';
 import { Container, Header, Title, Content, Footer, FooterTab, Left,Button, Right, Body, Icon, Text, List, ListItem } from 'native-base';
 import SideMenu from 'react-native-side-menu';
 import Menu from '../SideMenu/Menu';
-const screen = Dimensions.get('window');
+const screen = Dimensions.get('window'); 
 const FB_APP_ID = '2073630512892455';
 
 export default class MonCompte extends Component {
   constructor(props) {
     super(props);
     this.toggle = this.toggle.bind(this);
-    this.state = { isLoading: true, isOpen: false, selectedItem: 'compte', visible:false, userInfo: null,}
+    this.state = { isLoading: true, isOpen: false, selectedItem: 'compte', visible:false, userInfo: null,modalVisible: false, user: null,isVisible: false,
+    authUrl: null}
     YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
   }
   async logInFB() {
@@ -73,6 +76,73 @@ export default class MonCompte extends Component {
     const result = await this.signInWithGoogleAsync()
   }
  
+  _createToken() {
+    const url =
+      ' https://api.twitter.com/oauth/access_token' +
+      `?client_id=6LDZxejcMqpxKqo7wWZgZQWIo` +
+      `&client_secret=Ez5Y9aAAfuauGM7etMmLAq7Du8omuXE3W6MbMa1XHwQ9AK6WEH`;
+  
+    return fetch(url, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    }).then(res => res.json());
+  }
+  
+  signInWithTwitterAsync = async () => {
+    let redirectUrl = AuthSession.getRedirectUrl();
+    console.log(redirectUrl)
+    let result = await AuthSession.startAsync({
+      authUrl:
+      `https://api.twitter.com/oauth/authorize?` +
+      `&client_id=6LDZxejcMqpxKqo7wWZgZQWIo` +
+      `&client_secret=Ez5Y9aAAfuauGM7etMmLAq7Du8omuXE3W6MbMa1XHwQ9AK6WEH` +
+      `&redirect_uri=${encodeURIComponent(redirectUrl)}`
+    });
+    console.log(result);
+    if (result.type !== 'success') {
+      console.log("putain");
+    }else{
+      if (result.type === 'success') {
+        let resultToken = await this._createToken();
+        console.log(resultToken)
+      }
+    }
+
+    this.setState({ result });
+  };
+
+  loginTwitter= ()=>{
+    
+  }
+  signInWithTwitterAsync2 = async () => {
+    let redirectUrl = AuthSession.getRedirectUrl();
+    const { type, token } = await AuthSession.startAsync({
+      authUrl:
+        `https://api.twitter.com/oauth/authorize?`+
+        `client_id=`+`904690710586294272-fGju0Eq8ZmwthemGif7lF9bVn6Az4Op`+
+        `&redirect_uri=${encodeURIComponent(redirectUrl)}`
+
+    });
+    if (type === 'success') {
+      this.state({result})
+      console.log(result)
+    }else{
+
+    }
+    /*
+    let result = await AuthSession.startAsync({
+      authUrl:
+        `https://www.facebook.com/v2.8/dialog/oauth?response_type=token` +
+        `&client_id=${FB_APP_ID}` +
+        `&redirect_uri=${encodeURIComponent(redirectUrl)}`,
+    });
+    this.setState({ result });
+  };  */
+  } 
+
   ShareMessage=()=>
     {
             Share.share(
@@ -138,6 +208,7 @@ export default class MonCompte extends Component {
       </View>
     );
   };
+  
   render() {
    
     const menu = <Menu onItemSelected={this.onMenuItemSelected} />;
@@ -192,6 +263,32 @@ export default class MonCompte extends Component {
           <Icon name='people' />
           <Text>Connect with Google </Text>
           </Button>
+        <Button iconLeft onPress={()=>this.setState({modalVisible: !this.state.modalVisible})  } >
+          <Icon name='people' />
+          <Text>Connect with Twitter </Text>
+        </Button>
+ 
+        <Modal
+          animationType="slide"
+          transparent={false}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            alert('Modal has been closed.');
+          }}>
+          <View style={{marginTop: 22}}>
+            <View>
+              <Text>Hello World!</Text>
+
+              <TouchableHighlight
+                onPress={() =>this.setState({modalVisible: !this.state.modalVisible})}>
+                <Text>Hide Modal</Text>
+              </TouchableHighlight>
+            </View>
+          </View>
+        </Modal>
+
+
+
       </Content>
         
       </View>
@@ -242,6 +339,27 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 20,
   },
+  loginContainer: {
+    paddingHorizontal: 32,
+    marginBottom: 64,
+    backgroundColor: "transparent"
+  },
+  loginButton: {
+    backgroundColor: "#fff",
+    paddingVertical: 16,
+    borderRadius: 64,
+    overflow: "hidden"
+  },
+  loginButtonText: {
+    color: Constants.manifest.primaryColor,
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  loginCloseText: {
+    color: "#fff",
+    fontWeight: "bold"
+  }
 });
 
 /**

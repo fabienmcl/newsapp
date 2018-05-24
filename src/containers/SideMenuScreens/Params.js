@@ -13,7 +13,7 @@ import {
   StatusBar
 } from 'react-native';
 import {Actions} from 'react-native-router-flux';
-import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text, List, ListItem } from 'native-base';
+import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text, List, ListItem, Switch } from 'native-base';
 import SideMenu from 'react-native-side-menu';
 import Menu from '../SideMenu/Menu';
 const screen = Dimensions.get('window');
@@ -22,7 +22,7 @@ export default class Param extends Component {
   constructor(props) {
     super(props);
     this.toggle = this.toggle.bind(this);
-    this.state = { isLoading: true, isOpen: false, selectedItem: 'param'}
+    this.state = { isLoading: true, isOpen: false, selectedItem: 'param', location:false}
     YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
   }
  
@@ -97,7 +97,54 @@ export default class Param extends Component {
         <Right>
         </Right>
       </Header>
-      <Content  style={{backgroundColor:'#212121'}} >
+      <Content  style={{backgroundColor:'#fff'}} >
+
+      <List>
+            <ListItem icon>
+              <Left>
+                <Icon name="map" />
+              </Left>
+              <Body>
+                <Text>Location</Text>
+              </Body>
+              <Right>
+                <Switch value={this.state.location} onValueChange = {()=>this.setState({location: !this.state.location})} />
+              </Right>
+            </ListItem>
+            <ListItem icon>
+              <Left>
+                <Icon name="pizza" />
+              </Left>
+              <Body>
+                <Text>Accelerometer</Text>
+              </Body>
+              <Right>
+                <Switch value={false} />
+              </Right>
+            </ListItem>
+            <ListItem icon>
+              <Left>
+                <Icon name="pizza" />
+              </Left>
+              <Body>
+                <Text>Magnetometer</Text>
+              </Body>
+              <Right>
+                <Switch value={false} />
+              </Right>
+            </ListItem>
+            <ListItem icon>
+              <Left>
+                <Icon name="pizza" />
+              </Left>
+              <Body>
+                <Text>Gyroscope</Text>
+              </Body>
+              <Right>
+                <Switch value={false} />
+              </Right>
+            </ListItem>
+          </List>
             
         </Content>
         <Footer style={{ backgroundColor: '#212121'}} >

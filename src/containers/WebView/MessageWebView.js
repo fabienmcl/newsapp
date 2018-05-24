@@ -469,7 +469,7 @@ export default class MessageWebView extends React.Component {
                         </TouchableOpacity>
                 </View>
                 <View style={{ alignItems: 'center', justifyContent: 'flex-end'}}>
-                    <Button iconLeft block light onPress={ this.ShareMessage }>
+                    <Button iconLeft block onPress={ this.ShareMessage }>
                         <Icon name='share' />
                         <Text>Partage l'article </Text>
                     </Button>

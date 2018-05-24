@@ -14,7 +14,7 @@ import Favoris from './containers/SideMenuScreens/Favoris';
 import Historique from './containers/SideMenuScreens/Historique';
 import MonCompte from './containers/SideMenuScreens/MonCompte';
 import Concept from './containers/SideMenuScreens/Concept';
-import Param from './containers/SideMenuScreens/Params'
+import Param from './containers/SideMenuScreens/Params';
 {/*prototypes*/}
 import ListView from './prototypes/ListView/ListView';
 import Details from './prototypes/ListView/Movie';
@@ -34,7 +34,7 @@ export default class Routes extends Component<{}> {
 					{/*login*/}
 					<Scene key="loginapp" component={Loginapp} title="Loginapp"  initial ={false} /> 
 					{/*home*/}
-					<Scene key="flatListViewArticle" component={FlatListViewArticle} title="FlatListViewArticle"  title="Renewal" initial ={true} panHandlers={null} /> 
+					<Scene key="flatListViewArticle" component={FlatListViewArticle} title="FlatListViewArticle"  title="Renewal" initial ={false} panHandlers={null} /> 
 					<Scene key="flatDemo" component={FlatDemo} title="FlatDemo"  title="Renewal" initial ={false} /> 
 					{/*webview*/}
 					<Scene key="webviewcustom" component={Webviewcustom} title="Webviewcustom"  />
@@ -42,7 +42,7 @@ export default class Routes extends Component<{}> {
 					<Scene key="favoris" component={Favoris} title="Favoris" initial={false} panHandlers={null}/>
 					<Scene key="historique" component={Historique} title="Historique" initial={false} panHandlers={null}/>
 					<Scene key="monCompte" component={MonCompte} title="Mon Compte" initial={false} panHandlers={null}/>
-					<Scene key="concept" component={Concept} title="Le Concept" initial={false}  panHandlers={null}/>
+					<Scene key="concept" component={Concept} title="Le Concept" initial={true}  panHandlers={null}/>
 					<Scene key="param" component={Param} title="settings" initial={false}  panHandlers={null}/>
 					{/*prototypes*/}
 					<Scene key="listView" component={ListView} title="ListView" initial={false} />	
