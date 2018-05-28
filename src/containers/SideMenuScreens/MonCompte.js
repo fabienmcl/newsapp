@@ -17,18 +17,37 @@ import {
 } from 'react-native'; 
 import { AuthSession, Constants  } from 'expo';
 import {Actions} from 'react-native-router-flux';
-import { Container, Header, Title, Content, Footer, FooterTab, Left,Button, Right, Body, Icon, Text, List, ListItem } from 'native-base';
+import { Container, Header, Title, Content, Footer, FooterTab, Left,Button, Right, Body, Icon, Text, List, ListItem, CardItem, Card, Switch } from 'native-base';
 import SideMenu from 'react-native-side-menu';
 import Menu from '../SideMenu/Menu';
+import Dialog from "react-native-dialog";
+import man from '../../images/man.png'
+import woman from '../../images/girl.png'
 const screen = Dimensions.get('window'); 
 const FB_APP_ID = '2073630512892455';
-
+const userInformationBasic = [ {
+  firstName : "Prenom",
+  lastName : "NOM",
+  sex : "Man",
+  birthday : "01/01/1970",
+  location : "Orsay",
+  email : "hubert@gmail.com",
+  phone : "0622659615",
+  facebook : 0,
+  twitter : 0,
+  google : 0,
+}];
 export default class MonCompte extends Component {
   constructor(props) {
     super(props);
     this.toggle = this.toggle.bind(this);
-    this.state = { isLoading: true, isOpen: false, selectedItem: 'compte', visible:false, userInfo: null,modalVisible: false, user: null,isVisible: false,
-    authUrl: null}
+    this.state = { isLoading: true, isOpen: false, selectedItem: 'compte', visible:false, userInfo: null,modalVisible: false, user: null,isVisible: false, 
+    dialogLocationIsVisible: false,
+    dialogPhoneIsVisible: false,
+    authUrl: null,
+    userInformationBasic : userInformationBasic[0],
+    dialogText : null
+    }
     YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
   }
   async logInFB() {
@@ -76,6 +95,33 @@ export default class MonCompte extends Component {
     const result = await this.signInWithGoogleAsync()
   }
  
+  handleChangeSex(sx) {
+    const userInformationBasic = this.state.userInformationBasic;
+    userInformationBasic.sex = sx;
+
+    // update state
+    this.setState({
+      userInformationBasic,
+    });
+  };
+  handleChangeLocation(){
+    console.log(this.state.dialogText)
+    const userInformationBasic = this.state.userInformationBasic;
+    userInformationBasic.location = this.state.dialogText;
+    this.setState({
+      userInformationBasic,
+      dialogLocationIsVisible:false
+    });
+  }
+  handleChangePhone(){
+    console.log(this.state.dialogText)
+    const userInformationBasic = this.state.userInformationBasic;
+    userInformationBasic.phone = this.state.dialogText;
+    this.setState({
+      userInformationBasic,
+      dialogPhoneIsVisible:false
+    });
+  }
   _createToken() {
     const url =
       ' https://api.twitter.com/oauth/access_token' +
@@ -243,49 +289,227 @@ export default class MonCompte extends Component {
       </Header>
       <Content  style={{backgroundColor:'#212121'}} >
       
+      
         <View style={styles.container}>
-          <TouchableOpacity  onPress={ this.ShareMessage }>
-            <View style={styles.instructions}>
-              <Text>Simple Share</Text>
+        <TouchableOpacity>
+            <View >
+            <Image
+            source={this.state.userInformationBasic.sex == "Man" ? man: woman}
+            style={{
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            />
             </View>
-          </TouchableOpacity>
+        </TouchableOpacity>
+        <Card style={{flex: 1, width:'100%'}}>
+          <CardItem header bordered>
+           
+            <Text>Prenom NOM</Text>
+         
+              
+          </CardItem>
+          <CardItem bordered>
+          <List style={{flex: 1, width:'100%'}}>
+            <ListItem icon>
+              <Left>
+                <Icon name="person" style={{color:'#0063DC'}}/>
+              </Left>
+              <Body>
+                <Text>Sex</Text>
+              </Body>
+              <TouchableHighlight
+                onPress={() => Alert.alert(
+                  'What is your sex',
+                  '“Tous les hommes, femmes comprises, naissent prisonniers et inégaux, ce que le droit doit essayer de corriger dans la mesure du possible.”-Philippe Sollers ',
+                  [
+                    {text: 'Man', onPress: () => this.handleChangeSex("Man") },
+                    {text: 'Woman', onPress: () => this.handleChangeSex("Woman")},
+                  ],
+                  { cancelable: false }
+                )} >
+              <Right>
+                <Text>{this.state.userInformationBasic.sex}</Text>
+                <Icon name="arrow-forward" />
+              </Right>
+              </TouchableHighlight>
+            </ListItem>
+            <ListItem icon>
+              <Left>
+                <Icon name="calendar" style={{color:'#33CCFF'}}/>
+              </Left>
+              <Body>
+                <Text>Birthday</Text>
+              </Body>
+              <Right>
+                <Text>{this.state.userInformationBasic.birthday}</Text>
+                <Icon name="arrow-forward" />
+              </Right>
+            </ListItem>
+            <Dialog.Container visible={this.state.dialogLocationIsVisible}>
+              <Dialog.Title>Location</Dialog.Title>
+              <Dialog.Description>
+                Change your Location
+              </Dialog.Description>
+              <Dialog.Input onChangeText={(text) => this.setState({dialogText: text}) }  >
+                Orsay
+              </Dialog.Input>
+              <Dialog.Button label="Cancel" onPress={()=>this.setState({dialogLocationIsVisible : !this.state.dialogLocationIsVisible})}/>
+              <Dialog.Button label="OK" onPress={()=>this.handleChangeLocation()}/>
+            </Dialog.Container>
+            <ListItem icon>
+              <Left>
+                <Icon name="navigate" style={{color:'green'}}/>
+              </Left>
+              <Body>
+                <Text>Location</Text>
+              </Body>
+              <TouchableHighlight
+                onPress={() =>this.setState({dialogLocationIsVisible : !this.state.dialogLocationIsVisible}) }>
+                  
+              <Right>
+                <Text>{this.state.userInformationBasic.location}</Text>
+                <Icon name="arrow-forward" />
+              </Right>
+              </TouchableHighlight>
+            </ListItem>
+            <ListItem icon>
+              <Left>
+                <Icon name="ios-mail-open-outline" style={{color:'#FF3333'}}/>
+              </Left>
+              <Body>
+                <Text>Email</Text>
+              </Body>
+              <Right>
+                <Text>{this.state.userInformationBasic.email}</Text>
+                <Icon name="arrow-forward" />
+              </Right>
+            </ListItem>
+            <Dialog.Container visible={this.state.dialogPhoneIsVisible}>
+              <Dialog.Title>Phone</Dialog.Title>
+              <Dialog.Description>
+                Change your Phone
+              </Dialog.Description>
+              <Dialog.Input keyboardType={'numeric'} onChangeText={(text) => this.setState({dialogText: text}) } >
+                {this.state.userInformationBasic.phone}
+              </Dialog.Input>
+              <Dialog.Button label="Cancel" onPress={()=>this.setState({dialogPhoneIsVisible : !this.state.dialogPhoneIsVisible})}/>
+              <Dialog.Button label="OK" onPress={()=>this.handleChangePhone()}/>
+            </Dialog.Container>
+            <ListItem icon>
+              <Left>
+                <Icon name="ios-phone-portrait" />
+              </Left>
+              <Body>
+                <Text>Phone</Text>
+              </Body>
+              {/*<TouchableHighlight onPress={() =>this.setState({dialogPhoneIsVisible : !this.state.dialogPhoneIsVisible}) >
+               */} 
+               <TouchableHighlight
+                onPress={() =>this.setState({dialogPhoneIsVisible : !this.state.dialogPhoneIsVisible}) }>
+                  
+              <Right>
+                <Text>{this.state.userInformationBasic.phone}</Text>
+                <Icon name="arrow-forward" />
+              </Right>
+              </TouchableHighlight>
+            </ListItem>
+          </List>
+            </CardItem>
+            <CardItem header bordered>
+              <Text>Connect with social network</Text>
+          </CardItem>
+          <CardItem bordered>
+          <List style={{flex: 1, width:'100%'}}>
+            <ListItem icon>
+            
+              <Left>
+              <TouchableHighlight
+                onPress={()=>this.logInFB()}>
+                <Icon name="logo-facebook" style={{color:'#3b5998'}} />
+                </TouchableHighlight>
+              </Left>
+              <Body>
+                <TouchableHighlight
+                onPress={()=>this.logInFB()}>
+                <Text>Facebook</Text>
+                </TouchableHighlight>
+                
+              </Body>
+              <Right>
+              <TouchableHighlight
+                onPress={()=>this.logInFB()}>
+                <Icon name='close-circle' style={{color:'red'}}/>
+                </TouchableHighlight>
+                
+              </Right>
+              
+            </ListItem>
+            <ListItem icon>
+              <Left>
+              <TouchableHighlight
+               >
+                <Icon name="logo-twitter" style={{color:'#33CCFF'}} />
+                </TouchableHighlight>
+              </Left>
+              <Body>
+              <TouchableHighlight
+                onPress={() => Alert.alert(
+                  'lifehack',
+                  'Delete Twitter from your phone, because it is the worst',
+                  [
+                    {text: 'Cancel', onPress: () => console.log('Cancel Pressed!')},
+                    {text: 'OK', onPress: this.onDeleteBTN},
+                  ],
+                  { cancelable: false }
+                )} >
+                <Text>Twitter</Text>
+                </TouchableHighlight>
+                
+              </Body>
+              <Right>
+                <TouchableHighlight
+                >
+                <Icon name='close-circle' style={{color:'red'}}/>
+                </TouchableHighlight>
+              </Right>
+            </ListItem>
+            <ListItem icon>
+              <Left>
+              <TouchableHighlight
+                onPress={()=>this.signInWithGoogleAsync()}>
+                <Icon name="logo-google" style={{color:'#DD4B39'}} />
+                </TouchableHighlight>
+              </Left>
+              <Body>
+                <TouchableHighlight
+                onPress={()=>this.signInWithGoogleAsync()}>
+                <Text>Google</Text>
+                </TouchableHighlight>
+              </Body>
+              <Right>
+              <TouchableHighlight
+                onPress={()=>this.signInWithGoogleAsync()}>
+                <Icon name='checkmark-circle'  style={{color:'green'}} />
+                </TouchableHighlight>
+                
+              </Right>
+            </ListItem>
+          </List>
+          </CardItem>
+          </Card>
           
         </View>
         {!this.state.userInfo ? (
-          <Button iconLeft onPress={()=>this.logInFB()} >
-          <Icon name='people' />
-          <Text>Connect with Facebook </Text>
+          <Button onPress={()=>this.logInFB()}  style={{backgroundColor:'#212121'}} >
+        
+          <Text> </Text>
           </Button>
         ) : (
           this._renderUserInfo()
         )}
-        <Button iconLeft onPress={()=>this.signInWithGoogleAsync()} >
-          <Icon name='people' />
-          <Text>Connect with Google </Text>
-          </Button>
-        <Button iconLeft onPress={()=>this.setState({modalVisible: !this.state.modalVisible})  } >
-          <Icon name='people' />
-          <Text>Connect with Twitter </Text>
-        </Button>
  
-        <Modal
-          animationType="slide"
-          transparent={false}
-          visible={this.state.modalVisible}
-          onRequestClose={() => {
-            alert('Modal has been closed.');
-          }}>
-          <View style={{marginTop: 22}}>
-            <View>
-              <Text>Hello World!</Text>
-
-              <TouchableHighlight
-                onPress={() =>this.setState({modalVisible: !this.state.modalVisible})}>
-                <Text>Hide Modal</Text>
-              </TouchableHighlight>
-            </View>
-          </View>
-        </Modal>
+        
 
 
 

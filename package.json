@@ -11,6 +11,7 @@
     "react-native-animatable": "^1.2.4",
     "react-native-card-stack-swiper": "^1.0.8",
     "react-native-device-battery": "^1.0.0",
+    "react-native-dialog": "^3.3.0",
     "react-native-drawer": "^2.5.0",
     "react-native-elements": "^0.19.1",
     "react-native-modal": "^6.0.0",
