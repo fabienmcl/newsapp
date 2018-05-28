@@ -113,6 +113,15 @@ export default class MonCompte extends Component {
       dialogLocationIsVisible:false
     });
   }
+  handleChangeEmail(){
+    console.log(this.state.dialogText)
+    const userInformationBasic = this.state.userInformationBasic;
+    userInformationBasic.email = this.state.dialogText;
+    this.setState({
+      userInformationBasic,
+      dialogEmailIsVisible:false
+    });
+  }
   handleChangePhone(){
     console.log(this.state.dialogText)
     const userInformationBasic = this.state.userInformationBasic;
@@ -373,6 +382,17 @@ export default class MonCompte extends Component {
               </Right>
               </TouchableHighlight>
             </ListItem>
+            <Dialog.Container visible={this.state.dialogEmailIsVisible}>
+              <Dialog.Title>Email</Dialog.Title>
+              <Dialog.Description>
+                Change your email
+              </Dialog.Description>
+              <Dialog.Input onChangeText={(text) => this.setState({dialogText: text}) } >
+                {this.state.userInformationBasic.email}
+              </Dialog.Input>
+              <Dialog.Button label="Cancel" onPress={()=>this.setState({dialogEmailIsVisible : !this.state.dialogEmailIsVisible})}/>
+              <Dialog.Button label="OK" onPress={()=>this.handleChangeEmail()}/>
+            </Dialog.Container>
             <ListItem icon>
               <Left>
                 <Icon name="ios-mail-open-outline" style={{color:'#FF3333'}}/>
@@ -380,10 +400,15 @@ export default class MonCompte extends Component {
               <Body>
                 <Text>Email</Text>
               </Body>
-              <Right>
+              <TouchableHighlight
+                onPress={() =>this.setState({dialogEmailIsVisible : !this.state.dialogEmailIsVisible}) }>
+                  
+                <Right>
                 <Text>{this.state.userInformationBasic.email}</Text>
                 <Icon name="arrow-forward" />
               </Right>
+              </TouchableHighlight>
+              
             </ListItem>
             <Dialog.Container visible={this.state.dialogPhoneIsVisible}>
               <Dialog.Title>Phone</Dialog.Title>
