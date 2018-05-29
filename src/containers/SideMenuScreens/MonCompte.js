@@ -21,6 +21,7 @@ import { Container, Header, Title, Content, Footer, FooterTab, Left,Button, Righ
 import SideMenu from 'react-native-side-menu';
 import Menu from '../SideMenu/Menu';
 import Dialog from "react-native-dialog";
+import DatePicker from 'react-native-datepicker';
 import man from '../../images/man.png'
 import woman from '../../images/girl.png'
 const screen = Dimensions.get('window'); 
@@ -46,7 +47,8 @@ export default class MonCompte extends Component {
     dialogPhoneIsVisible: false,
     authUrl: null,
     userInformationBasic : userInformationBasic[0],
-    dialogText : null
+    dialogText : null,
+    date:"01-01-2018"
     }
     YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
   }
@@ -320,7 +322,7 @@ export default class MonCompte extends Component {
           </CardItem>
           <CardItem bordered>
           <List style={{flex: 1, width:'100%'}}>
-            <ListItem icon>
+            <ListItem icon style={{flex: 1, width:'100%'}}>
               <Left>
                 <Icon name="person" style={{color:'#0063DC'}}/>
               </Left>
@@ -348,11 +350,36 @@ export default class MonCompte extends Component {
                 <Icon name="calendar" style={{color:'#33CCFF'}}/>
               </Left>
               <Body>
-                <Text>Birthday</Text>
+                <Text>Birth</Text>
               </Body>
               <Right>
-                <Text>{this.state.userInformationBasic.birthday}</Text>
-                <Icon name="arrow-forward" />
+              <DatePicker
+          style={{width: 200}}
+          date={this.state.date}
+          mode="date"
+          placeholder="select date"
+          format="DD-MM-YYYY"
+          minDate="01-01-1920"
+          maxDate="01-01-2020"
+          confirmBtnText="Confirm"
+          cancelBtnText="Cancel"
+          showIcon={false}
+          customStyles={{
+            dateIcon: {
+              position: 'absolute',
+              left: 0,
+              top: 4,
+              marginLeft: 0
+            },
+            dateInput: {
+              marginLeft: 36
+            }
+            // ... You can check the source to find the other keys.
+          }}
+          onDateChange={(date) => {this.setState({date: date})}}
+        />
+                {/*<Text>{this.state.userInformationBasic.birthday}</Text>
+                <Icon name="arrow-forward" />*/}
               </Right>
             </ListItem>
             <Dialog.Container visible={this.state.dialogLocationIsVisible}>
@@ -526,10 +553,30 @@ export default class MonCompte extends Component {
           
         </View>
         {!this.state.userInfo ? (
-          <Button onPress={()=>this.logInFB()}  style={{backgroundColor:'#212121'}} >
-        
-          <Text> </Text>
-          </Button>
+          <DatePicker
+          style={{width: 200}}
+          date={this.state.date}
+          mode="date"
+          placeholder="select date"
+          format="DD-MM-YYYY"
+          minDate="01-01-1920"
+          maxDate="01-01-2020"
+          confirmBtnText="Confirm"
+          cancelBtnText="Cancel"
+          customStyles={{
+            dateIcon: {
+              position: 'absolute',
+              left: 0,
+              top: 4,
+              marginLeft: 0
+            },
+            dateInput: {
+              marginLeft: 36
+            }
+            // ... You can check the source to find the other keys.
+          }}
+          onDateChange={(date) => {this.setState({date: date})}}
+        />
         ) : (
           this._renderUserInfo()
         )}
