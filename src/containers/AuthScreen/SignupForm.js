@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Alert } from 'react-native'
 import { Text, View } from 'react-native-animatable'
 
 import CustomButton from '../../components/CustomButton'
@@ -32,17 +32,7 @@ export default class SignupForm extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.form} ref={(ref) => this.formRef = ref}>
-          <CustomTextInput
-            ref={(ref) => this.mobileInputRef = ref}
-            placeholder={'Full name'}
-            editable={!isLoading}
-            returnKeyType={'next'}
-            blurOnSubmit={false}
-            withRef={true}
-            onSubmitEditing={() => this.emailInputRef.focus()}
-            onChangeText={(value) => this.setState({ fullName: value })}
-            isEnabled={!isLoading}
-          />
+          
           <CustomTextInput
             ref={(ref) => this.emailInputRef = ref}
             placeholder={'Email'}
@@ -51,17 +41,31 @@ export default class SignupForm extends Component {
             returnKeyType={'next'}
             blurOnSubmit={false}
             withRef={true}
-            onSubmitEditing={() => this.passwordInputRef.focus()}
+            onSubmitEditing={() => this.mobileInputRef.focus()}
             onChangeText={(value) => this.setState({ email: value })}
             isEnabled={!isLoading}
           />
           <CustomTextInput
+            ref={(ref) => this.mobileInputRef = ref}
+            placeholder={'password'}
+            editable={!isLoading}
+            returnKeyType={'next'}
+            secureTextEntry={true}
+            blurOnSubmit={false}
+            withRef={true}
+            onSubmitEditing={() => this.passwordInputRef.focus()}
+            onChangeText={(value) => this.setState({ fullName: value })}
+            isEnabled={!isLoading}
+          />
+
+          <CustomTextInput
             ref={(ref) => this.passwordInputRef = ref}
-            placeholder={'Password'}
+            placeholder={'confirm Password'}
             editable={!isLoading}
             returnKeyType={'done'}
             secureTextEntry={true}
             withRef={true}
+            //onSubmitEditing={() => this.mobileInputRef.focus()}
             onChangeText={(value) => this.setState({ password: value })}
             isEnabled={!isLoading}
           />
@@ -69,7 +73,14 @@ export default class SignupForm extends Component {
         <View style={styles.footer}>
           <View ref={(ref) => this.buttonRef = ref} animation={'bounceIn'} duration={600} delay={400}>
             <CustomButton
-              onPress={() => onSignupPress(email, password, fullName)}
+              onPress={() => this.state.fullName === this.state.password ?  onSignupPress(email, password, fullName): Alert.alert(
+                'error',
+                'the passwords must be identical',
+                [
+                 {text: 'OK', onPress: () => console.log('ok Pressed!')},
+                ],
+                { cancelable: false }
+              )}
               isEnabled={isValid}
               isLoading={isLoading}
               buttonStyle={styles.createAccountButton}
@@ -87,6 +98,7 @@ export default class SignupForm extends Component {
           >
             {'Already have an account?'}
           </Text>
+          
         </View>
       </View>
     )

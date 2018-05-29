@@ -8,7 +8,7 @@ import metrics from '../../config/metrics'
 import Opening from './Opening'
 import SignupForm from './SignupForm'
 import LoginForm from './LoginForm'
-
+import Expo from "expo";
 const IMAGE_WIDTH = metrics.DEVICE_WIDTH * 0.8
 
 if (Platform.OS === 'android') UIManager.setLayoutAnimationEnabledExperimental(true)
@@ -42,12 +42,23 @@ if (Platform.OS === 'android') UIManager.setLayoutAnimationEnabledExperimental(t
  *   2. fadeOut the logo, 3. tells the container that the login animation has completed and that the app is ready to show the next screen (HomeScreen).
  */
 export default class AuthScreen extends Component {
-  
+  constructor(props) {
+    super(props);
+  }
 
   state = {
     visibleForm: null // Can be: null | SIGNUP | LOGIN
   }
 
+  async componentWillMount() {
+    await Expo.Font.loadAsync({
+      Roboto: require("native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+      Ionicons: require("@expo/vector-icons/fonts/Ionicons.ttf"),
+    });
+    
+   
+  }
   componentWillUpdate (nextProps) {
     // If the user has logged/signed up succesfully start the hide animation
     if (!this.props.isLoggedIn && nextProps.isLoggedIn) {

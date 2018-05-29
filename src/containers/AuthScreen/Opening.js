@@ -1,36 +1,103 @@
 import React, { Component } from 'react'
-import { StyleSheet } from 'react-native'
-import { Text, View } from 'react-native-animatable'
-
+import { StyleSheet, Alert } from 'react-native'
+import { View } from 'react-native-animatable'
+import { Container, Content, Left,Button, Right, Body, Icon, Text} from 'native-base';
+import { AuthSession, Constants, Font  } from 'expo';
+import {Actions} from 'react-native-router-flux';
 import CustomButton from '../../components/CustomButton'
 import metrics from '../../config/metrics'
-
+const FB_APP_ID = '2073630512892455';
+import Expo from "expo";
 export default class Opening extends Component {
-  
+  constructor(props) {
+    super(props)
+  }
+  async componentWillMount() {
+    await Expo.Font.loadAsync({
+      Roboto: require("native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+      Ionicons: require("@expo/vector-icons/fonts/Ionicons.ttf"),
+    });
+   
+  }
+  async logInFB() {
+    const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync('2073630512892455', {
+        permissions: ['public_profile','email','user_birthday', 'user_friends'],
+      });
+    if (type === 'success') {
+      // Get the user's name using Facebook's Graph API
+      const response = await fetch(
+        `https://graph.facebook.com/me?access_token=${token}`);
+        /*Alert.alert(
+          'Logged in!',
+          `Hi ${(await response.json()).name}!`,
+        );
+        const userInfo = await response.json().then(this.setState({ userInfo }));
+        console.log(userInfo);*/
+        let userInfoResponse = await fetch(
+          `https://graph.facebook.com/me?access_token=${token}&fields=id,name,picture.type(large),email,birthday`
+        );
+        const userInfo = await userInfoResponse.json();
+        this.setState({ userInfo });
+        console.log(userInfo)
+        Actions.flatListViewArticle()
+    }
+  }
+  async  signInWithGoogleAsync() {
+    try {
+      const result = await Expo.Google.logInAsync({
+        androidClientId: '18527368615-6muuu4pvirifog1ufdei401tsgivm55f.apps.googleusercontent.com',
+        iosClientId: '18527368615-5rkmhp6aum543q94mlrsrftio5naue04.apps.googleusercontent.com',
+        scopes: ['profile', 'email'],
+      });
+
+      if (result.type === 'success') {
+        console.log(result)
+        Actions.flatListViewArticle()
+        return result.accessToken;
+      } else {
+        return {cancelled: true};
+      }
+    } catch(e) {
+      return {error: true};
+    }
+  }
+  loginG = async () => {
+    const result = await this.signInWithGoogleAsync()
+  }
 
   render () {
     return (
       <View style={styles.container}>
+        
         <View animation={'zoomIn'} delay={600} duration={400}>
-          <CustomButton
-            text={'Create Account'}
-            onPress={this.props.onCreateAccountPress}
-            buttonStyle={styles.createAccountButton}
-            textStyle={styles.createAccountButtonText}
-          />
+        
+        <Button iconLeft block onPress={this.props.onSignInPress} style={{backgroundColor:'#212121'}} > 
+          <Icon name="ios-at-outline" /> 
+          <Text style={{color:'white'}}> Sign In with email </Text>
+        </Button>
         </View>
         <View style={styles.separatorContainer} animation={'zoomIn'} delay={700} duration={400}>
           <View style={styles.separatorLine} />
-          <Text style={styles.separatorOr}>{'Or'}</Text>
+          <Text style={styles.separatorOr}>{'Or connect with'}</Text>
           <View style={styles.separatorLine} />
         </View>
-        <View animation={'zoomIn'} delay={800} duration={400}>
-          <CustomButton
-            text={'Sign In'}
-            onPress={this.props.onSignInPress}
-            buttonStyle={styles.signInButton}
-            textStyle={styles.signInButtonText}
-          />
+        <View animation={'zoomIn'} delay={700} duration={400}>
+          <Button iconLeft block  danger onPress={()=>this.loginG()}><Icon name="logo-google" /> <Text> Google </Text></Button>
+        </View>
+        <View style={{ marginVertical: 20}} animation={'zoomIn'} delay={700} duration={400}>
+          <Button iconLeft block primary onPress={()=>this.logInFB()}><Icon name="logo-facebook" /> <Text> Facebook </Text></Button>
+        </View>
+        <View animation={'zoomIn'} delay={700} duration={400}>
+        <Button iconLeft block info onPress={() => Alert.alert(
+                  'lifehack',
+                  'Delete Twitter from your phone, because it is the worst',
+                  [
+                    {text: 'Cancel', onPress: () => console.log('Cancel Pressed!')},
+                    {text: 'OK', onPress: this.onDeleteBTN},
+                  ],
+                  { cancelable: false }
+                )}><Icon name="logo-twitter" /> <Text> Twitter </Text></Button>
         </View>
       </View>
     )

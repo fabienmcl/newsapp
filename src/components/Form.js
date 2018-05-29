@@ -7,19 +7,10 @@ import {
   TouchableOpacity,
   Alert
 } from 'react-native';
-import {Actions} from 'react-native-router-flux';
 
 export default class Logo extends Component<{}> {
 
-  listview() {
-		Actions.listview()
-  }
-  webviewAnim(){
-    Actions.webviewAnim()
-  }
-  webviewScroll(){
-    Actions.webviewScroll()
-  }
+  
 	render(){
 		return(
 			<View style={styles.container}>
@@ -37,16 +28,7 @@ export default class Logo extends Component<{}> {
               secureTextEntry={true}
               placeholderTextColor = "#ffffff"
               ref={(input) => this.password = input}
-              />  
-          <TouchableOpacity style={styles.button} onPress={this.listview}>
-            <Text style={styles.buttonText}>{this.props.type}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={this.webviewAnim}>
-            <Text style={styles.buttonText}>webView+animation</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={this.webviewScroll}>
-            <Text style={styles.buttonText}>webView+ScrollView</Text>
-          </TouchableOpacity>  
+              /> 
   		</View>
 			)
 	}

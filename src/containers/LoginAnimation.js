@@ -20,7 +20,7 @@ import { View } from 'react-native-animatable';
 import { Icon } from 'native-base'
 import HomeScreen from './HomeScreen/HomeScreen'
 import AuthScreen from './AuthScreen'
-
+import Expo, { SQLite, Font, AppLoading } from 'expo';
 const SCREEN_HEIGHT = Dimensions.get('window').height
 const SCREEN_WIDTH  = Dimensions.get('window').width
 const SCREEN_WIDTH_CUSTOM_PADDING = SCREEN_WIDTH*0.43;
@@ -34,8 +34,16 @@ export default class WebV extends Component {
     this.state = {
       isLoggedIn: false, // Is the user authenticated?
       isLoading: false, // Is the user loggingIn/signinUp?
-      isAppReady: false // Has the app completed the login animation?
+      isAppReady: false, // Has the app completed the login animation?
+      loading: true
     }
+  }
+  async componentWillMount() {
+    await Font.loadAsync({
+      Roboto: require("native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+    });
+    this.setState({ loading: false });
   }
   _simulateLogin = (username, password) => {
     this.setState({ isLoading: true })
@@ -47,6 +55,7 @@ export default class WebV extends Component {
     setTimeout(() => this.setState({ isLoggedIn: true, isLoading: false }), 1000)
   }
   render() {
+    
     if (this.state.isAppReady) {
       return (
         <HomeScreen

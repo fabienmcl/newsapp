@@ -77,6 +77,7 @@ export default class LoginForm extends Component {
           >
             {'Not registered yet?'}
           </Text>
+          
         </View>
       </View>
     )

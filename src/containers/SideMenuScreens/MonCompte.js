@@ -15,7 +15,7 @@ import {
   Share,
   Modal
 } from 'react-native'; 
-import { AuthSession, Constants  } from 'expo';
+import { AuthSession, Constants,Font  } from 'expo';
 import {Actions} from 'react-native-router-flux';
 import { Container, Header, Title, Content, Footer, FooterTab, Left,Button, Right, Body, Icon, Text, List, ListItem, CardItem, Card, Switch } from 'native-base';
 import SideMenu from 'react-native-side-menu';
@@ -34,6 +34,7 @@ const userInformationBasic = [ {
   location : "Orsay",
   email : "hubert@gmail.com",
   phone : "0622659615",
+  mail : 0,
   facebook : 1,
   twitter : 0,
   google : 1,
@@ -51,6 +52,12 @@ export default class MonCompte extends Component {
     date:"01-01-1949"
     }
     YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
+  }
+  async componentDidMount(){
+    await Font.loadAsync({
+      Roboto: require("native-base/Fonts/Roboto.ttf"),
+      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+    });
   }
   async logInFB() {
     const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync('2073630512892455', {
@@ -483,6 +490,24 @@ export default class MonCompte extends Component {
           </CardItem>
           <CardItem bordered>
           <List style={{flex: 1, width:'100%'}}>
+            <ListItem icon>
+              <Left>
+              <TouchableHighlight>
+                <Icon name="ios-at-outline" style={{color:'#DD4B39'}} />
+                </TouchableHighlight>
+              </Left>
+              <Body>
+                <TouchableHighlight>
+                <Text>Mail</Text>
+                </TouchableHighlight>
+              </Body>
+              <Right>
+              <TouchableHighlight >
+                <Icon name={this.state.userInformationBasic.mail == 0 ? 'close-circle' : 'checkmark-circle'} style={{color: this.state.userInformationBasic.mail === 0 ? 'red' : 'green'}} />
+              </TouchableHighlight>
+                
+              </Right>
+            </ListItem>
             <ListItem icon >
             
               <Left>
