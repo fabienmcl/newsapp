@@ -27,16 +27,16 @@ import woman from '../../images/girl.png'
 const screen = Dimensions.get('window'); 
 const FB_APP_ID = '2073630512892455';
 const userInformationBasic = [ {
-  firstName : "Prenom",
-  lastName : "NOM",
+  firstName : "Hubert",
+  lastName : "BONISSEUR DE LA BATH",
   sex : "Man",
-  birthday : "01/01/1970",
+  birth : "01-01-1949",
   location : "Orsay",
   email : "hubert@gmail.com",
   phone : "0622659615",
-  facebook : 0,
+  facebook : 1,
   twitter : 0,
-  google : 0,
+  google : 1,
 }];
 export default class MonCompte extends Component {
   constructor(props) {
@@ -48,7 +48,7 @@ export default class MonCompte extends Component {
     authUrl: null,
     userInformationBasic : userInformationBasic[0],
     dialogText : null,
-    date:"01-01-2018"
+    date:"01-01-1949"
     }
     YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
   }
@@ -302,27 +302,28 @@ export default class MonCompte extends Component {
       
       
         <View style={styles.container}>
-        <TouchableOpacity>
-            <View >
+        <TouchableOpacity  >
             <Image
             source={this.state.userInformationBasic.sex == "Man" ? man: woman}
             style={{
               justifyContent: 'center',
               alignItems: 'center',
+              height:150,
+              width:150
             }}
             />
-            </View>
+          
         </TouchableOpacity>
         <Card style={{flex: 1, width:'100%'}}>
           <CardItem header bordered>
            
-            <Text>Prenom NOM</Text>
+            <Text>{this.state.userInformationBasic.firstName}  {this.state.userInformationBasic.lastName}</Text>
          
               
           </CardItem>
-          <CardItem bordered>
-          <List style={{flex: 1, width:'100%'}}>
-            <ListItem icon style={{flex: 1, width:'100%'}}>
+          <CardItem bordered style={{marginRight:0,paddingRight:0}} >
+          <List style={{flex: 1, width:'100%', marginRight:0,paddingRight:0}}>
+            <ListItem icon style={styles.listItemStyle}>
               <Left>
                 <Icon name="person" style={{color:'#0063DC'}}/>
               </Left>
@@ -345,7 +346,7 @@ export default class MonCompte extends Component {
               </Right>
               </TouchableHighlight>
             </ListItem>
-            <ListItem icon>
+            <ListItem icon icon style={styles.listItemStyle}>
               <Left>
                 <Icon name="calendar" style={{color:'#33CCFF'}}/>
               </Left>
@@ -359,27 +360,36 @@ export default class MonCompte extends Component {
           mode="date"
           placeholder="select date"
           format="DD-MM-YYYY"
-          minDate="01-01-1920"
-          maxDate="01-01-2020"
+          minDate="01-01-1921"
+          maxDate="01-01-2021"
           confirmBtnText="Confirm"
           cancelBtnText="Cancel"
           showIcon={false}
           customStyles={{
+           
             dateIcon: {
-              position: 'absolute',
-              left: 0,
-              top: 4,
-              marginLeft: 0
+             
             },
             dateInput: {
-              marginLeft: 36
+              marginLeft: 115,
+              marginRight:0,paddingRight:0,
+              borderRadius:25,
+              borderWidth: 0,
+            },
+            dateText:{
+              fontWeight: 'bold',
+              padding:0,
+              margin:0, 
+              color:'grey'
             }
+            
             // ... You can check the source to find the other keys.
           }}
           onDateChange={(date) => {this.setState({date: date})}}
         />
                 {/*<Text>{this.state.userInformationBasic.birthday}</Text>
                 <Icon name="arrow-forward" />*/}
+                <Icon name="arrow-forward" />
               </Right>
             </ListItem>
             <Dialog.Container visible={this.state.dialogLocationIsVisible}>
@@ -393,7 +403,7 @@ export default class MonCompte extends Component {
               <Dialog.Button label="Cancel" onPress={()=>this.setState({dialogLocationIsVisible : !this.state.dialogLocationIsVisible})}/>
               <Dialog.Button label="OK" onPress={()=>this.handleChangeLocation()}/>
             </Dialog.Container>
-            <ListItem icon>
+            <ListItem icon style={styles.listItemStyle}>
               <Left>
                 <Icon name="navigate" style={{color:'green'}}/>
               </Left>
@@ -420,7 +430,7 @@ export default class MonCompte extends Component {
               <Dialog.Button label="Cancel" onPress={()=>this.setState({dialogEmailIsVisible : !this.state.dialogEmailIsVisible})}/>
               <Dialog.Button label="OK" onPress={()=>this.handleChangeEmail()}/>
             </Dialog.Container>
-            <ListItem icon>
+            <ListItem icon style={styles.listItemStyle}>
               <Left>
                 <Icon name="ios-mail-open-outline" style={{color:'#FF3333'}}/>
               </Left>
@@ -448,7 +458,7 @@ export default class MonCompte extends Component {
               <Dialog.Button label="Cancel" onPress={()=>this.setState({dialogPhoneIsVisible : !this.state.dialogPhoneIsVisible})}/>
               <Dialog.Button label="OK" onPress={()=>this.handleChangePhone()}/>
             </Dialog.Container>
-            <ListItem icon>
+            <ListItem icon style={styles.listItemStyle}>
               <Left>
                 <Icon name="ios-phone-portrait" />
               </Left>
@@ -473,7 +483,7 @@ export default class MonCompte extends Component {
           </CardItem>
           <CardItem bordered>
           <List style={{flex: 1, width:'100%'}}>
-            <ListItem icon>
+            <ListItem icon >
             
               <Left>
               <TouchableHighlight
@@ -491,13 +501,13 @@ export default class MonCompte extends Component {
               <Right>
               <TouchableHighlight
                 onPress={()=>this.logInFB()}>
-                <Icon name='close-circle' style={{color:'red'}}/>
+                <Icon name={this.state.userInformationBasic.facebook == 0 ? 'close-circle' : 'checkmark-circle'} style={{color: this.state.userInformationBasic.facebook === 0 ? 'red' : 'green'}}/>
                 </TouchableHighlight>
                 
               </Right>
               
             </ListItem>
-            <ListItem icon>
+            <ListItem icon >
               <Left>
               <TouchableHighlight
                >
@@ -522,7 +532,7 @@ export default class MonCompte extends Component {
               <Right>
                 <TouchableHighlight
                 >
-                <Icon name='close-circle' style={{color:'red'}}/>
+                <Icon name={this.state.userInformationBasic.twitter == 0 ? 'close-circle' : 'checkmark-circle'} style={{color: this.state.userInformationBasic.twitter === 0 ? 'red' : 'green'}}/>
                 </TouchableHighlight>
               </Right>
             </ListItem>
@@ -542,7 +552,7 @@ export default class MonCompte extends Component {
               <Right>
               <TouchableHighlight
                 onPress={()=>this.signInWithGoogleAsync()}>
-                <Icon name='checkmark-circle'  style={{color:'green'}} />
+                <Icon name={this.state.userInformationBasic.facebook == 0 ? 'close-circle' : 'checkmark-circle'} style={{color: this.state.userInformationBasic.facebook === 0 ? 'red' : 'green'}} />
                 </TouchableHighlight>
                 
               </Right>
@@ -553,30 +563,8 @@ export default class MonCompte extends Component {
           
         </View>
         {!this.state.userInfo ? (
-          <DatePicker
-          style={{width: 200}}
-          date={this.state.date}
-          mode="date"
-          placeholder="select date"
-          format="DD-MM-YYYY"
-          minDate="01-01-1920"
-          maxDate="01-01-2020"
-          confirmBtnText="Confirm"
-          cancelBtnText="Cancel"
-          customStyles={{
-            dateIcon: {
-              position: 'absolute',
-              left: 0,
-              top: 4,
-              marginLeft: 0
-            },
-            dateInput: {
-              marginLeft: 36
-            }
-            // ... You can check the source to find the other keys.
-          }}
-          onDateChange={(date) => {this.setState({date: date})}}
-        />
+          <View>
+          </View>
         ) : (
           this._renderUserInfo()
         )}
@@ -624,6 +612,7 @@ const styles = StyleSheet.create({
     paddingLeft: '3%',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor:'#212121'
   },
   container: {
     flex: 1,
@@ -655,6 +644,11 @@ const styles = StyleSheet.create({
   loginCloseText: {
     color: "#fff",
     fontWeight: "bold"
+  },
+  listItemStyle :{
+    flex: 1, 
+    width:'100%',  
+    marginLeft:0, paddingLeft:0, marginRight:0, paddingRight:0
   }
 });
 
