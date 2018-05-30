@@ -113,9 +113,9 @@ export default class MessageWebView extends React.Component {
     ShareMessage=()=>{
         Share.share({
             title: this.props.navigation.state.params.title,
-            message: "Hello world, \n je t'envoi un super article lu sur l'application renewal : ",
+            message: `Bonjour, \n je pense que l'article : ${this.props.navigation.state.params.title} pourrait t'interresser. \n `,
             url: this.props.navigation.state.params.url,
-            subject: "Share Link from Renewal" //  for email 
+            subject: `Je recommande l'article : ${this.props.navigation.state.params.title}` //  for email 
         }).then(result => console.log(result)).catch(errorMsg => console.log(errorMsg));
     }
     /*

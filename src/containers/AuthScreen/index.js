@@ -1,7 +1,7 @@
 import React, { Component} from 'react'
 import { KeyboardAvoidingView, LayoutAnimation, Platform, StyleSheet, UIManager } from 'react-native'
 import { Image, View } from 'react-native-animatable'
-
+import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text, List, ListItem } from 'native-base';
 import imgLogo from '../../images/logo.png'
 import metrics from '../../config/metrics'
 
@@ -91,8 +91,17 @@ export default class AuthScreen extends Component {
     const { visibleForm } = this.state
     // The following style is responsible of the "bounce-up from bottom" animation of the form
     const formStyle = (!visibleForm) ? { height: 0 } : { marginTop: 40 }
+    console.log(this.props)
+    console.log(this.state)
     return (
       <View style={styles.container}>
+        {this.state.visibleForm === null ? (
+          <View>
+          </View>
+        ) : (
+          <Icon name={"ios-close"} onPress={()=>this.setState({visibleForm: null})} style={{color: 'black', width :'10%', paddingLeft: '3%', alignItems: 'center', justifyContent: 'center',color:"red"}}   />
+        )}
+            
         <Image
           animation={'bounceIn'}
           duration={1200}
