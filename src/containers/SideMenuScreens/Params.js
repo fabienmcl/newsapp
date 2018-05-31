@@ -13,7 +13,7 @@ import {
   StatusBar
 } from 'react-native';
 import {Actions} from 'react-native-router-flux';
-import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text, List, ListItem, Switch } from 'native-base';
+import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text, List, ListItem, Switch, Separator, Card, CardItem} from 'native-base';
 import SideMenu from 'react-native-side-menu';
 import Menu from '../SideMenu/Menu';
 const screen = Dimensions.get('window');
@@ -97,63 +97,178 @@ export default class Param extends Component {
         <Right>
         </Right>
       </Header>
-      <Content  style={{backgroundColor:'#fff'}} >
-
-      <List>
-            <ListItem icon>
+      <Content>
+          <List>
+          <ListItem itemDivider style={{backgroundColor:'#eeeeee'}}>
+              <Text style={{fontWeight: 'bold'}}>Gestion des capteurs</Text>
+            </ListItem> 
+            <ListItem itemDivider style={{backgroundColor:'#e0e0e0'}}>
+            <Text style={{color:'#a4a4a4', fontSize:14}}>
+                Certaines articles sont basées sur l'analyse fine de votre comportement.
+                L'accès a ses capteurs permet une recommandation d'article.
+            </Text>
+            </ListItem> 
+            <List style={{backgroundColor:'#ffffff'}}>
+            
+            <ListItem icon >
               <Left>
-                <Icon name="map" />
+              <Text>Localisation</Text>
               </Left>
               <Body>
-                <Text>Location</Text>
+              </Body>
+              <Right>
+              <Switch value={this.state.location} onValueChange = {()=>this.setState({location: !this.state.location})} />
+              </Right>
+            </ListItem>
+            <ListItem icon >
+              <Left>
+              <Text>Gyroscope</Text>
+              </Left>
+              <Body>
+              </Body>
+              <Right>
+              <Switch value={this.state.location} onValueChange = {()=>this.setState({location: !this.state.location})} />
+              </Right>
+            </ListItem>
+            <ListItem icon >
+              <Left>
+              <Text>Accelerometer</Text>
+              </Left>
+              <Body>
+              </Body>
+              <Right>
+              <Switch value={this.state.location} onValueChange = {()=>this.setState({location: !this.state.location})} />
+              </Right>
+            </ListItem>
+            <ListItem icon >
+              <Left>
+              <Text>Magnetometer</Text>
+              </Left>
+              <Body>
+              </Body>
+              <Right>
+              <Switch value={this.state.location} onValueChange = {()=>this.setState({location: !this.state.location})} />
+              </Right>
+            </ListItem>
+            <ListItem icon >
+              <Left>
+              <Text>Qualité du réseaux</Text>
+              </Left>
+              <Body>
+              </Body>
+              <Right>
+              <Switch value={this.state.location} onValueChange = {()=>this.setState({location: !this.state.location})} />
+              </Right>
+            </ListItem>
+            
+            </List>
+            
+            <ListItem itemDivider style={{backgroundColor:'#eeeeee'}}>
+              <Text  style={{fontWeight: 'bold'}}>Gestion des recommandations</Text>
+            </ListItem> 
+          <ListItem itemDivider style={{backgroundColor:'#e0e0e0'}}>
+          <Text style={{color:'#a4a4a4', fontSize:14}}>
+                Certaines articles sont basées sur ce que vous faites ailleurs. 
+                Mais vous verrez toujours des articles sur votre utilisation au sein de l'application.
+              </Text>
+            </ListItem> 
+            <List style={{backgroundColor:'#ffffff'}}>
+            
+            <ListItem icon >
+              <Left>
+              <Text>Basé sur votre activé</Text>
+              </Left>
+              <Body>
               </Body>
               <Right>
                 <Switch value={this.state.location} onValueChange = {()=>this.setState({location: !this.state.location})} />
               </Right>
             </ListItem>
-            <ListItem icon>
+            </List>
+
+            <List style={{backgroundColor:'#ffffff'}}>
+            <ListItem itemDivider style={{backgroundColor:'#f5f5f5'}}>
+            <Text style={{color:'#a4a4a4', fontSize:14}}>
+              Certaines recommandation d'articles sont basées sur activité en ligne sur les réseaux sociaux .   
+            </Text>
+            </ListItem> 
+            <ListItem icon >
               <Left>
-                <Icon name="pizza" />
+              <Text>Conservation et accès aux informations</Text>
               </Left>
               <Body>
-                <Text>Accelerometer</Text>
               </Body>
               <Right>
-                <Switch value={false} />
+                <Switch value={this.state.location} onValueChange = {()=>this.setState({location: !this.state.location})} />
               </Right>
             </ListItem>
-            <ListItem icon>
-              <Left>
-                <Icon name="pizza" />
-              </Left>
-              <Body>
-                <Text>Magnetometer</Text>
-              </Body>
-              <Right>
-                <Switch value={false} />
-              </Right>
-            </ListItem>
-            <ListItem icon>
-              <Left>
-                <Icon name="pizza" />
-              </Left>
-              <Body>
-                <Text>Gyroscope</Text>
-              </Body>
-              <Right>
-                <Switch value={false} />
-              </Right>
-            </ListItem>
-          </List>
             
+            <ListItem itemDivider style={{backgroundColor:'#f5f5f5'}}>
+            <Text style={{color:'#a4a4a4', fontSize:14}}>
+              La conservation d'informations ou l'accès à des informations déjà conservées sur votre appareil, par exemple des identifiants de l'appareil
+            </Text>
+            </ListItem>
+            </List>
+
+            
+            <ListItem itemDivider style={{backgroundColor:'#eeeeee'}}>
+              <Text style={{fontWeight: 'bold'}}>Plus d'information</Text>
+            </ListItem> 
+            <List style={{backgroundColor:'#ffffff'}}>
+            
+            <ListItem icon >
+              <Left>
+              <Text>Assistance</Text>
+              </Left>
+              <Body>
+              </Body>
+              <Right>
+              <Icon name="arrow-forward" />
+               </Right>
+            </ListItem>
+            <ListItem icon >
+              <Left>
+              <Text>Politique de confidentialité</Text>
+              </Left>
+              <Body>
+              </Body>
+              <Right>
+                <Icon name="arrow-forward" />
+              </Right>
+            </ListItem>
+            <ListItem icon >
+              <Left>
+              <Text>Condition de Service</Text>
+              </Left>
+              <Body>
+              </Body>
+              <Right>
+                <Icon name="arrow-forward" />
+              </Right>
+            </ListItem>
+            <ListItem icon >
+              <Left>
+              <Text>Juridique(autres)</Text>
+              </Left>
+              <Body>
+              </Body>
+              <Right>
+              <Icon name="arrow-forward" />
+               </Right>
+            </ListItem>
+            
+            
+            </List>
+
+
+
+
+          </List>
+          <Button
+                block danger> 
+              <Text>Demander mes données </Text>
+              </Button>
         </Content>
-        <Footer style={{ backgroundColor: '#212121'}} >
-          <FooterTab>
-            <Button full>
-              <Text >footer </Text>
-            </Button>
-          </FooterTab>
-        </Footer>
       </View>
       </SideMenu>
    );
