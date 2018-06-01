@@ -10,7 +10,9 @@ import {
   YellowBox, 
   TouchableOpacity, 
   Dimensions,
-  StatusBar
+  StatusBar,
+  AsyncStorage, 
+  ListView
 } from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text, List, ListItem, Switch, Separator, Card, CardItem} from 'native-base';
@@ -18,12 +20,47 @@ import SideMenu from 'react-native-side-menu';
 import Menu from '../SideMenu/Menu';
 const screen = Dimensions.get('window');
 
+let settings = [
+  {
+  location : true,
+  gyroscope : true,
+  accelerometer : true,
+  magnetometer : true,
+  networks : true,
+  activity : true, 
+  access :true
+
+}];
+
+
 export default class Param extends Component {
   constructor(props) {
     super(props);
     this.toggle = this.toggle.bind(this);
-    this.state = { isLoading: true, isOpen: false, selectedItem: 'param', location:false}
+    this.state = { isLoading: true, isOpen: false, selectedItem: 'param', location:false, settings:null}
     YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
+  }
+
+  async componentDidMount(){
+    console.log(settings)
+    console.log(settings[0].location)
+       
+    try {
+     // AsyncStorage.setItem('settings', JSON.stringify(settings));
+      AsyncStorage.getItem('settings', (err, result)=>{
+        console.log(result)
+        var json = JSON.parse(result)
+        console.log(json[0].location)
+        this.setState({settings : json[0], isLoading: false })
+        console.log(this.state.settings.location)
+
+      })
+      //AsyncStorage.removeItem('settings',(error, result));
+      
+    } catch (error) {
+      // Error saving data
+    }
+    
   }
  
   
@@ -67,7 +104,32 @@ export default class Param extends Component {
       selectedItem: item,
   });
  
+  changeStateLocation(){
+    const s = this.state.settings;
+    console.log(s)
+    s.location = s.location === 0 ? 1:0;
+    console.log(s)
+    this.setState({
+      settings : s
+    })
+  }
+  handleChangePhone(){
+    console.log(this.state.dialogText)
+    const userInformationBasic = this.state.userInformationBasic;
+    userInformationBasic.phone = this.state.dialogText;
+    this.setState({
+      userInformationBasic,
+      dialogPhoneIsVisible:false
+    });
+  }
   render() {
+    if (this.state.isLoading) {
+      return (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <ActivityIndicator size="large" />
+        </View>
+      );
+    }
    
     const menu = <Menu onItemSelected={this.onMenuItemSelected} />;
     return (
@@ -117,7 +179,7 @@ export default class Param extends Component {
               <Body>
               </Body>
               <Right>
-              <Switch value={this.state.location} onValueChange = {()=>this.setState({location: !this.state.location})} />
+              <Switch value={this.state.settings.location === 0 ? false : true} onChange={()=>this.changeStateLocation()}/>
               </Right>
             </ListItem>
             <ListItem icon >
@@ -127,7 +189,7 @@ export default class Param extends Component {
               <Body>
               </Body>
               <Right>
-              <Switch value={this.state.location} onValueChange = {()=>this.setState({location: !this.state.location})} />
+              <Switch value={this.state.settings.gyroscope === 0 ? false : true} />
               </Right>
             </ListItem>
             <ListItem icon >
@@ -137,7 +199,7 @@ export default class Param extends Component {
               <Body>
               </Body>
               <Right>
-              <Switch value={this.state.location} onValueChange = {()=>this.setState({location: !this.state.location})} />
+              <Switch value={this.state.settings.accelerometer === 0 ? false : true}  />
               </Right>
             </ListItem>
             <ListItem icon >
@@ -147,7 +209,7 @@ export default class Param extends Component {
               <Body>
               </Body>
               <Right>
-              <Switch value={this.state.location} onValueChange = {()=>this.setState({location: !this.state.location})} />
+              <Switch value={this.state.settings.magnetometer === 0 ? false : true}  />
               </Right>
             </ListItem>
             <ListItem icon >
@@ -157,7 +219,7 @@ export default class Param extends Component {
               <Body>
               </Body>
               <Right>
-              <Switch value={this.state.location} onValueChange = {()=>this.setState({location: !this.state.location})} />
+              <Switch value={this.state.settings.networks === 0 ? false : true}  />
               </Right>
             </ListItem>
             
@@ -181,7 +243,7 @@ export default class Param extends Component {
               <Body>
               </Body>
               <Right>
-                <Switch value={this.state.location} onValueChange = {()=>this.setState({location: !this.state.location})} />
+                <Switch value={this.state.settings.activity === 0 ? false : true}  />
               </Right>
             </ListItem>
             </List>
@@ -199,7 +261,7 @@ export default class Param extends Component {
               <Body>
               </Body>
               <Right>
-                <Switch value={this.state.location} onValueChange = {()=>this.setState({location: !this.state.location})} />
+                <Switch value={this.state.settings.access === 0 ? false : true}  />
               </Right>
             </ListItem>
             
