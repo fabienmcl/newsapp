@@ -13,7 +13,8 @@ import {
   Dimensions,
   StatusBar,
   Share,
-  Modal
+  Modal,
+  AsyncStorage
 } from 'react-native'; 
 import { AuthSession, Constants,Font  } from 'expo';
 import {Actions} from 'react-native-router-flux';
@@ -24,21 +25,25 @@ import Dialog from "react-native-dialog";
 import DatePicker from 'react-native-datepicker';
 import man from '../../images/man.png'
 import woman from '../../images/girl.png'
+import user from '../../images/user.png'
 const screen = Dimensions.get('window'); 
 const FB_APP_ID = '2073630512892455';
-const userInformationBasic = [ {
-  firstName : "Hubert",
-  lastName : "BONISSEUR DE LA BATH",
+const userInformation = [ {
+  firstName : "prenom",
+  lastName : "NOM",
+  image : '../../images/user.png',
   sex : "Man",
   birth : "01-01-1949",
   location : "Orsay",
-  email : "hubert@gmail.com",
-  phone : "0622659615",
+  email : "mail@gmail.com",
+  phone : "0607080910",
   mail : 0,
-  facebook : 1,
+  facebook : 0,
   twitter : 0,
-  google : 1,
+  google : 0,
 }];
+
+
 export default class MonCompte extends Component {
   constructor(props) {
     super(props);
@@ -47,18 +52,38 @@ export default class MonCompte extends Component {
     dialogLocationIsVisible: false,
     dialogPhoneIsVisible: false,
     authUrl: null,
-    userInformationBasic : userInformationBasic[0],
     dialogText : null,
     date:"01-01-1949"
     }
     YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
+    
   }
   async componentDidMount(){
+    console.log(userInformation)
     await Font.loadAsync({
       Roboto: require("native-base/Fonts/Roboto.ttf"),
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
     });
+    try {
+
+      //AsyncStorage.setItem('userInformationBasic', JSON.stringify(userInformation[0]));
+      AsyncStorage.getItem('userInformationBasic', (err, result)=>{
+        console.log(result)
+        var json = JSON.parse(result)
+        console.log(json)
+        //console.log(json[0].location)
+        this.setState({userInformationBasic : json, isLoading: false })
+        console.log(this.state.userInformationBasic.facebook)
+
+
+      })
+      //AsyncStorage.removeItem('settings',(error, result));
+      
+    } catch (error) {
+      // Error saving data
+    }
   }
+  
   async logInFB() {
     const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync('2073630512892455', {
         permissions: ['public_profile','email','user_birthday', 'user_friends'],
@@ -105,40 +130,50 @@ export default class MonCompte extends Component {
   }
  
   handleChangeSex(sx) {
-    const userInformationBasic = this.state.userInformationBasic;
-    userInformationBasic.sex = sx;
-
-    // update state
-    this.setState({
-      userInformationBasic,
-    });
+    const u = this.state.userInformationBasic;
+    u.sex = sx;
+    this.update(u)
   };
   handleChangeLocation(){
     console.log(this.state.dialogText)
-    const userInformationBasic = this.state.userInformationBasic;
-    userInformationBasic.location = this.state.dialogText;
-    this.setState({
-      userInformationBasic,
-      dialogLocationIsVisible:false
-    });
+    const u = this.state.userInformationBasic;
+    u.location = this.state.dialogText;
+    this.update(u)
   }
   handleChangeEmail(){
     console.log(this.state.dialogText)
-    const userInformationBasic = this.state.userInformationBasic;
-    userInformationBasic.email = this.state.dialogText;
-    this.setState({
-      userInformationBasic,
-      dialogEmailIsVisible:false
-    });
+    const u = this.state.userInformationBasic;
+    u.email = this.state.dialogText;
+    this.update(u)
+  }
+  handleChangeDate(date){
+    console.log(date)
+    const u = this.state.userInformationBasic;
+    u.birth = date;
+    this.update(u);
+   
   }
   handleChangePhone(){
     console.log(this.state.dialogText)
-    const userInformationBasic = this.state.userInformationBasic;
-    userInformationBasic.phone = this.state.dialogText;
+    const u = this.state.userInformationBasic;
+    u.phone = this.state.dialogText;
+   this.update(u);
+  }
+  update(u){
+    console.log('update')
+    console.log(u)
     this.setState({
-      userInformationBasic,
-      dialogPhoneIsVisible:false
+      userInformationBasic : u,
+      dialogPhoneIsVisible:false,
+      dialogEmailIsVisible:false,
+      dialogLocationIsVisible:false
     });
+    try {
+      AsyncStorage.setItem('userInformationBasic', JSON.stringify(u));
+      
+    } catch (error) {
+      // Error saving data
+    }
   }
   _createToken() {
     const url =
@@ -272,9 +307,17 @@ export default class MonCompte extends Component {
       </View>
     );
   };
-  
+  disconnect(){
+    Actions.loginapp();
+  }
   render() {
-   
+    if (this.state.isLoading) {
+      return (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <ActivityIndicator size="large" />
+        </View>
+      );
+    }
     const menu = <Menu onItemSelected={this.onMenuItemSelected} />;
     return (
       
@@ -311,7 +354,7 @@ export default class MonCompte extends Component {
         <View style={styles.container}>
         <TouchableOpacity  >
             <Image
-            source={this.state.userInformationBasic.sex == "Man" ? man: woman}
+            source={user}
             style={{
               justifyContent: 'center',
               alignItems: 'center',
@@ -363,7 +406,7 @@ export default class MonCompte extends Component {
               <Right>
               <DatePicker
           style={{width: 200}}
-          date={this.state.date}
+          date={this.state.userInformationBasic.birth}
           mode="date"
           placeholder="select date"
           format="DD-MM-YYYY"
@@ -392,7 +435,7 @@ export default class MonCompte extends Component {
             
             // ... You can check the source to find the other keys.
           }}
-          onDateChange={(date) => {this.setState({date: date})}}
+          onDateChange={(date) => this.handleChangeDate(date) }
         />
                 {/*<Text>{this.state.userInformationBasic.birthday}</Text>
                 <Icon name="arrow-forward" />*/}
@@ -585,6 +628,9 @@ export default class MonCompte extends Component {
           </List>
           </CardItem>
           </Card>
+          <Button block danger onPress={()=>this.disconnect()} >  
+            <Text>Deconnection </Text>
+          </Button>
           
         </View>
         {!this.state.userInfo ? (

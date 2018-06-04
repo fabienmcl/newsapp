@@ -32,7 +32,7 @@ export default class Routes extends Component<{}> {
 			<Router>
 				<Stack key="root" hideNavBar={true}>
 					{/*login*/}
-					<Scene key="loginapp" component={Loginapp} title="Loginapp"  initial ={false} /> 
+					<Scene key="loginapp" component={Loginapp} title="Loginapp"  initial ={false} panHandlers={null}/> 
 					{/*home*/}
 					<Scene key="flatListViewArticle" component={FlatListViewArticle} title="FlatListViewArticle"  title="Renewal" initial ={false} panHandlers={null} /> 
 					<Scene key="flatDemo" component={FlatDemo} title="FlatDemo"  title="Renewal" initial ={false} /> 
@@ -41,9 +41,9 @@ export default class Routes extends Component<{}> {
 					{/* sidemenu */}
 					<Scene key="favoris" component={Favoris} title="Favoris" initial={false} panHandlers={null}/>
 					<Scene key="historique" component={Historique} title="Historique" initial={false} panHandlers={null}/>
-					<Scene key="monCompte" component={MonCompte} title="Mon Compte" initial={false} panHandlers={null}/>
+					<Scene key="monCompte" component={MonCompte} title="Mon Compte" initial={true} panHandlers={null}/>
 					<Scene key="concept" component={Concept} title="Le Concept" initial={false}  panHandlers={null}/>
-					<Scene key="param" component={Param} title="settings" initial={true}  panHandlers={null}/>
+					<Scene key="param" component={Param} title="settings" initial={false}  panHandlers={null}/>
 					{/*prototypes*/}
 					<Scene key="listView" component={ListView} title="ListView" initial={false} />	
 					<Scene key="details" component={Details} title="Details" initial={false} />

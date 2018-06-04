@@ -43,19 +43,20 @@ export default class Param extends Component {
 
   async componentDidMount(){
     console.log(settings)
-    console.log(settings[0].location)
-       
+    //console.log(settings[0].location)
+    //AsyncStorage.removeItem('settings',(error, result));
     try {
-     // AsyncStorage.setItem('settings', JSON.stringify(settings));
+     // AsyncStorage.setItem('settings', JSON.stringify(settings[0]));
       AsyncStorage.getItem('settings', (err, result)=>{
         console.log(result)
         var json = JSON.parse(result)
-        console.log(json[0].location)
-        this.setState({settings : json[0], isLoading: false })
-        console.log(this.state.settings.location)
+        console.log(json)
+        //console.log(json[0].location)
+        this.setState({settings : json, isLoading: false })
+        //console.log(this.state.settings.location)
 
       })
-      //AsyncStorage.removeItem('settings',(error, result));
+      
       
     } catch (error) {
       // Error saving data
@@ -108,10 +109,50 @@ export default class Param extends Component {
     const s = this.state.settings;
     console.log(s)
     s.location = s.location === 0 ? 1:0;
+    this.update(s)
+  }
+  changeStateGyroscope(){
+    const s = this.state.settings;
+    console.log(s)
+    s.gyroscope = s.gyroscope === 0 ? 1:0;
+    this.update(s)
+  }
+  changeStateAccelerometer(){
+    const s = this.state.settings;
+    console.log(s)
+    s.accelerometer = s.accelerometer === 0 ? 1:0;
+    this.update(s)
+  }
+  changeStateMagnetometer(){
+    const s = this.state.settings;
+    console.log(s)
+    s.magnetometer = s.magnetometer === 0 ? 1:0;
+    this.update(s)
+  }
+  changeStateNetwork(){
+    const s = this.state.settings;
+    console.log(s)
+    s.networks = s.networks === 0 ? 1:0;
+    this.update(s)
+  }
+  changeStateActivity(){
+    const s = this.state.settings;
+    console.log(s)
+    s.activity = s.activity === 0 ? 1:0;
+    this.update(s)
+  }
+  changeStateAcess(){
+    const s = this.state.settings;
+    console.log(s)
+    s.access = s.access === 0 ? 1:0;
+    this.update(s)
+  }
+  update(s){
     console.log(s)
     this.setState({
       settings : s
     })
+    AsyncStorage.setItem('settings', JSON.stringify(s));
   }
   handleChangePhone(){
     console.log(this.state.dialogText)
@@ -189,7 +230,7 @@ export default class Param extends Component {
               <Body>
               </Body>
               <Right>
-              <Switch value={this.state.settings.gyroscope === 0 ? false : true} />
+              <Switch value={this.state.settings.gyroscope === 0 ? false : true}  onChange={()=>this.changeStateGyroscope()}/>
               </Right>
             </ListItem>
             <ListItem icon >
@@ -199,7 +240,7 @@ export default class Param extends Component {
               <Body>
               </Body>
               <Right>
-              <Switch value={this.state.settings.accelerometer === 0 ? false : true}  />
+              <Switch value={this.state.settings.accelerometer === 0 ? false : true}   onChange={()=>this.changeStateAccelerometer()}/>
               </Right>
             </ListItem>
             <ListItem icon >
@@ -209,7 +250,7 @@ export default class Param extends Component {
               <Body>
               </Body>
               <Right>
-              <Switch value={this.state.settings.magnetometer === 0 ? false : true}  />
+              <Switch value={this.state.settings.magnetometer === 0 ? false : true}   onChange={()=>this.changeStateMagnetometer()}/>
               </Right>
             </ListItem>
             <ListItem icon >
@@ -219,7 +260,7 @@ export default class Param extends Component {
               <Body>
               </Body>
               <Right>
-              <Switch value={this.state.settings.networks === 0 ? false : true}  />
+              <Switch value={this.state.settings.networks === 0 ? false : true}   onChange={()=>this.changeStateNetwork()}/>
               </Right>
             </ListItem>
             
@@ -243,7 +284,7 @@ export default class Param extends Component {
               <Body>
               </Body>
               <Right>
-                <Switch value={this.state.settings.activity === 0 ? false : true}  />
+                <Switch value={this.state.settings.activity === 0 ? false : true}  onChange={()=>this.changeStateActivity()} />
               </Right>
             </ListItem>
             </List>
@@ -261,7 +302,7 @@ export default class Param extends Component {
               <Body>
               </Body>
               <Right>
-                <Switch value={this.state.settings.access === 0 ? false : true}  />
+                <Switch value={this.state.settings.access === 0 ? false : true}  onChange={()=>this.changeStateAcess()} />
               </Right>
             </ListItem>
             
