@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, Alert } from 'react-native'
+import { StyleSheet, Alert,AsyncStorage } from 'react-native'
 import { View } from 'react-native-animatable'
 import { Container, Content, Left,Button, Right, Body, Icon, Text} from 'native-base';
 import { AuthSession, Constants, Font  } from 'expo';
@@ -18,7 +18,14 @@ export default class Opening extends Component {
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
       Ionicons: require("@expo/vector-icons/fonts/Ionicons.ttf"),
     });
-   
+    try {
+     AsyncStorage.getItem('userInformationBasic', (err, result)=>{
+      var json = JSON.parse(result)
+      this.setState({userInformationBasic : json})
+      })
+    } catch (error) {
+      // Error saving data
+    }
   }
   async logInFB() {
     const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync('2073630512892455', {
@@ -52,8 +59,8 @@ export default class Opening extends Component {
       });
 
       if (result.type === 'success') {
-        console.log(result)
-        Actions.flatListViewArticle()
+        //console.log(result)
+        this.updateWithGoogle(result)
         return result.accessToken;
       } else {
         return {cancelled: true};
@@ -61,6 +68,27 @@ export default class Opening extends Component {
     } catch(e) {
       return {error: true};
     }
+  }
+  updateWithGoogle(result){
+    console.log(result)
+    const u = this.state.userInformationBasic;
+    u.firstName = result.user.givenName;
+    u.lastName = result.user.familyName;
+    u.email = result.user.email;
+    u.image = result.user.photoUrl;
+    u.google = 1;
+    this.setState({
+      userInformationBasic : u,
+    });
+    console.log(u)
+    try {
+      AsyncStorage.setItem('userInformationBasic', JSON.stringify(this.state.userInformationBasic));
+      
+    } catch (error) {
+      // Error saving data
+      console.log("error")
+    }
+    Actions.flatListViewArticle()
   }
   loginG = async () => {
     const result = await this.signInWithGoogleAsync()

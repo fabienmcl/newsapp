@@ -31,10 +31,10 @@ const FB_APP_ID = '2073630512892455';
 const userInformation = [ {
   firstName : "prenom",
   lastName : "NOM",
-  image : '../../images/user.png',
-  sex : "Man",
+  image : "https://facebook.github.io/react-native/docs/assets/favicon.png",
+  sex : "null",
   birth : "01-01-1949",
-  location : "Orsay",
+  location : "null",
   email : "mail@gmail.com",
   phone : "0607080910",
   mail : 0,
@@ -308,6 +308,18 @@ export default class MonCompte extends Component {
     );
   };
   disconnect(){
+    this.setState({isLoading : true})
+    try {
+      AsyncStorage.setItem('userInformationBasic', JSON.stringify(userInformation[0]));
+      AsyncStorage.getItem('userInformationBasic', (err, result)=>{
+      var json = JSON.parse(result)
+      this.setState({userInformationBasic : json, isLoading: false })
+      })
+      //AsyncStorage.removeItem('settings',(error, result));
+      
+    } catch (error) {
+      // Error saving data
+    }
     Actions.loginapp();
   }
   render() {
@@ -354,7 +366,7 @@ export default class MonCompte extends Component {
         <View style={styles.container}>
         <TouchableOpacity  >
             <Image
-            source={user}
+            source={{uri : this.state.userInformationBasic.image}}
             style={{
               justifyContent: 'center',
               alignItems: 'center',
@@ -620,7 +632,7 @@ export default class MonCompte extends Component {
               <Right>
               <TouchableHighlight
                 onPress={()=>this.signInWithGoogleAsync()}>
-                <Icon name={this.state.userInformationBasic.facebook == 0 ? 'close-circle' : 'checkmark-circle'} style={{color: this.state.userInformationBasic.facebook === 0 ? 'red' : 'green'}} />
+                <Icon name={this.state.userInformationBasic.google == 0 ? 'close-circle' : 'checkmark-circle'} style={{color: this.state.userInformationBasic.google === 0 ? 'red' : 'green'}} />
                 </TouchableHighlight>
                 
               </Right>
