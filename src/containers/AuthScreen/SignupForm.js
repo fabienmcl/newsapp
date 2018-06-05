@@ -24,7 +24,33 @@ export default class SignupForm extends Component {
       ])
     }
   }
-
+  checkForm(){
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ;
+    if(reg.test(this.state.email) === false){
+      console.log("Email is Not Correct");
+      Alert.alert(
+        'error',
+        'please pass valid email',
+        [
+         {text: 'OK', onPress: () => console.log('ok Pressed!')},
+        ],
+        { cancelable: false })
+        return false;
+    }else if ( (this.state.fullName === this.state.password)===false){
+        Alert.alert(
+        'error',
+        'the passwords must be identical',
+        [
+         {text: 'OK', onPress: () => console.log('ok Pressed!')},
+        ],
+        { cancelable: false }
+      )
+      return false;
+    }else{
+      return true;
+    }
+    
+  }
   render () {
     const { email, password, fullName } = this.state
     const { isLoading, onLoginLinkPress, onSignupPress } = this.props
@@ -73,14 +99,7 @@ export default class SignupForm extends Component {
         <View style={styles.footer}>
           <View ref={(ref) => this.buttonRef = ref} animation={'bounceIn'} duration={600} delay={400}>
             <CustomButton
-              onPress={() => this.state.fullName === this.state.password ?  onSignupPress(email, password, fullName): Alert.alert(
-                'error',
-                'the passwords must be identical',
-                [
-                 {text: 'OK', onPress: () => console.log('ok Pressed!')},
-                ],
-                { cancelable: false }
-              )}
+              onPress={() => this.checkForm()===true ? onSignupPress(email, password, fullName) : console.log()}
               isEnabled={isValid}
               isLoading={isLoading}
               buttonStyle={styles.createAccountButton}

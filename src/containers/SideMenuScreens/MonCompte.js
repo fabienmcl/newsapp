@@ -144,8 +144,13 @@ export default class MonCompte extends Component {
   handleChangeEmail(){
     console.log(this.state.dialogText)
     const u = this.state.userInformationBasic;
-    u.email = this.state.dialogText;
-    this.update(u)
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ ;
+    if(reg.test(this.state.dialogText) === false){
+      console.log("Email is Not Correct");
+    }else{
+      u.email = this.state.dialogText;
+      this.update(u)
+    }
   }
   handleChangeDate(date){
     console.log(date)
