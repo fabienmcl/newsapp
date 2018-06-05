@@ -45,10 +45,35 @@ export default class Opening extends Component {
           `https://graph.facebook.com/me?access_token=${token}&fields=id,name,picture.type(large),email,birthday`
         );
         const userInfo = await userInfoResponse.json();
-        this.setState({ userInfo });
-        console.log(userInfo)
+        //this.setState({ userInfo });
+        //console.log(userInfo)
+        this.updateWithFacebook(userInfo)
         Actions.flatListViewArticle()
     }
+  }
+  updateWithFacebook(userInfo){
+    console.log(userInfo)
+    console.log(userInfo.name)
+    const u = this.state.userInformationBasic;
+    u.firstName = userInfo.name.split(" ")[0];
+    u.lastName = userInfo.name.split(" ")[1];
+    u.email = userInfo.email;
+    u.image = userInfo.picture.data.url;
+    u.birth = userInfo.birthday.split("/")[1]+"-"+userInfo.birthday.split("/")[0]+"-"+userInfo.birthday.split("/")[2];
+    u.facebook = 1;
+    u.mail=1;
+    this.setState({
+      userInformationBasic : u,
+    });
+    console.log(u)
+    try {
+      AsyncStorage.setItem('userInformationBasic', JSON.stringify(this.state.userInformationBasic));
+      
+    } catch (error) {
+      // Error saving data
+      console.log("error")
+    }
+    Actions.flatListViewArticle()
   }
   async  signInWithGoogleAsync() {
     try {
@@ -77,6 +102,7 @@ export default class Opening extends Component {
     u.email = result.user.email;
     u.image = result.user.photoUrl;
     u.google = 1;
+    u.mail=1;
     this.setState({
       userInformationBasic : u,
     });

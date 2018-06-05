@@ -14,7 +14,8 @@ import {
   StatusBar,
   Share,
   Modal,
-  AsyncStorage
+  AsyncStorage,
+  Linking
 } from 'react-native'; 
 import { AuthSession, Constants,Font  } from 'expo';
 import {Actions} from 'react-native-router-flux';
@@ -567,20 +568,20 @@ export default class MonCompte extends Component {
             
               <Left>
               <TouchableHighlight
-                onPress={()=>this.logInFB()}>
+                onPress={()=> this.state.userInformationBasic.facebook === 1 ? console.log() : this.logInFB()}>
                 <Icon name="logo-facebook" style={{color:'#3b5998'}} />
                 </TouchableHighlight>
               </Left>
               <Body>
                 <TouchableHighlight
-                onPress={()=>this.logInFB()}>
+                onPress={()=> this.state.userInformationBasic.facebook === 1 ? console.log() : this.logInFB()}>
                 <Text>Facebook</Text>
                 </TouchableHighlight>
                 
               </Body>
               <Right>
               <TouchableHighlight
-                onPress={()=>this.logInFB()}>
+                onPress={()=> this.state.userInformationBasic.facebook === 1 ? console.log() : this.logInFB()}>
                 <Icon name={this.state.userInformationBasic.facebook == 0 ? 'close-circle' : 'checkmark-circle'} style={{color: this.state.userInformationBasic.facebook === 0 ? 'red' : 'green'}}/>
                 </TouchableHighlight>
                 
@@ -589,8 +590,7 @@ export default class MonCompte extends Component {
             </ListItem>
             <ListItem icon >
               <Left>
-              <TouchableHighlight
-               >
+              <TouchableHighlight  >
                 <Icon name="logo-twitter" style={{color:'#33CCFF'}} />
                 </TouchableHighlight>
               </Left>
@@ -619,19 +619,19 @@ export default class MonCompte extends Component {
             <ListItem icon>
               <Left>
               <TouchableHighlight
-                onPress={()=>this.signInWithGoogleAsync()}>
+                onPress={()=> this.state.userInformationBasic.google === 1 ? console.log() : this.signInWithGoogleAsync()}>
                 <Icon name="logo-google" style={{color:'#DD4B39'}} />
                 </TouchableHighlight>
               </Left>
               <Body>
                 <TouchableHighlight
-                onPress={()=>this.signInWithGoogleAsync()}>
+                onPress={()=>this.state.userInformationBasic.google === 1 ? console.log() : this.signInWithGoogleAsync()}>
                 <Text>Google</Text>
                 </TouchableHighlight>
               </Body>
               <Right>
               <TouchableHighlight
-                onPress={()=>this.signInWithGoogleAsync()}>
+                onPress={()=>   this.state.userInformationBasic.google === 1 ? console.log() :this.signInWithGoogleAsync()}>
                 <Icon name={this.state.userInformationBasic.google == 0 ? 'close-circle' : 'checkmark-circle'} style={{color: this.state.userInformationBasic.google === 0 ? 'red' : 'green'}} />
                 </TouchableHighlight>
                 

@@ -12,7 +12,9 @@ import {
   Dimensions,
   StatusBar,
   AsyncStorage, 
-  ListView
+  ListView,
+  Linking,
+  TouchableHighlight
 } from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text, List, ListItem, Switch, Separator, Card, CardItem} from 'native-base';
@@ -321,14 +323,28 @@ export default class Param extends Component {
             
             <ListItem icon >
               <Left>
+              <TouchableHighlight  onPress={() => Linking.openURL( (Platform.OS === 'android')
+                  ? 'mailto:hay.julien1@gmail.com?cc=?subject=Renewal:assistance&body=yourMessage'
+                  : 'mailto:hay.julien1@gmail.com?cc=&subject=Renewal:assistance&body=yourMessage')}
+               >
               <Text>Assistance</Text>
+              </TouchableHighlight>
               </Left>
               <Body>
               </Body>
               <Right>
+              <TouchableHighlight  onPress={() => Linking.openURL( (Platform.OS === 'android')
+                  ? 'mailto:hay.julien1@gmail.com?cc=?subject=Renewal:assistance&body=yourMessage'
+                  : 'mailto:hay.julien1@gmail.com?cc=&subject=Renewal:assistance&body=yourMessage')}
+               >
+               {/* (Platform.OS === 'android')
+      ? sms:1-408-555-1212?body=yourMessage
+      : sms:1-408-555-1212&body=yourMessage;*/}
               <Icon name="arrow-forward" />
+              </TouchableHighlight>
                </Right>
             </ListItem>
+            
             <ListItem icon >
               <Left>
               <Text>Politique de confidentialité</Text>
