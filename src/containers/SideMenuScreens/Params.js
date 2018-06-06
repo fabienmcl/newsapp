@@ -196,10 +196,18 @@ export default class Param extends Component {
   changeStateNotification(){
     const s = this.state.settings;
     console.log(s)
-    if(s.notification === 0){
-      
-    }
     s.notification = s.notification === 0 ? 1:0;
+    if(s.notification===1){
+      Alert.alert( 
+        'Notification',
+        'please accept notification acces',
+        [
+          {text: 'Cancel', onPress: () => this.changeStateNotification(), style: 'cancel'},
+          {text: 'OK', onPress: () => Linking.openURL('app-settings:')},
+        ],
+        { cancelable: false })
+      //Linking.openURL('app-settings:')
+    }
     this.update(s)
   }
   update(s){
@@ -399,17 +407,17 @@ export default class Param extends Component {
             
             <ListItem icon >
               <Left>
-              <TouchableHighlight  onPress={() => Linking.openURL( (Platform.OS === 'android')
+              <TouchableOpacity  onPress={() => Linking.openURL( (Platform.OS === 'android')
                   ? 'mailto:hay.julien1@gmail.com?cc=?subject=Renewal:assistance&body=yourMessage'
                   : 'mailto:hay.julien1@gmail.com?cc=&subject=Renewal:assistance&body=yourMessage')}
                >
               <Text>Assistance</Text>
-              </TouchableHighlight>
+              </TouchableOpacity>
               </Left>
               <Body>
               </Body>
               <Right>
-              <TouchableHighlight  onPress={() => Linking.openURL( (Platform.OS === 'android')
+              <TouchableOpacity  onPress={() => Linking.openURL( (Platform.OS === 'android')
                   ? 'mailto:hay.julien1@gmail.com?cc=?subject=Renewal:assistance&body=yourMessage'
                   : 'mailto:hay.julien1@gmail.com?cc=&subject=Renewal:assistance&body=yourMessage')}
                >
@@ -417,7 +425,7 @@ export default class Param extends Component {
       ? sms:1-408-555-1212?body=yourMessage
       : sms:1-408-555-1212&body=yourMessage;*/}
               <Icon name="arrow-forward" />
-              </TouchableHighlight>
+              </TouchableOpacity>
                </Right>
             </ListItem>
             
