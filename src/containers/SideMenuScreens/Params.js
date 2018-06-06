@@ -19,18 +19,21 @@ import {
 import {Actions} from 'react-native-router-flux';
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text, List, ListItem, Switch, Separator, Card, CardItem} from 'native-base';
 import SideMenu from 'react-native-side-menu';
+import Expo, { AuthSession, Constants, Font  } from 'expo';
 import Menu from '../SideMenu/Menu';
 const screen = Dimensions.get('window');
 
 let settings = [
   {
   location : true,
+  pedometer : true,
   gyroscope : true,
   accelerometer : true,
   magnetometer : true,
   networks : true,
   activity : true, 
-  access :true
+  access :true,
+  notification : true
 
 }];
 
@@ -48,7 +51,7 @@ export default class Param extends Component {
     //console.log(settings[0].location)
     //AsyncStorage.removeItem('settings',(error, result));
     try {
-     // AsyncStorage.setItem('settings', JSON.stringify(settings[0]));
+      AsyncStorage.setItem('settings', JSON.stringify(settings[0]));
       AsyncStorage.getItem('settings', (err, result)=>{
         console.log(result)
         var json = JSON.parse(result)
@@ -63,7 +66,7 @@ export default class Param extends Component {
     } catch (error) {
       // Error saving data
     }
-    
+    //this.getLocationAsync();
   }
  
   
@@ -110,7 +113,48 @@ export default class Param extends Component {
   changeStateLocation(){
     const s = this.state.settings;
     console.log(s)
-    s.location = s.location === 0 ? 1:0;
+    s.location = s.location === 0 ? 1:0
+    if(s.location===1){
+      Alert.alert( 
+        'Location',
+        'please accept location acces',
+        [
+          {text: 'Cancel', onPress: () => this.changeStateLocation(), style: 'cancel'},
+          {text: 'OK', onPress: () => Linking.openURL('app-settings:')},
+        ],
+        { cancelable: false })
+      //Linking.openURL('app-settings:')
+    }
+    this.update(s)
+  }
+  async getLocationAsync() {
+    const { Location, Permissions } = Expo;
+    const { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status === 'granted') {
+      //return Location.getCurrentPositionAsync({enableHighAccuracy: true});
+      console.log(Location.getCurrentPositionAsync({enableHighAccuracy: true}))
+      return true;
+    } else {
+      throw new Error('Location permission not granted');
+      return false;
+    }
+  }
+  
+  changeStatePedometer(){
+    const s = this.state.settings;
+    console.log(s)
+    s.pedometer = s.pedometer === 0 ? 1:0;
+    if(s.pedometer===1){
+      Alert.alert( 
+        'Pedometer',
+        'please accept pedometer acces',
+        [
+          {text: 'Cancel', onPress: () => this.changeStatePedometer(), style: 'cancel'},
+          {text: 'OK', onPress: () => Linking.openURL('app-settings:')},
+        ],
+        { cancelable: false })
+      //Linking.openURL('app-settings:')
+    }
     this.update(s)
   }
   changeStateGyroscope(){
@@ -147,6 +191,15 @@ export default class Param extends Component {
     const s = this.state.settings;
     console.log(s)
     s.access = s.access === 0 ? 1:0;
+    this.update(s)
+  }
+  changeStateNotification(){
+    const s = this.state.settings;
+    console.log(s)
+    if(s.notification === 0){
+      
+    }
+    s.notification = s.notification === 0 ? 1:0;
     this.update(s)
   }
   update(s){
@@ -222,7 +275,20 @@ export default class Param extends Component {
               <Body>
               </Body>
               <Right>
-              <Switch value={this.state.settings.location === 0 ? false : true} onChange={()=>this.changeStateLocation()}/>
+              <Switch value={this.state.settings.location === 0 ? false : true} 
+                onChange={()=>this.changeStateLocation()}
+                //onChange={()=>Linking.openURL('app-settings:')}
+                />
+              </Right>
+            </ListItem>
+            <ListItem icon >
+              <Left>
+              <Text>Pedometer</Text>
+              </Left>
+              <Body>
+              </Body>
+              <Right>
+              <Switch value={this.state.settings.pedometer === 0 ? false : true} onChange={()=>this.changeStatePedometer()}/>
               </Right>
             </ListItem>
             <ListItem icon >
@@ -312,6 +378,16 @@ export default class Param extends Component {
             <Text style={{color:'#a4a4a4', fontSize:14}}>
               La conservation d'informations ou l'accès à des informations déjà conservées sur votre appareil, par exemple des identifiants de l'appareil
             </Text>
+            </ListItem>
+            <ListItem icon >
+              <Left>
+              <Text>Notifications</Text>
+              </Left>
+              <Body>
+              </Body>
+              <Right>
+                <Switch value={this.state.settings.notification === 0 ? false : true}  onChange={()=>this.changeStateNotification()} />
+              </Right>
             </ListItem>
             </List>
 

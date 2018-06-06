@@ -30,14 +30,14 @@ import user from '../../images/user.png'
 const screen = Dimensions.get('window'); 
 const FB_APP_ID = '2073630512892455';
 const userInformation = [ {
-  firstName : "prenom",
-  lastName : "NOM",
-  image : "https://facebook.github.io/react-native/docs/assets/favicon.png",
-  sex : "null",
+  firstName : "Empty",
+  lastName : "Empty",
+  image : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Empty_set.svg/500px-Empty_set.svg.png",
+  sex : "Empty",
   birth : "01-01-1949",
-  location : "null",
-  email : "mail@gmail.com",
-  phone : "0607080910",
+  location : "Empty",
+  email : "Empty",
+  phone : "Empty",
   mail : 0,
   facebook : 0,
   twitter : 0,
@@ -103,10 +103,39 @@ export default class MonCompte extends Component {
           `https://graph.facebook.com/me?access_token=${token}&fields=id,name,picture.type(large),email,birthday`
         );
         const userInfo = await userInfoResponse.json();
-        this.setState({ userInfo });
-        console.log(userInfo)
+        //this.setState({ userInfo });
+        //console.log(userInfo)
+        this.updateWithFacebook(userInfo)
         
     }
+  }
+  updateWithFacebook(userInfo){
+    console.log(userInfo)
+    console.log(userInfo.name)
+    const u = this.state.userInformationBasic;
+    u.firstName = u.firstName === "Empty" ? userInfo.name.split(" ")[0] : u.lastName;
+    u.lastName = u.lastName === "Empty" ? userInfo.name.split(" ")[1] : u.lastName;
+
+    
+    u.email = u.email === "Empty" ? userInfo.email : u.email;
+    
+    u.image = u.image === "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Empty_set.svg/500px-Empty_set.svg.png" ? userInfo.picture.data.url : u.image;
+    u.birth = u.birth === "01-01-1949" ? userInfo.birthday.split("/")[1]+"-"+userInfo.birthday.split("/")[0]+"-"+userInfo.birthday.split("/")[2] : u.birth;
+    u.facebook = 1;
+    u.mail=1;
+    
+    this.setState({
+      userInformationBasic : u,
+    });
+    console.log(u)
+    try {
+      AsyncStorage.setItem('userInformationBasic', JSON.stringify(this.state.userInformationBasic));
+      
+    } catch (error) {
+      // Error saving data
+      console.log("error")
+    }
+    //Actions.flatListViewArticle()
   }
   async  signInWithGoogleAsync() {
     try {
@@ -117,13 +146,35 @@ export default class MonCompte extends Component {
       });
 
       if (result.type === 'success') {
-        console.log(result)
+        //console.log(result)
+        this.updateWithGoogle(result)
         return result.accessToken;
       } else {
         return {cancelled: true};
       }
     } catch(e) {
       return {error: true};
+    }
+  }
+  updateWithGoogle(result){
+    console.log(result)
+    const u = this.state.userInformationBasic;
+    u.firstName = u.firstName === "Empty" ? result.user.givenName : u.firstName;
+    u.lastName = u.lastName === "Empty" ? result.user.familyName : u.lastName;
+    u.email = u.email === "Empty" ? result.user.email : u.email;
+    u.image = u.image === "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Empty_set.svg/500px-Empty_set.svg.png" ? result.user.photoUrl : u.image;
+    u.google = 1;
+    u.mail=1;
+    this.setState({
+      userInformationBasic : u,
+    });
+    console.log(u)
+    try {
+      AsyncStorage.setItem('userInformationBasic', JSON.stringify(this.state.userInformationBasic));
+      
+    } catch (error) {
+      // Error saving data
+      console.log("error")
     }
   }
   loginG = async () => {
@@ -385,7 +436,7 @@ export default class MonCompte extends Component {
         <Card style={{flex: 1, width:'100%'}}>
           <CardItem header bordered>
            
-            <Text>{this.state.userInformationBasic.firstName}  {this.state.userInformationBasic.lastName}</Text>
+            <Text>{this.state.userInformationBasic.firstName}  {this.state.userInformationBasic.lastName.toUpperCase()}</Text>
          
               
           </CardItem>
@@ -553,42 +604,63 @@ export default class MonCompte extends Component {
           <List style={{flex: 1, width:'100%'}}>
             <ListItem icon>
               <Left>
-              <TouchableHighlight>
+              <TouchableOpacity>
                 <Icon name="ios-at-outline" style={{color:'#DD4B39'}} />
-                </TouchableHighlight>
+                </TouchableOpacity>
               </Left>
               <Body>
-                <TouchableHighlight>
+                <TouchableOpacity>
                 <Text>Mail</Text>
-                </TouchableHighlight>
+                </TouchableOpacity>
               </Body>
               <Right>
-              <TouchableHighlight >
+              <TouchableOpacity >
                 <Icon name={this.state.userInformationBasic.mail == 0 ? 'close-circle' : 'checkmark-circle'} style={{color: this.state.userInformationBasic.mail === 0 ? 'red' : 'green'}} />
-              </TouchableHighlight>
+              </TouchableOpacity>
+                
+              </Right>
+            </ListItem>
+            <ListItem icon>
+              <Left>
+              <TouchableOpacity
+                onPress={()=> this.state.userInformationBasic.google === 1 ? console.log() : this.signInWithGoogleAsync()}>
+                <Icon name="logo-google" style={{color:'#DD4B39'}} />
+                </TouchableOpacity>
+              </Left>
+              <Body>
+                <TouchableOpacity
+                onPress={()=>this.state.userInformationBasic.google === 1 ? console.log() : this.signInWithGoogleAsync()}>
+                <Text>Google</Text>
+                </TouchableOpacity>
+              </Body>
+              <Right>
+              <TouchableOpacity
+                onPress={()=>   this.state.userInformationBasic.google === 1 ? console.log() :this.signInWithGoogleAsync()}>
+                <Icon name={this.state.userInformationBasic.google == 0 ? 'close-circle' : 'checkmark-circle'} style={{color: this.state.userInformationBasic.google === 0 ? 'red' : 'green'}} />
+                </TouchableOpacity>
                 
               </Right>
             </ListItem>
             <ListItem icon >
             
               <Left>
-              <TouchableHighlight
+              <TouchableOpacity
                 onPress={()=> this.state.userInformationBasic.facebook === 1 ? console.log() : this.logInFB()}>
                 <Icon name="logo-facebook" style={{color:'#3b5998'}} />
-                </TouchableHighlight>
+                </TouchableOpacity>
               </Left>
               <Body>
-                <TouchableHighlight
+                <TouchableOpacity
                 onPress={()=> this.state.userInformationBasic.facebook === 1 ? console.log() : this.logInFB()}>
                 <Text>Facebook</Text>
-                </TouchableHighlight>
+                </TouchableOpacity>
                 
               </Body>
               <Right>
-              <TouchableHighlight
+              <TouchableOpacity
                 onPress={()=> this.state.userInformationBasic.facebook === 1 ? console.log() : this.logInFB()}>
                 <Icon name={this.state.userInformationBasic.facebook == 0 ? 'close-circle' : 'checkmark-circle'} style={{color: this.state.userInformationBasic.facebook === 0 ? 'red' : 'green'}}/>
-                </TouchableHighlight>
+                </TouchableOpacity>
                 
               </Right>
               
@@ -600,7 +672,7 @@ export default class MonCompte extends Component {
                 </TouchableHighlight>
               </Left>
               <Body>
-              <TouchableHighlight
+              <TouchableOpacity
                 onPress={() => Alert.alert(
                   'lifehack',
                   'Delete Twitter from your phone, because it is the worst',
@@ -611,37 +683,17 @@ export default class MonCompte extends Component {
                   { cancelable: false }
                 )} >
                 <Text>Twitter</Text>
-                </TouchableHighlight>
+                </TouchableOpacity>
                 
               </Body>
               <Right>
-                <TouchableHighlight
+                <TouchableOpacity
                 >
                 <Icon name={this.state.userInformationBasic.twitter == 0 ? 'close-circle' : 'checkmark-circle'} style={{color: this.state.userInformationBasic.twitter === 0 ? 'red' : 'green'}}/>
-                </TouchableHighlight>
+                </TouchableOpacity>
               </Right>
             </ListItem>
-            <ListItem icon>
-              <Left>
-              <TouchableHighlight
-                onPress={()=> this.state.userInformationBasic.google === 1 ? console.log() : this.signInWithGoogleAsync()}>
-                <Icon name="logo-google" style={{color:'#DD4B39'}} />
-                </TouchableHighlight>
-              </Left>
-              <Body>
-                <TouchableHighlight
-                onPress={()=>this.state.userInformationBasic.google === 1 ? console.log() : this.signInWithGoogleAsync()}>
-                <Text>Google</Text>
-                </TouchableHighlight>
-              </Body>
-              <Right>
-              <TouchableHighlight
-                onPress={()=>   this.state.userInformationBasic.google === 1 ? console.log() :this.signInWithGoogleAsync()}>
-                <Icon name={this.state.userInformationBasic.google == 0 ? 'close-circle' : 'checkmark-circle'} style={{color: this.state.userInformationBasic.google === 0 ? 'red' : 'green'}} />
-                </TouchableHighlight>
-                
-              </Right>
-            </ListItem>
+            
           </List>
           </CardItem>
           </Card>

@@ -24,7 +24,7 @@ import Gyroscope from './prototypes/Sensors/Gyroscope';
 import Localization from './prototypes/Sensors/Localization';
 import Location from './prototypes/Sensors/Location';
 import Magnetometer from './prototypes/Sensors/Magnetometer';
-
+import Pedometer from './prototypes/Sensors/PedometerSensor';
 
 export default class Routes extends Component<{}> {
 	render() {
@@ -32,7 +32,7 @@ export default class Routes extends Component<{}> {
 			<Router>
 				<Stack key="root" hideNavBar={true}>
 					{/*login*/}
-					<Scene key="loginapp" component={Loginapp} title="Loginapp"  initial ={true} panHandlers={null}/> 
+					<Scene key="loginapp" component={Loginapp} title="Loginapp"  initial ={false} panHandlers={null}/> 
 					{/*home*/}
 					<Scene key="flatListViewArticle" component={FlatListViewArticle} title="FlatListViewArticle"  title="Renewal" initial ={false} panHandlers={null} /> 
 					<Scene key="flatDemo" component={FlatDemo} title="FlatDemo"  title="Renewal" initial ={false} /> 
@@ -43,7 +43,7 @@ export default class Routes extends Component<{}> {
 					<Scene key="historique" component={Historique} title="Historique" initial={false} panHandlers={null}/>
 					<Scene key="monCompte" component={MonCompte} title="Mon Compte" initial={false} panHandlers={null}/>
 					<Scene key="concept" component={Concept} title="Le Concept" initial={false}  panHandlers={null}/>
-					<Scene key="param" component={Param} title="settings" initial={false}  panHandlers={null}/>
+					<Scene key="param" component={Param} title="settings" initial={true}  panHandlers={null}/>
 					{/*prototypes*/}
 					<Scene key="listView" component={ListView} title="ListView" initial={false} />	
 					<Scene key="details" component={Details} title="Details" initial={false} />
@@ -51,8 +51,9 @@ export default class Routes extends Component<{}> {
 					<Scene key="accelerometer" component={Accelerometer} title="Accelerometer" initial={false} />	
 					<Scene key="gyroscope" component={Gyroscope} title="Gyroscope" initial={false} />	
 					<Scene key="localization" component={Localization} title="Localization" initial={false} />	
-					<Scene key="location" component={Location} title="Location" initial={false} />	
+					<Scene key="location" component={Location} title="Location" initial={false} />		
 					<Scene key="magnetometer" component={Magnetometer} title="Magnetometer" initial={false} />	
+					<Scene key="pedometer" component={Pedometer} title="Pedometer" initial={false} />	
 				</Stack>
 			 </Router>
 			)

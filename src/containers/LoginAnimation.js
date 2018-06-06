@@ -14,7 +14,7 @@ import {
     FlatList,
     Slider,
     ScrollView,
-    WebView 
+    WebView,
 } from "react-native";
 import { View } from 'react-native-animatable';
 import { Icon } from 'native-base'
