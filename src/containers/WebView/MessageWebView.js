@@ -16,7 +16,8 @@ import {
     WebView,
     View,
     StatusBar,
-    Share
+    Share,
+    Linking
 } from "react-native";
 import {Actions} from 'react-native-router-flux';
 import * as Animatable from 'react-native-animatable';
@@ -361,6 +362,8 @@ export default class MessageWebView extends React.Component {
                 scrollEventThrottle={100} //min 1 et max 16 (+de scroll detect)
                 onScrollBeginDrag={this._handleScrollBegin.bind(this)}
                 onScrollEndDrag={this._handleScrollEnd.bind(this)}
+                
+               
                 /*
                 //onTouchStart={ () => console.log( 'touch start' ) }
 
@@ -403,7 +406,7 @@ export default class MessageWebView extends React.Component {
                 javaScriptEnabled
                 injectedJavaScript={patchPostMessageJsCode}
                 source={{uri:this.props.navigation.state.params.url}}
-            
+               
                 ref={x => {this.WebView = x}}
                 onMessage={e => console.log(JSON.parse(JSON.stringify(e.nativeEvent.data)))}
                 style={{height: SCREEN_HEIGHT_CUSTOM_REST-(SCREEN_HEIGHT_CUSTOM_HEADER+(SCREEN_HEIGHT_CUSTOM_HEADER)), width:'100%' }}
