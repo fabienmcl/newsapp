@@ -1,10 +1,17 @@
 import React, { Component } from 'react'
-import { StyleSheet, Alert } from 'react-native'
+import { StyleSheet, Alert, ActivityIndicator } from 'react-native'
 import { Text, View } from 'react-native-animatable'
 
 import CustomButton from '../../components/CustomButton'
 import CustomTextInput from '../../components/CustomTextInput'
 import metrics from '../../config/metrics'
+import I18n from 'ex-react-native-i18n';
+I18n.fallbacks = true
+
+I18n.translations = {
+  'en': require("../../i18n/en"),
+  'fr': require('../../i18n/fr'),
+};
 
 export default class SignupForm extends Component {
   
@@ -12,9 +19,14 @@ export default class SignupForm extends Component {
   state = {
     email: '',
     password: '',
-    fullName: ''
+    fullName: '',
+    isLoading: true,
   }
 
+  async componentWillMount() {
+    await I18n.initAsync();
+    this.setState({isLoading:false})
+  }
   hideForm = async () => {
     if (this.buttonRef && this.formRef && this.linkRef) {
       await Promise.all([
@@ -61,7 +73,7 @@ export default class SignupForm extends Component {
           
           <CustomTextInput
             ref={(ref) => this.emailInputRef = ref}
-            placeholder={'Email'}
+            placeholder={I18n.t('form_email')}
             keyboardType={'email-address'}
             editable={!isLoading}
             returnKeyType={'next'}
@@ -73,7 +85,7 @@ export default class SignupForm extends Component {
           />
           <CustomTextInput
             ref={(ref) => this.mobileInputRef = ref}
-            placeholder={'password'}
+            placeholder={I18n.t('form_password')}
             editable={!isLoading}
             returnKeyType={'next'}
             secureTextEntry={true}
@@ -86,7 +98,7 @@ export default class SignupForm extends Component {
 
           <CustomTextInput
             ref={(ref) => this.passwordInputRef = ref}
-            placeholder={'confirm Password'}
+            placeholder={I18n.t('form_password_confirm')}
             editable={!isLoading}
             returnKeyType={'done'}
             secureTextEntry={true}
@@ -104,7 +116,7 @@ export default class SignupForm extends Component {
               isLoading={isLoading}
               buttonStyle={styles.createAccountButton}
               textStyle={styles.createAccountButtonText}
-              text={'Create Account'}
+              text={I18n.t('form_buttton_create')}
             />
           </View>
           <Text
@@ -115,7 +127,7 @@ export default class SignupForm extends Component {
             duration={600}
             delay={400}
           >
-            {'Already have an account?'}
+            {I18n.t('form_link_account')}
           </Text>
           
         </View>

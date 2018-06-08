@@ -1,0 +1,40 @@
+{
+  "concept_welcome" : "Welcome to Renewal",
+  "concept_welcome_explain" : "an evaluation platform for news recommender systems",
+  "concept_discover" : "Discover",
+  "concept_discover_explain" : "explore news according to your interest center",
+  "concept_sn" : "Use your social networks",
+  "concept_sn_explain" : "click here for more information",
+  "concept_skip" : "Skip/Connect",
+
+  "opening_email" : "Sign In with email",
+  "opening_or" : "Or connect with",
+
+  "form_email" : "Email",
+  "form_password" : "Password",
+  "form_password_confirm" : "Confirm ur password",
+  "form_buttton_login" : "Log In",
+  "form_buttton_create" : "Create Account",
+  "form_link_registed" : "Not registered yet?",
+  "form_link_account" : "Already have an account?",
+
+  "settings_header" : "Settings",
+  "settings_title" : "Preserve your confidence and your privacy",
+  "settings_title_explain" : "To ensure greater transparency about the data that Renewal collects about you, how it is used and the means at your disposal to control your personal data.",
+  "settings_section_sensors" : "Sensor management",
+  "settings_section_sensors_explain" : "Some articles are based on the fine analysis of your behavior within the application and requires access to different sensors.",
+
+  "sensor_location" : "Location",
+  "sensor_pedometer" : "Pedometer",
+  "sensor_gyroscope" : "Gyroscope",
+  "sensor_accelerometer" : "Accelerometer",
+  "sensor_magnetometer" : "Magnetometer",
+  "sensor_network" : "Network nature",
+
+  
+  "settings_section_recommendations" : "Management of recommendations",
+  "settings_section_recommendations_explain" :"Some articles are based on what you do elsewhere.But you will still see articles about your use within the app.",
+
+  "hello world": "hello world",
+  "greeting": "Hi!"
+}

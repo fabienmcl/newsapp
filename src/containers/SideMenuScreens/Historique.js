@@ -10,23 +10,109 @@ import {
   YellowBox, 
   TouchableOpacity, 
   Dimensions,
-  StatusBar
+  StatusBar,
+  ScrollView
 } from 'react-native';
 import {Actions} from 'react-native-router-flux';
-import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text, List, ListItem } from 'native-base';
+import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text, List, ListItem, DeckSwiper, Card, CardItem,Thumbnail} from 'native-base';
 import SideMenu from 'react-native-side-menu';
 import Menu from '../SideMenu/Menu';
-const screen = Dimensions.get('window');
+import TreePicker from 'react-native-tree-picker';
+import I18n from 'ex-react-native-i18n';
 
+// Enable fallbacks if you want `en-US` and `en-GB` to fallback to `en`
+I18n.fallbacks = true
+
+I18n.translations = {
+  'en': require("../../i18n/en"),
+  'fr': require('../../i18n/fr'),
+};
+
+/*
+I18n.translations = {
+  en: : require(:'../../in18/en'),
+  fr: {
+    greeting: 'Bonjour!'
+  }
+}
+*/
+
+const screen = Dimensions.get('window');
+const data = [
+  {
+      "id":1, 
+      "key":1,
+      "Title":"title",
+
+      "Children": [
+          {
+              "id":2,
+              "Id":2,
+              "key":2, 
+              "Key":2,
+              "Title":"title children",
+              
+          }
+      ]
+  },
+  {
+      "id":3, 
+      "Id":3,
+      "key":3,
+      "Key":3,
+      "Title":"title other"
+  }
+];
+const family = [
+  {
+    id: 'Grandparent',
+    key : 1,
+    name: 'Grandpa',
+    age: 78,
+    children: [
+      {
+        id: 'Me',
+        key:2,
+        name: 'Me',
+        age: 30,
+        children: [
+          {
+            id: 'Erick',
+            key:3,
+            name: 'Erick',
+            age: 10,
+          },
+          {
+            id: 'Rose',
+            key:4,
+            name: 'Rose',
+            age: 12,
+          },
+        ],
+      },
+    ],
+  },
+];
+const cards = [
+  {
+    text: 'Card One',
+    name: 'One',
+    image: "https://picsum.photos/200",
+  },
+  
+];
 export default class Historique extends Component {
   constructor(props) {
     super(props);
     this.toggle = this.toggle.bind(this);
-    this.state = { isLoading: true, isOpen: false, selectedItem: 'historique'}
+    this.state = { isLoading: true, isOpen: false, selectedItem: 'historique', languages: []}
     YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
   }
  
-  
+  async componentWillMount() {
+    await I18n.initAsync();
+    this.setState({isLoading:false})
+  }
   
   _sideMenuPress(){
     console.log("le menu le menu le menu");
@@ -68,7 +154,13 @@ export default class Historique extends Component {
   });
  
   render() {
-   
+    if (this.state.isLoading) {
+      return (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <ActivityIndicator size="large" />
+        </View>
+      );
+    }
     const menu = <Menu onItemSelected={this.onMenuItemSelected} />;
     return (
       
@@ -100,7 +192,18 @@ export default class Historique extends Component {
         </Right>
       </Header>
       <Content  style={{backgroundColor:'#212121'}} >
-            
+      {/*
+      <View style={{ flex: 1 }}>
+                <TreePicker 
+                    title="Select" 
+                    data={data}
+                    onPress={()=>console.log("onPress")}
+                    selectParent={true} />
+                    
+         
+            </View>
+        */}
+        <Text>{I18n.t('greeting')}</Text>
         </Content>
         <Footer style={{ backgroundColor: '#212121'}} >
           <FooterTab>

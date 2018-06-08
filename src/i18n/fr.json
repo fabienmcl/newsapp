@@ -1,0 +1,40 @@
+{
+  "concept_welcome" : "Bienvenue dans Renewal",
+  "concept_welcome_explain" : "une plateforme d'évaluation pour les systèmes de recommandations d'actualité",
+  "concept_discover" : "Découvrir",
+  "concept_discover_explain" : "explorer les actualités en fonction de votre centre d'intérêt",
+  "concept_sn" : "Utilise vos réseaux sociaux",
+  "concept_sn_explain" : "cliquez ici pour plus d'informations",
+  "concept_skip" : "Passer / Se connecter",
+
+  "opening_email" : "Connection avec votre email",
+  "opening_or" : "Ou connectez-vous avec",
+
+  "form_email" : "Email",
+  "form_password" : "Mot de passe",
+  "form_password_confirm" : "Confirmer votre mot de passe",
+  "form_buttton_login" : "S'identifier",
+  "form_buttton_create" : "Créer un compte",
+  "form_link_registed" : "Pas encore inscrit?",
+  "form_link_account" : "Vous avez déjà un compte?",
+
+  "settings_header" : "Paramètres",
+  "settings_title" : "Préserver votre confiance et votre vie privée",
+  "settings_title_explain" : " Afin d'assurer une plus grande transparence au sujet des données que Renewal collecte vous concernant, de l'usage qui en est fait et des moyens à votre disposition pour contrôler vos données personnelles.",
+  "settings_section_sensors" : "Gestion des capteurs",
+  "settings_section_sensors_explain" : "Certaines articles sont basées sur l'analyse fine de votre comportement au sein de l'application et necessite un accès aux différents capteurs.",
+
+  "sensor_location" : "Position",
+  "sensor_pedometer" : "Podomètre",
+  "sensor_gyroscope" : "Gyroscope",
+  "sensor_accelerometer" : "Accéléromètre",
+  "sensor_magnetometer" : "Magnétomètre",
+  "sensor_network" : "Nature du réseaux",
+
+  "settings_section_recommendations" : "Gestion des recommandations",
+  "settings_section_recommendations_explain" : "Certaines articles sont basées sur ce que vous faites ailleurs. Mais vous verrez toujours des articles sur votre utilisation au sein de l'application.",
+
+
+  "hello world": "bonjour le monde",
+  "greeting": "Bonjour!"
+}

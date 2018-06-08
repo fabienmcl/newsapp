@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, Alert,AsyncStorage } from 'react-native'
+import { StyleSheet, Alert,AsyncStorage,ActivityIndicator } from 'react-native'
 import { View } from 'react-native-animatable'
 import { Container, Content, Left,Button, Right, Body, Icon, Text} from 'native-base';
 import { AuthSession, Constants, Font  } from 'expo';
@@ -8,9 +8,18 @@ import CustomButton from '../../components/CustomButton'
 import metrics from '../../config/metrics'
 const FB_APP_ID = '2073630512892455';
 import Expo from "expo";
+import I18n from 'ex-react-native-i18n';
+I18n.fallbacks = true
+
+I18n.translations = {
+  'en': require("../../i18n/en"),
+  'fr': require('../../i18n/fr'),
+};
+
 export default class Opening extends Component {
   constructor(props) {
     super(props)
+    this.state = {isLoading: true,}
   }
   async componentWillMount() {
     await Expo.Font.loadAsync({
@@ -26,6 +35,8 @@ export default class Opening extends Component {
     } catch (error) {
       // Error saving data
     }
+    await I18n.initAsync();
+    this.setState({isLoading:false})
   }
   async logInFB() {
     const { type, token } = await Expo.Facebook.logInWithReadPermissionsAsync('2073630512892455', {
@@ -121,6 +132,13 @@ export default class Opening extends Component {
   }
 
   render () {
+    if (this.state.isLoading) {
+      return (
+        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+          <ActivityIndicator size="large" />
+        </View>
+      );
+    }
     return (
       <View style={styles.container}>
         
@@ -128,12 +146,12 @@ export default class Opening extends Component {
         
         <Button iconLeft block onPress={this.props.onSignInPress} style={{backgroundColor:'#212121'}} > 
           <Icon name="ios-at-outline" /> 
-          <Text style={{color:'white'}}> Sign In with email </Text>
+          <Text style={{color:'white'}}>{I18n.t('opening_email')}</Text>
         </Button>
         </View>
         <View style={styles.separatorContainer} animation={'zoomIn'} delay={700} duration={400}>
           <View style={styles.separatorLine} />
-          <Text style={styles.separatorOr}>{'Or connect with'}</Text>
+          <Text style={styles.separatorOr}>{I18n.t('opening_or')}</Text>
           <View style={styles.separatorLine} />
         </View>
         <View animation={'zoomIn'} delay={700} duration={400}>

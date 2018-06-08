@@ -13,8 +13,8 @@ import Webviewcustom from './containers/WebView/MessageWebView';
 import Favoris from './containers/SideMenuScreens/Favoris';
 import Historique from './containers/SideMenuScreens/Historique';
 import MonCompte from './containers/SideMenuScreens/MonCompte';
-/*import Concept from './containers/SideMenuScreens/Concept';*/
-import Concept from './containers/SideMenuScreens/SimpleConcept';
+import Concept from './containers/SideMenuScreens/Concept';
+import SConcept from './containers/SideMenuScreens/SimpleConcept';
 import Param from './containers/SideMenuScreens/Params';
 {/*prototypes*/}
 import ListView from './prototypes/ListView/ListView';
@@ -33,7 +33,7 @@ export default class Routes extends Component<{}> {
 			<Router>
 				<Stack key="root" hideNavBar={true}>
 					{/*concept swipe*/}
-					<Scene key="conceptSwipe" component={Concept} title="Le Concept" initial={true}  panHandlers={null}/>
+					<Scene key="conceptSwipe" component={SConcept} title="Le Concept" initial={false}  panHandlers={null}/>
 					{/*login*/}
 					<Scene key="loginapp" component={Loginapp} title="Loginapp"  initial ={false} panHandlers={null}/> 
 					{/*home*/}
@@ -45,8 +45,8 @@ export default class Routes extends Component<{}> {
 					<Scene key="favoris" component={Favoris} title="Favoris" initial={false} panHandlers={null}/>
 					<Scene key="historique" component={Historique} title="Historique" initial={false} panHandlers={null}/>
 					<Scene key="monCompte" component={MonCompte} title="Mon Compte" initial={false} panHandlers={null}/>
-					<Scene key="concept" component={Concept} title="Le Concept" initial={true}  panHandlers={null}/>
-					<Scene key="param" component={Param} title="settings" initial={false}  panHandlers={null}/>
+					<Scene key="concept" component={Concept} title="Le Concept" initial={false}  panHandlers={null}/>
+					<Scene key="param" component={Param} title="settings" initial={true}  panHandlers={null}/>
 					{/*prototypes*/}
 					<Scene key="listView" component={ListView} title="ListView" initial={false} />	
 					<Scene key="details" component={Details} title="Details" initial={false} />

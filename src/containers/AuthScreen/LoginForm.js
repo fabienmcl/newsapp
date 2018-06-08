@@ -1,17 +1,31 @@
 import React, { Component } from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet,ActivityIndicator } from 'react-native'
 import { Text, View } from 'react-native-animatable'
 
 import CustomButton from '../../components/CustomButton'
 import CustomTextInput from '../../components/CustomTextInput'
 import metrics from '../../config/metrics'
 
+
+import I18n from 'ex-react-native-i18n';
+I18n.fallbacks = true
+
+I18n.translations = {
+  'en': require("../../i18n/en"),
+  'fr': require('../../i18n/fr'),
+};
+
 export default class LoginForm extends Component {
 
   state = {
     email: '',
     password: '',
-    fullName: ''
+    fullName: '',
+    isLoading: true,
+  }
+  async componentWillMount() {
+    await I18n.initAsync();
+    this.setState({isLoading:false})
   }
 
   hideForm = async () => {
@@ -34,7 +48,7 @@ export default class LoginForm extends Component {
           <CustomTextInput
             name={'email'}
             ref={(ref) => this.emailInputRef = ref}
-            placeholder={'Email'}
+            placeholder={I18n.t('form_email')}
             keyboardType={'email-address'}
             editable={!isLoading}
             returnKeyType={'next'}
@@ -47,7 +61,7 @@ export default class LoginForm extends Component {
           <CustomTextInput
             name={'password'}
             ref={(ref) => this.passwordInputRef = ref}
-            placeholder={'Password'}
+            placeholder={I18n.t('form_password')}
             editable={!isLoading}
             returnKeyType={'done'}
             secureTextEntry={true}
@@ -64,7 +78,7 @@ export default class LoginForm extends Component {
               isLoading={isLoading}
               buttonStyle={styles.loginButton}
               textStyle={styles.loginButtonText}
-              text={'Log In'}
+              text={I18n.t('form_buttton_login')}
             />
           </View>
           <Text
@@ -75,7 +89,7 @@ export default class LoginForm extends Component {
             duration={600}
             delay={400}
           >
-            {'Not registered yet?'}
+            {I18n.t('form_link_registed')}
           </Text>
           
         </View>

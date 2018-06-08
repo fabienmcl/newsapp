@@ -377,7 +377,7 @@ export default class MonCompte extends Component {
     } catch (error) {
       // Error saving data
     }
-    Actions.loginapp();
+    Actions.conceptSwipe();
   }
   render() {
     if (this.state.isLoading) {

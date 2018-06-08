@@ -33,10 +33,18 @@ let settings = [
   networks : true,
   activity : true, 
   access :true,
+  target:true,
   notification : true
 
 }];
 
+import I18n from 'ex-react-native-i18n';
+I18n.fallbacks = true
+
+I18n.translations = {
+  'en': require("../../i18n/en"),
+  'fr': require('../../i18n/fr'),
+};
 
 export default class Param extends Component {
   constructor(props) {
@@ -51,7 +59,7 @@ export default class Param extends Component {
     //console.log(settings[0].location)
     //AsyncStorage.removeItem('settings',(error, result));
     try {
-      AsyncStorage.setItem('settings', JSON.stringify(settings[0]));
+      //AsyncStorage.setItem('settings', JSON.stringify(settings[0]));
       AsyncStorage.getItem('settings', (err, result)=>{
         console.log(result)
         var json = JSON.parse(result)
@@ -67,6 +75,8 @@ export default class Param extends Component {
       // Error saving data
     }
     //this.getLocationAsync();
+    await I18n.initAsync();
+    this.setState({isLoading:false})
   }
  
   
@@ -193,6 +203,12 @@ export default class Param extends Component {
     s.access = s.access === 0 ? 1:0;
     this.update(s)
   }
+  changeStateTarget(){
+    const s = this.state.settings;
+    console.log(s)
+    s.target = s.target === 0 ? 1:0;
+    this.update(s)
+  }
   changeStateNotification(){
     const s = this.state.settings;
     console.log(s)
@@ -258,7 +274,7 @@ export default class Param extends Component {
         </Left>
         <Body >
          
-          <Title style={{color:'white'}}>{this.props.navigation.state.params.title}</Title>
+          <Title style={{color:'white'}}>{I18n.t('settings_header')}</Title>
         </Body>
         <Right>
         </Right>
@@ -266,19 +282,26 @@ export default class Param extends Component {
       <Content>
           <List>
           <ListItem itemDivider style={{backgroundColor:'#eeeeee'}}>
-              <Text style={{fontWeight: 'bold'}}>Gestion des capteurs</Text>
+              <Text style={{fontWeight: 'bold'}}>{I18n.t('settings_title')}</Text>
             </ListItem> 
             <ListItem itemDivider style={{backgroundColor:'#e0e0e0'}}>
             <Text style={{color:'#a4a4a4', fontSize:14}}>
-                Certaines articles sont basées sur l'analyse fine de votre comportement.
-                L'accès a ses capteurs permet une recommandation d'article.
+            {I18n.t('settings_title_explain')}
+            </Text>
+            </ListItem>
+          <ListItem itemDivider style={{backgroundColor:'#eeeeee'}}>
+              <Text style={{fontWeight: 'bold'}}>{I18n.t('settings_section_sensors')}</Text>
+            </ListItem> 
+            <ListItem itemDivider style={{backgroundColor:'#e0e0e0'}}>
+            <Text style={{color:'#a4a4a4', fontSize:14}}>
+              {I18n.t('settings_section_sensors_explain')}
             </Text>
             </ListItem> 
             <List style={{backgroundColor:'#ffffff'}}>
             
             <ListItem icon >
               <Left>
-              <Text>Localisation</Text>
+              <Text>{I18n.t('sensor_location')}</Text>
               </Left>
               <Body>
               </Body>
@@ -291,7 +314,7 @@ export default class Param extends Component {
             </ListItem>
             <ListItem icon >
               <Left>
-              <Text>Pedometer</Text>
+              <Text>{I18n.t('sensor_pedometer')}</Text>
               </Left>
               <Body>
               </Body>
@@ -301,7 +324,7 @@ export default class Param extends Component {
             </ListItem>
             <ListItem icon >
               <Left>
-              <Text>Gyroscope</Text>
+              <Text>{I18n.t('sensor_gyroscope')}</Text>
               </Left>
               <Body>
               </Body>
@@ -311,7 +334,7 @@ export default class Param extends Component {
             </ListItem>
             <ListItem icon >
               <Left>
-              <Text>Accelerometer</Text>
+              <Text>{I18n.t('sensor_accelerometer')}</Text>
               </Left>
               <Body>
               </Body>
@@ -321,7 +344,7 @@ export default class Param extends Component {
             </ListItem>
             <ListItem icon >
               <Left>
-              <Text>Magnetometer</Text>
+              <Text>{I18n.t('sensor_magnetometer')}</Text>
               </Left>
               <Body>
               </Body>
@@ -331,7 +354,7 @@ export default class Param extends Component {
             </ListItem>
             <ListItem icon >
               <Left>
-              <Text>Qualité du réseaux</Text>
+              <Text>{I18n.t('sensor_network')}</Text>
               </Left>
               <Body>
               </Body>
@@ -343,7 +366,7 @@ export default class Param extends Component {
             </List>
             
             <ListItem itemDivider style={{backgroundColor:'#eeeeee'}}>
-              <Text  style={{fontWeight: 'bold'}}>Gestion des recommandations</Text>
+              <Text  style={{fontWeight: 'bold'}}>{I18n.t('settings_section_recommendations')}</Text>
             </ListItem> 
           <ListItem itemDivider style={{backgroundColor:'#e0e0e0'}}>
           <Text style={{color:'#a4a4a4', fontSize:14}}>
@@ -385,6 +408,21 @@ export default class Param extends Component {
             <ListItem itemDivider style={{backgroundColor:'#f5f5f5'}}>
             <Text style={{color:'#a4a4a4', fontSize:14}}>
               La conservation d'informations ou l'accès à des informations déjà conservées sur votre appareil, par exemple des identifiants de l'appareil
+            </Text>
+            </ListItem>
+            <ListItem icon >
+              <Left>
+              <Text>Ciblage et mesure de contenu</Text>
+              </Left>
+              <Body>
+              </Body>
+              <Right>
+                <Switch value={this.state.settings.target === 0 ? false : true}  onChange={()=>this.changeStateTarget()} />
+              </Right>
+            </ListItem>
+            <ListItem itemDivider style={{backgroundColor:'#f5f5f5'}}>
+            <Text style={{color:'#a4a4a4', fontSize:14}}>
+              La collecte d’informations associé à celles rassemblées précédemment afin de sélectionner et diffuser des contenus à votre égard, puis évaluer leur diffusion ainsi que leur efficacité. 
             </Text>
             </ListItem>
             <ListItem icon >
@@ -431,41 +469,45 @@ export default class Param extends Component {
             
             <ListItem icon >
               <Left>
-              <Text>Politique de confidentialité</Text>
+              <TouchableOpacity  onPress={() => Linking.openURL("https://www.facebook.com/privacy/explanation")}>
+                <Text>Politique de confidentialité</Text>
+              </TouchableOpacity>
               </Left>
               <Body>
               </Body>
               <Right>
+              <TouchableOpacity  onPress={() => Linking.openURL("https://www.facebook.com/privacy/explanation")}>
                 <Icon name="arrow-forward" />
+              </TouchableOpacity> 
               </Right>
             </ListItem>
             <ListItem icon >
               <Left>
-              <Text>Condition de Service</Text>
+              <TouchableOpacity  onPress={() => Linking.openURL("https://www.facebook.com/terms")}>
+                <Text>Condition de Service</Text>
+              </TouchableOpacity>
               </Left>
               <Body>
               </Body>
               <Right>
-                <Icon name="arrow-forward" />
+                
               </Right>
             </ListItem>
             <ListItem icon >
               <Left>
-              <Text>Juridique(autres)</Text>
+              <TouchableOpacity  onPress={() => Linking.openURL("https://www.facebook.com/terms")}>
+                <Text>Juridique(autres)</Text>
+              </TouchableOpacity>
               </Left>
               <Body>
               </Body>
               <Right>
-              <Icon name="arrow-forward" />
-               </Right>
+              <TouchableOpacity  onPress={() => Linking.openURL("https://www.facebook.com/terms")}>
+                  <Icon name="arrow-forward" />
+                </TouchableOpacity>
+              </Right>
             </ListItem>
-            
-            
             </List>
-
-
-
-
           </List>
           <Button
                 block danger> 
