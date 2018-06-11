@@ -14,12 +14,21 @@ import {Actions} from 'react-native-router-flux';
 const window = Dimensions.get('window');
 const uri = 'https://icon-icons.com/icons2/933/PNG/512/settings-cogwheel-button_icon-icons.com_72559.png';
 
+import I18n from 'ex-react-native-i18n';
+
+I18n.fallbacks = true
+const deviceLocale = I18n.locale
+
+I18n.translations = {
+  'en': require("../../i18n/en"),
+  'fr': require('../../i18n/fr'),
+};
 
 function onPressItem(item){
     //console.log("item du menu pressed is : "+item)
     onItemSelected(item)
 }
-export default function Menu({ onItemSelected }) {
+export default function Menu({ onItemSelected }) { 
   return (
     <Container style={{backgroundColor:'#212121', paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight}}>
         <Header style={styles.header}>
@@ -43,19 +52,19 @@ export default function Menu({ onItemSelected }) {
             <List style={{backgroundColor:'#424242', marginTop:5}}>
                 <ListItem iconLeft onPress={() =>  onItemSelected('recommandation')}>
                     <Icon name="ios-trending-up-outline" style={styles.iconItem} />
-                        <Text style={styles.textItem} >Recommandation d'article</Text>
+                    <Text style={styles.textItem} >{I18n.t('side_menu_recommendation')}</Text>
                 </ListItem>
                 <ListItem iconLeft onPress={() => onItemSelected('favoris')}>
                     <Icon name="ios-star-outline" style={styles.iconItem} />
-                    <Text style={styles.textItem}  >Favoris</Text>
+                    <Text style={styles.textItem}  >{I18n.t('side_menu_fav')}</Text>
                 </ListItem>
                 <ListItem iconLeft onPress={() => onItemSelected('historique')}>
                     <Icon name="ios-stats-outline" style={styles.iconItem} />
-                    <Text style={styles.textItem}  >Historique</Text>
+                    <Text style={styles.textItem}  >{I18n.t('side_menu_history')}</Text>
                 </ListItem>
                 <ListItem iconLeft onPress={() => onItemSelected('compte')}>
                     <Icon name="ios-person" style={styles.iconItem} />
-                    <Text style={styles.textItem} >Mon compte</Text>
+                    <Text style={styles.textItem} > {I18n.t('side_menu_account')} </Text>
                 </ListItem>
             </List>
            
@@ -63,7 +72,7 @@ export default function Menu({ onItemSelected }) {
         <Footer style={{ backgroundColor: '#212121'}} >
           <FooterTab>
             <Button full onPress={() => onItemSelected('concept')}>
-              <Text >Le concept</Text>
+              <Text >{I18n.t('side_menu_concept')}</Text>
             </Button>
           </FooterTab>
         </Footer>

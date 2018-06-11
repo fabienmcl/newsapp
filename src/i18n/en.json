@@ -35,6 +35,43 @@
   "settings_section_recommendations" : "Management of recommendations",
   "settings_section_recommendations_explain" :"Some articles are based on what you do elsewhere.But you will still see articles about your use within the app.",
 
+  "settings_section_recommendations_activity": "Based on your activated",
+  "settings_section_recommendations_activity_explain": "Some article recommendations are based on online activity on social networks.",
+  "settings_section_recommendations_access": "Preservation and access to information",
+  "settings_section_recommendations_access_explain": "Retention of information or access to information already stored on your device, such as device identifiers.",
+  "settings_section_recommendations_target": "Targeting and Content Measurement",
+  "settings_section_recommendations_target_explain": "The collection of information associated with those collected previously to select and distribute content to you, then evaluate their dissemination and effectiveness.",
+  "settings_section_recommendations_notification": "Notifications",
+
+  "settings_section_more_information": "More information",
+  "settings_section_more_information_assistance": "Assistance",
+  "settings_section_more_information_privacy": "Privacy Policy",
+  "settings_section_more_information_condition_of_service": "Service Condition",
+  "settings_section_more_information_legal": "Legal (other)",
+  "settings_button_request_my_data": "Request my data",
+
+  "side_menu_recommendation": "Article recommendation",
+  "side_menu_fav": "Favorites",
+  "side_menu_history": "History",
+  "side_menu_account": "My account",
+  "side_menu_concept": "The concept",
+
+
+  "account_sex" : "Sex",
+  "account_birth" : "Birth",
+  "account_location" : "Location",
+  "account_location_popup" : "setup your location",
+  "account_email" : "Email",
+  "account_email_popup" : "setup your email",
+  "account_phone" : "Phone",
+  "account_phone_popup" : "setup your phone number",
+  "account_social_network" : "Connect with social network",
+  "account_button_disconnect" : "Disconnect",
+
+  "wv_opinion": "Your opinion on the article", 
+  "wv_share": "Sharing the article", 
+  "wv_recommendations": "Article recommendations:",
+
   "hello world": "hello world",
   "greeting": "Hi!"
 }

@@ -19,23 +19,13 @@ import SideMenu from 'react-native-side-menu';
 import Menu from '../SideMenu/Menu';
 import TreePicker from 'react-native-tree-picker';
 import I18n from 'ex-react-native-i18n';
-
-// Enable fallbacks if you want `en-US` and `en-GB` to fallback to `en`
 I18n.fallbacks = true
+const deviceLocale = I18n.locale
 
 I18n.translations = {
   'en': require("../../i18n/en"),
   'fr': require('../../i18n/fr'),
 };
-
-/*
-I18n.translations = {
-  en: : require(:'../../in18/en'),
-  fr: {
-    greeting: 'Bonjour!'
-  }
-}
-*/
 
 const screen = Dimensions.get('window');
 const data = [
@@ -186,7 +176,7 @@ export default class Historique extends Component {
           <Button transparent>
             <Icon name='ios-stats' style={{ color: '#fff'}}   onPress={()=>this._sideMenuPress()} />
           </Button>
-          <Title style={{color:'white'}}>{this.props.navigation.state.params.title}</Title>
+          <Title style={{color:'white'}}>{I18n.t('side_menu_history')}</Title>
         </Body>
         <Right>
         </Right>

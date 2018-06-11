@@ -55,7 +55,9 @@ export default class Param extends Component {
   }
 
   async componentDidMount(){
+
     console.log(settings)
+    this.setState({settings : settings})
     //console.log(settings[0].location)
     //AsyncStorage.removeItem('settings',(error, result));
     try {
@@ -253,132 +255,121 @@ export default class Param extends Component {
    
     const menu = <Menu onItemSelected={this.onMenuItemSelected} />;
     return (
-      
-      
       <SideMenu
         menu={menu}
         isOpen={this.state.isOpen}
         onChange={isOpen => this.updateMenuState(isOpen)}
         disableGestures={false}
-      
       >
-      
-      <View style={{justifyContent: 'center', flex:1, backgroundColor : "#212121",paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight}}>
-      
-      <Header style={{backgroundColor: '#212121'}}>
-        <StatusBar barStyle="light-content"/>
-        <Left >
-          <Button transparent>
-            <Icon name='menu' style={{ color: '#fff'}}   onPress={()=>this._sideMenuPress()} />
-          </Button>
-        </Left>
-        <Body >
-         
-          <Title style={{color:'white'}}>{I18n.t('settings_header')}</Title>
-        </Body>
-        <Right>
-        </Right>
-      </Header>
-      <Content>
-          <List>
-          <ListItem itemDivider style={{backgroundColor:'#eeeeee'}}>
-              <Text style={{fontWeight: 'bold'}}>{I18n.t('settings_title')}</Text>
-            </ListItem> 
-            <ListItem itemDivider style={{backgroundColor:'#e0e0e0'}}>
-            <Text style={{color:'#a4a4a4', fontSize:14}}>
-            {I18n.t('settings_title_explain')}
-            </Text>
-            </ListItem>
-          <ListItem itemDivider style={{backgroundColor:'#eeeeee'}}>
-              <Text style={{fontWeight: 'bold'}}>{I18n.t('settings_section_sensors')}</Text>
-            </ListItem> 
-            <ListItem itemDivider style={{backgroundColor:'#e0e0e0'}}>
-            <Text style={{color:'#a4a4a4', fontSize:14}}>
-              {I18n.t('settings_section_sensors_explain')}
-            </Text>
-            </ListItem> 
-            <List style={{backgroundColor:'#ffffff'}}>
-            
-            <ListItem icon >
-              <Left>
-              <Text>{I18n.t('sensor_location')}</Text>
-              </Left>
-              <Body>
-              </Body>
-              <Right>
-              <Switch value={this.state.settings.location === 0 ? false : true} 
-                onChange={()=>this.changeStateLocation()}
-                //onChange={()=>Linking.openURL('app-settings:')}
-                />
-              </Right>
-            </ListItem>
-            <ListItem icon >
-              <Left>
-              <Text>{I18n.t('sensor_pedometer')}</Text>
-              </Left>
-              <Body>
-              </Body>
-              <Right>
-              <Switch value={this.state.settings.pedometer === 0 ? false : true} onChange={()=>this.changeStatePedometer()}/>
-              </Right>
-            </ListItem>
-            <ListItem icon >
-              <Left>
-              <Text>{I18n.t('sensor_gyroscope')}</Text>
-              </Left>
-              <Body>
-              </Body>
-              <Right>
-              <Switch value={this.state.settings.gyroscope === 0 ? false : true}  onChange={()=>this.changeStateGyroscope()}/>
-              </Right>
-            </ListItem>
-            <ListItem icon >
-              <Left>
-              <Text>{I18n.t('sensor_accelerometer')}</Text>
-              </Left>
-              <Body>
-              </Body>
-              <Right>
-              <Switch value={this.state.settings.accelerometer === 0 ? false : true}   onChange={()=>this.changeStateAccelerometer()}/>
-              </Right>
-            </ListItem>
-            <ListItem icon >
-              <Left>
-              <Text>{I18n.t('sensor_magnetometer')}</Text>
-              </Left>
-              <Body>
-              </Body>
-              <Right>
-              <Switch value={this.state.settings.magnetometer === 0 ? false : true}   onChange={()=>this.changeStateMagnetometer()}/>
-              </Right>
-            </ListItem>
-            <ListItem icon >
-              <Left>
-              <Text>{I18n.t('sensor_network')}</Text>
-              </Left>
-              <Body>
-              </Body>
-              <Right>
-              <Switch value={this.state.settings.networks === 0 ? false : true}   onChange={()=>this.changeStateNetwork()}/>
-              </Right>
-            </ListItem>
-            
+        <View style={{justifyContent: 'center', flex:1, backgroundColor : "#212121",paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight}}>
+          <Header style={{backgroundColor: '#212121'}}>
+            <StatusBar barStyle="light-content"/>
+            <Left >
+              <Button transparent>
+                <Icon name='menu' style={{ color: '#fff'}}   onPress={()=>this._sideMenuPress()} />
+              </Button>
+            </Left>
+            <Body >
+              <Title style={{color:'white'}}>{I18n.t('settings_header')}</Title>
+            </Body>
+            <Right>
+            </Right>
+          </Header>
+          <Content>
+            <List>
+              <ListItem itemDivider style={{backgroundColor:'#eeeeee'}}>
+                <Text style={{fontWeight: 'bold'}}>{I18n.t('settings_title')}</Text>
+              </ListItem> 
+              <ListItem itemDivider style={{backgroundColor:'#e0e0e0'}}>
+                <Text style={{color:'#a4a4a4', fontSize:14}}>
+                  {I18n.t('settings_title_explain')}
+                </Text>
+              </ListItem>
+              <ListItem itemDivider style={{backgroundColor:'#eeeeee'}}>
+                <Text style={{fontWeight: 'bold'}}>
+                  {I18n.t('settings_section_sensors')}
+                </Text>
+              </ListItem> 
+              <ListItem itemDivider style={{backgroundColor:'#e0e0e0'}}>
+                <Text style={{color:'#a4a4a4', fontSize:14}}>
+                  {I18n.t('settings_section_sensors_explain')}
+                </Text>
+              </ListItem> 
+              <List style={{backgroundColor:'#ffffff'}}>
+                <ListItem icon >
+                  <Left>
+                    <Text>{I18n.t('sensor_location')}</Text>
+                  </Left>
+                  <Body>
+                  </Body>
+                  <Right>
+                    <Switch value={this.state.settings.location === 0 ? false : true} 
+                      onChange={()=>this.changeStateLocation()}
+                      //onChange={()=>Linking.openURL('app-settings:')}
+                    />
+                  </Right>
+                </ListItem>
+                <ListItem icon >
+                  <Left>
+                    <Text>{I18n.t('sensor_pedometer')}</Text>
+                  </Left>
+                  <Body>
+                  </Body>
+                  <Right>
+                    <Switch value={this.state.settings.pedometer === 0 ? false : true} onChange={()=>this.changeStatePedometer()}/>
+                  </Right>
+                </ListItem>
+                <ListItem icon >
+                  <Left>
+                    <Text>{I18n.t('sensor_gyroscope')}</Text>
+                  </Left>
+                  <Body>
+                  </Body>
+                  <Right>
+                    <Switch value={this.state.settings.gyroscope === 0 ? false : true}  onChange={()=>this.changeStateGyroscope()}/>
+                  </Right>
+                </ListItem>
+                <ListItem icon >
+                  <Left>
+                    <Text>{I18n.t('sensor_accelerometer')}</Text>
+                  </Left>
+                  <Body>
+                  </Body>
+                  <Right>
+                    <Switch value={this.state.settings.accelerometer === 0 ? false : true}   onChange={()=>this.changeStateAccelerometer()}/>
+                  </Right>
+                </ListItem>
+                <ListItem icon >
+                  <Left>
+                    <Text>{I18n.t('sensor_magnetometer')}</Text>
+                  </Left>
+                  <Body>
+                  </Body>
+                  <Right>
+                    <Switch value={this.state.settings.magnetometer === 0 ? false : true}   onChange={()=>this.changeStateMagnetometer()}/>
+                  </Right>
+                </ListItem>
+                <ListItem icon >
+                  <Left>
+                    <Text>{I18n.t('sensor_network')}</Text>
+                  </Left>
+                  <Body>
+                  </Body>
+                  <Right>
+                    <Switch value={this.state.settings.networks === 0 ? false : true}   onChange={()=>this.changeStateNetwork()}/>
+                  </Right>
+                </ListItem>
+              </List> 
             </List>
             
+            {/*coupure*/}
             <ListItem itemDivider style={{backgroundColor:'#eeeeee'}}>
               <Text  style={{fontWeight: 'bold'}}>{I18n.t('settings_section_recommendations')}</Text>
             </ListItem> 
-          <ListItem itemDivider style={{backgroundColor:'#e0e0e0'}}>
-          <Text style={{color:'#a4a4a4', fontSize:14}}>
-                Certaines articles sont basées sur ce que vous faites ailleurs. 
-                Mais vous verrez toujours des articles sur votre utilisation au sein de l'application.
-              </Text>
-            </ListItem> 
-            <List style={{backgroundColor:'#ffffff'}}>
-            
-            <ListItem icon >
+             
+            <ListItem itemDivider icon style={{backgroundColor:'#ffffff'}}>
               <Left>
-              <Text>Basé sur votre activé</Text>
+                <Text>{I18n.t('settings_section_recommendations_activity')}</Text>
               </Left>
               <Body>
               </Body>
@@ -386,136 +377,126 @@ export default class Param extends Component {
                 <Switch value={this.state.settings.activity === 0 ? false : true}  onChange={()=>this.changeStateActivity()} />
               </Right>
             </ListItem>
-            </List>
-
             <List style={{backgroundColor:'#ffffff'}}>
-            <ListItem itemDivider style={{backgroundColor:'#f5f5f5'}}>
-            <Text style={{color:'#a4a4a4', fontSize:14}}>
-              Certaines recommandation d'articles sont basées sur activité en ligne sur les réseaux sociaux .   
-            </Text>
-            </ListItem> 
-            <ListItem icon >
-              <Left>
-              <Text>Conservation et accès aux informations</Text>
-              </Left>
-              <Body>
-              </Body>
-              <Right>
-                <Switch value={this.state.settings.access === 0 ? false : true}  onChange={()=>this.changeStateAcess()} />
-              </Right>
-            </ListItem>
-            
-            <ListItem itemDivider style={{backgroundColor:'#f5f5f5'}}>
-            <Text style={{color:'#a4a4a4', fontSize:14}}>
-              La conservation d'informations ou l'accès à des informations déjà conservées sur votre appareil, par exemple des identifiants de l'appareil
-            </Text>
-            </ListItem>
-            <ListItem icon >
-              <Left>
-              <Text>Ciblage et mesure de contenu</Text>
-              </Left>
-              <Body>
-              </Body>
-              <Right>
-                <Switch value={this.state.settings.target === 0 ? false : true}  onChange={()=>this.changeStateTarget()} />
-              </Right>
-            </ListItem>
-            <ListItem itemDivider style={{backgroundColor:'#f5f5f5'}}>
-            <Text style={{color:'#a4a4a4', fontSize:14}}>
-              La collecte d’informations associé à celles rassemblées précédemment afin de sélectionner et diffuser des contenus à votre égard, puis évaluer leur diffusion ainsi que leur efficacité. 
-            </Text>
-            </ListItem>
-            <ListItem icon >
-              <Left>
-              <Text>Notifications</Text>
-              </Left>
-              <Body>
-              </Body>
-              <Right>
-                <Switch value={this.state.settings.notification === 0 ? false : true}  onChange={()=>this.changeStateNotification()} />
-              </Right>
-            </ListItem>
+              <ListItem itemDivider style={{backgroundColor:'#f5f5f5'}}>
+                <Text style={{color:'#a4a4a4', fontSize:14}}>
+                  {I18n.t('settings_section_recommendations_activity_explain')}
+                </Text>
+              </ListItem> 
+              <ListItem icon >
+                <Left>
+                  <Text>{I18n.t('settings_section_recommendations_access')}</Text>
+                </Left>
+                <Body>
+                </Body>
+                <Right>
+                  <Switch value={this.state.settings.access === 0 ? false : true}  onChange={()=>this.changeStateAcess()} />
+                </Right>
+              </ListItem>
+              <ListItem itemDivider style={{backgroundColor:'#f5f5f5'}}>
+                <Text style={{color:'#a4a4a4', fontSize:14}}>
+                  {I18n.t('settings_section_recommendations_access_explain')}
+                </Text>
+              </ListItem>
+              <ListItem icon >
+                <Left>
+                  <Text>{I18n.t('settings_section_recommendations_target')}</Text>
+                </Left>
+                <Body>
+                </Body>
+                <Right>
+                  <Switch value={this.state.settings.target === 0 ? false : true}  onChange={()=>this.changeStateTarget()} />
+                </Right>
+              </ListItem>
+              <ListItem itemDivider style={{backgroundColor:'#f5f5f5'}}>
+                <Text style={{color:'#a4a4a4', fontSize:14}}>
+                  {I18n.t('settings_section_recommendations_target_explain')}
+                </Text>
+              </ListItem>
+              <ListItem icon >
+                <Left>
+                  <Text>{I18n.t('settings_section_recommendations_notification')}</Text>
+                </Left>
+                <Body>
+                </Body>
+                <Right>
+                  <Switch value={this.state.settings.notification === 0 ? false : true}  onChange={()=>this.changeStateNotification()} />
+                </Right>
+              </ListItem>
             </List>
-
-            
             <ListItem itemDivider style={{backgroundColor:'#eeeeee'}}>
-              <Text style={{fontWeight: 'bold'}}>Plus d'information</Text>
+              <Text style={{fontWeight: 'bold'}}>{I18n.t('settings_section_more_information')}</Text>
             </ListItem> 
             <List style={{backgroundColor:'#ffffff'}}>
-            
             <ListItem icon >
               <Left>
-              <TouchableOpacity  onPress={() => Linking.openURL( (Platform.OS === 'android')
+                <TouchableOpacity  onPress={() => Linking.openURL( (Platform.OS === 'android')
                   ? 'mailto:hay.julien1@gmail.com?cc=?subject=Renewal:assistance&body=yourMessage'
                   : 'mailto:hay.julien1@gmail.com?cc=&subject=Renewal:assistance&body=yourMessage')}
-               >
-              <Text>Assistance</Text>
-              </TouchableOpacity>
+                >
+                  <Text>{I18n.t('settings_section_more_information_assistance')}</Text>
+                </TouchableOpacity>
               </Left>
               <Body>
               </Body>
               <Right>
-              <TouchableOpacity  onPress={() => Linking.openURL( (Platform.OS === 'android')
+                <TouchableOpacity  onPress={() => Linking.openURL( (Platform.OS === 'android')
                   ? 'mailto:hay.julien1@gmail.com?cc=?subject=Renewal:assistance&body=yourMessage'
                   : 'mailto:hay.julien1@gmail.com?cc=&subject=Renewal:assistance&body=yourMessage')}
-               >
-               {/* (Platform.OS === 'android')
-      ? sms:1-408-555-1212?body=yourMessage
-      : sms:1-408-555-1212&body=yourMessage;*/}
-              <Icon name="arrow-forward" />
-              </TouchableOpacity>
-               </Right>
-            </ListItem>
-            
-            <ListItem icon >
-              <Left>
-              <TouchableOpacity  onPress={() => Linking.openURL("https://www.facebook.com/privacy/explanation")}>
-                <Text>Politique de confidentialité</Text>
-              </TouchableOpacity>
-              </Left>
-              <Body>
-              </Body>
-              <Right>
-              <TouchableOpacity  onPress={() => Linking.openURL("https://www.facebook.com/privacy/explanation")}>
-                <Icon name="arrow-forward" />
-              </TouchableOpacity> 
-              </Right>
-            </ListItem>
-            <ListItem icon >
-              <Left>
-              <TouchableOpacity  onPress={() => Linking.openURL("https://www.facebook.com/terms")}>
-                <Text>Condition de Service</Text>
-              </TouchableOpacity>
-              </Left>
-              <Body>
-              </Body>
-              <Right>
-                
-              </Right>
-            </ListItem>
-            <ListItem icon >
-              <Left>
-              <TouchableOpacity  onPress={() => Linking.openURL("https://www.facebook.com/terms")}>
-                <Text>Juridique(autres)</Text>
-              </TouchableOpacity>
-              </Left>
-              <Body>
-              </Body>
-              <Right>
-              <TouchableOpacity  onPress={() => Linking.openURL("https://www.facebook.com/terms")}>
+                >
+                  {/* (Platform.OS === 'android')
+                    ? sms:1-408-555-1212?body=yourMessage
+                    : sms:1-408-555-1212&body=yourMessage;*/}
                   <Icon name="arrow-forward" />
                 </TouchableOpacity>
               </Right>
             </ListItem>
-            </List>
+            <ListItem icon >
+              <Left>
+                <TouchableOpacity  onPress={() => Linking.openURL("https://www.facebook.com/privacy/explanation")}>
+                  <Text>{I18n.t('settings_section_more_information_privacy')}</Text>
+                </TouchableOpacity>
+              </Left>
+              <Body>
+              </Body>
+              <Right>
+                <TouchableOpacity  onPress={() => Linking.openURL("https://www.facebook.com/privacy/explanation")}>
+                  <Icon name="arrow-forward" />
+                </TouchableOpacity> 
+              </Right>
+            </ListItem>
+            <ListItem icon >
+              <Left>
+                <TouchableOpacity  onPress={() => Linking.openURL("https://www.facebook.com/terms")}>
+                  <Text>{I18n.t('settings_section_more_information_condition_of_service')}</Text>
+                </TouchableOpacity>
+              </Left>
+              <Body>
+              </Body>
+              <Right>  
+              </Right>
+            </ListItem>
+            <ListItem icon >
+              <Left>
+                <TouchableOpacity  onPress={() => Linking.openURL("https://www.facebook.com/terms")}>
+                  <Text>{I18n.t('settings_section_more_information_legal')}</Text>
+                </TouchableOpacity>
+              </Left>
+              <Body>
+              </Body>
+              <Right>
+                <TouchableOpacity  onPress={() => Linking.openURL("https://www.facebook.com/terms")}>
+                  <Icon name="arrow-forward" />
+                </TouchableOpacity>
+              </Right>
+            </ListItem>
           </List>
-          <Button
-                block danger> 
-              <Text>Demander mes données </Text>
-              </Button>
-        </Content>
+          <Button block danger> 
+            <Text>{I18n.t('settings_button_request_my_data')}</Text>
+          </Button>
+        </Content> 
       </View>
-      </SideMenu>
+    </SideMenu>
    );
   }
 }

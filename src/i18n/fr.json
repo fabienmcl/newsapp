@@ -32,8 +32,43 @@
   "sensor_network" : "Nature du réseaux",
 
   "settings_section_recommendations" : "Gestion des recommandations",
-  "settings_section_recommendations_explain" : "Certaines articles sont basées sur ce que vous faites ailleurs. Mais vous verrez toujours des articles sur votre utilisation au sein de l'application.",
+  "settings_section_recommendations_explain" : "Certains articles sont basées sur ce que vous faites ailleurs. Mais vous verrez toujours des articles sur votre utilisation au sein de l'application.",
 
+  "settings_section_recommendations_activity" : "Basé sur votre activé",
+  "settings_section_recommendations_activity_explain" : " Certaines recommandation d'articles sont basées sur activité en ligne sur les réseaux sociaux .",
+  "settings_section_recommendations_access" : "Conservation et accès aux informations",
+  "settings_section_recommendations_access_explain" : "La conservation d'informations ou l'accès à des informations déjà conservées sur votre appareil, par exemple des identifiants de l'appareil.",
+  "settings_section_recommendations_target" : "Ciblage et mesure de contenu",
+  "settings_section_recommendations_target_explain" : "La collecte d’informations associé à celles rassemblées précédemment afin de sélectionner et diffuser des contenus à votre égard, puis évaluer leur diffusion ainsi que leur efficacité.",
+  "settings_section_recommendations_notification" : "Notifications",
+
+  "settings_section_more_information" : "Plus d'inforation",
+  "settings_section_more_information_assistance" : "Assistance",
+  "settings_section_more_information_privacy" : "Politique de confidentialité",
+  "settings_section_more_information_condition_of_service" : "Condition de Service",
+  "settings_section_more_information_legal" : "Juridique(autres)",
+  "settings_button_request_my_data" : "Demander mes données",
+
+  "side_menu_recommendation" : "Recommandation d'article",
+  "side_menu_fav" : "Favoris",
+  "side_menu_history" : "Historique",
+  "side_menu_account" : "Mon compte",
+  "side_menu_concept" : "Le concept",
+
+  "account_sex" : "Sexe",
+  "account_birth" : "Date",
+  "account_location" : "Position",
+  "account_location_popup" : "configurez votre emplacement",
+  "account_email" : "Email",
+  "account_email_popup" : "configurez votre adresse mail",
+  "account_phone" : "Téléphone",
+  "account_phone_popup" : "configurez votre numéro de téléphone",
+  "account_social_network" : "Connectez-vous avec vos réseau sociaux",
+  "account_button_disconnect" : "Deconnection",
+  
+  "wv_opinion" : "Ton avsi sur l'article :",
+  "wv_share" : "Partage l'article",
+  "wv_recommendations" : "Recommandations d'articles :",
 
   "hello world": "bonjour le monde",
   "greeting": "Bonjour!"

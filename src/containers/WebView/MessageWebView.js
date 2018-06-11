@@ -34,6 +34,14 @@ import TimerMixin from 'react-timer-mixin';
 const SCREEN_HEIGHT_CUSTOM_HEADER = SCREEN_HEIGHT/20;
 const SCREEN_HEIGHT_CUSTOM_REST= SCREEN_HEIGHT - SCREEN_HEIGHT_CUSTOM_HEADER;
 const PropTypes = require('prop-types');
+import I18n from 'ex-react-native-i18n';
+I18n.fallbacks = true
+const deviceLocale = I18n.locale
+
+I18n.translations = {
+  'en': require("../../i18n/en"),
+  'fr': require('../../i18n/fr'),
+};
 
 // fix https://github.com/facebook/react-native/issues/10865
 // thx https://github.com/kyle-ilantzis !
@@ -94,6 +102,10 @@ export default class MessageWebView extends React.Component {
         };
         this.springValue = new Animated.Value(1)
     }
+    async componentDidMount(){
+        await I18n.initAsync();
+        this.setState({isLoading:false})
+      }
     spring () {
         this.springValue.setValue(0.3)
         setTimeout(() => {
@@ -434,7 +446,7 @@ export default class MessageWebView extends React.Component {
                 </Animatable.View>
                 </ScrollView>
                 <View style={{ alignItems: 'center', justifyContent: 'flex-end' }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 22 }}>Ton avis sur l'article : </Text>
+                    <Text style={{ fontWeight: 'bold', fontSize: 22 }}>{I18n.t('wv_opinion')} </Text>
                 </View>
 
                 <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', flex:1 }}>
@@ -474,7 +486,7 @@ export default class MessageWebView extends React.Component {
                 <View style={{ alignItems: 'center', justifyContent: 'flex-end'}}>
                     <Button iconLeft block onPress={ this.ShareMessage }>
                         <Icon name='share' />
-                        <Text>Partage l'article </Text>
+                        <Text>{I18n.t('wv_share')}</Text>
                     </Button>
                 </View>
                 {/*
@@ -498,7 +510,7 @@ export default class MessageWebView extends React.Component {
                 </View>
                 */}
                 <View style={{ alignItems: 'center', justifyContent: 'flex-end'}}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 22 }}>Recommandations d'articles :</Text>
+                    <Text style={{ fontWeight: 'bold', fontSize: 22 }}>{I18n.t('wv_recommendations')}</Text>
                 </View>
                 <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', height: SCREEN_HEIGHT/2 }}>
                     <FlatListViewArticle style={{flex: 1}}  ref={x => {this.child = x}}>

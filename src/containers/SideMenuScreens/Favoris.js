@@ -19,6 +19,14 @@ import SideMenu from 'react-native-side-menu';
 import Menu from '../SideMenu/Menu';
 const screen = Dimensions.get('window');
 const db = SQLite.openDatabase('db.db');
+import I18n from 'ex-react-native-i18n';
+I18n.fallbacks = true
+const deviceLocale = I18n.locale
+
+I18n.translations = {
+  'en': require("../../i18n/en"),
+  'fr': require('../../i18n/fr'),
+};
 
 export default class Favoris extends Component {
   constructor(props) {
@@ -120,7 +128,7 @@ export default class Favoris extends Component {
           <Button transparent>
             <Icon name='ios-star' style={{ color: '#fff'}}   onPress={()=>this._sideMenuPress()} />
           </Button>
-          <Title style={{color:'white'}}>{this.props.navigation.state.params.title}</Title>
+          <Title style={{color:'white'}}>{I18n.t('side_menu_fav')}</Title>
         </Body>
         <Right>
         </Right>
@@ -157,13 +165,6 @@ export default class Favoris extends Component {
           refreshing={this.state.refreshing}
           />
       </Content>
-      <Footer style={{ backgroundColor: '#212121'}} >
-          <FooterTab style={{ backgroundColor: '#212121'}}>
-            <Button full style={{ backgroundColor: '#212121'}}>
-              <Text >footer </Text>
-            </Button>
-          </FooterTab>
-        </Footer>
       </View>
       </SideMenu>
    );

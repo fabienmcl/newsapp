@@ -44,6 +44,15 @@ const userInformation = [ {
   google : 0,
 }];
 
+import I18n from 'ex-react-native-i18n';
+I18n.fallbacks = true
+const deviceLocale = I18n.locale
+
+I18n.translations = {
+  'en': require("../../i18n/en"),
+  'fr': require('../../i18n/fr'),
+};
+
 
 export default class MonCompte extends Component {
   constructor(props) {
@@ -61,6 +70,7 @@ export default class MonCompte extends Component {
   }
   async componentDidMount(){
     console.log(userInformation)
+    await I18n.initAsync();
     await Font.loadAsync({
       Roboto: require("native-base/Fonts/Roboto.ttf"),
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
@@ -83,6 +93,7 @@ export default class MonCompte extends Component {
     } catch (error) {
       // Error saving data
     }
+    
   }
   
   async logInFB() {
@@ -412,7 +423,7 @@ export default class MonCompte extends Component {
           <Button transparent>
             <Icon name='ios-person' style={{ color: '#fff'}}   onPress={()=>this._sideMenuPress()} />
           </Button>
-          <Title style={{color:'white'}}>{this.props.navigation.state.params.title}</Title>
+          <Title style={{color:'white'}}>{I18n.t('side_menu_account')}</Title>
         </Body>
         <Right>
         </Right>
@@ -447,7 +458,7 @@ export default class MonCompte extends Component {
                 <Icon name="person" style={{color:'#0063DC'}}/>
               </Left>
               <Body>
-                <Text>Sex</Text>
+                <Text>{I18n.t('account_sex')}</Text>
               </Body>
               <TouchableHighlight
                 onPress={() => Alert.alert(
@@ -470,7 +481,7 @@ export default class MonCompte extends Component {
                 <Icon name="calendar" style={{color:'#33CCFF'}}/>
               </Left>
               <Body>
-                <Text>Birth</Text>
+                <Text>{I18n.t('account_birth')}</Text>
               </Body>
               <Right>
               <DatePicker
@@ -512,12 +523,12 @@ export default class MonCompte extends Component {
               </Right>
             </ListItem>
             <Dialog.Container visible={this.state.dialogLocationIsVisible}>
-              <Dialog.Title>Location</Dialog.Title>
+              <Dialog.Title>{I18n.t('account_location')}</Dialog.Title>
               <Dialog.Description>
-                Change your Location
+              {I18n.t('account_location_popup')}
               </Dialog.Description>
               <Dialog.Input onChangeText={(text) => this.setState({dialogText: text}) }  >
-                Orsay
+              {this.state.userInformationBasic.location}
               </Dialog.Input>
               <Dialog.Button label="Cancel" onPress={()=>this.setState({dialogLocationIsVisible : !this.state.dialogLocationIsVisible})}/>
               <Dialog.Button label="OK" onPress={()=>this.handleChangeLocation()}/>
@@ -527,7 +538,7 @@ export default class MonCompte extends Component {
                 <Icon name="navigate" style={{color:'green'}}/>
               </Left>
               <Body>
-                <Text>Location</Text>
+                <Text>{I18n.t('account_location')}</Text>
               </Body>
               <TouchableHighlight
                 onPress={() =>this.setState({dialogLocationIsVisible : !this.state.dialogLocationIsVisible}) }>
@@ -539,9 +550,9 @@ export default class MonCompte extends Component {
               </TouchableHighlight>
             </ListItem>
             <Dialog.Container visible={this.state.dialogEmailIsVisible}>
-              <Dialog.Title>Email</Dialog.Title>
+              <Dialog.Title>{I18n.t('account_email')}</Dialog.Title>
               <Dialog.Description>
-                Change your email
+              {I18n.t('account_email_popup')}
               </Dialog.Description>
               <Dialog.Input onChangeText={(text) => this.setState({dialogText: text}) } >
                 {this.state.userInformationBasic.email}
@@ -554,7 +565,7 @@ export default class MonCompte extends Component {
                 <Icon name="ios-mail-open-outline" style={{color:'#FF3333'}}/>
               </Left>
               <Body>
-                <Text>Email</Text>
+                <Text>{I18n.t('account_email')}</Text>
               </Body>
               <TouchableHighlight
                 onPress={() =>this.setState({dialogEmailIsVisible : !this.state.dialogEmailIsVisible}) }>
@@ -582,7 +593,7 @@ export default class MonCompte extends Component {
                 <Icon name="ios-phone-portrait" />
               </Left>
               <Body>
-                <Text>Phone</Text>
+                <Text>{I18n.t('account_phone')}</Text>
               </Body>
               {/*<TouchableHighlight onPress={() =>this.setState({dialogPhoneIsVisible : !this.state.dialogPhoneIsVisible}) >
                */} 
@@ -598,7 +609,7 @@ export default class MonCompte extends Component {
           </List>
             </CardItem>
             <CardItem header bordered>
-              <Text>Connect with social network</Text>
+              <Text>{I18n.t('account_social_network')}</Text>
           </CardItem>
           <CardItem bordered>
           <List style={{flex: 1, width:'100%'}}>
@@ -698,7 +709,7 @@ export default class MonCompte extends Component {
           </CardItem>
           </Card>
           <Button block danger onPress={()=>this.disconnect()} >  
-            <Text>Deconnection </Text>
+            <Text>{I18n.t('account_button_disconnect')} </Text>
           </Button>
           
         </View>
