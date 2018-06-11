@@ -49,6 +49,18 @@
   "settings_section_more_information_legal" : "Juridique(autres)",
   "settings_button_request_my_data" : "Demander mes données",
 
+  "settings_popup_location" :"Localisation désctivée",
+  "settings_popup_location_explain" :"Pour afficher les articles d'actualité local. Autorisez l'accès à Renewal depuis les paramètres de votre terminal",
+  "settings_popup_pedometer" :"Podometre désctivée",
+  "settings_popup_pedometer_explain" :"Le podometre permet d'analyser plus finement votre comportement. Vous pouvez configurer dans les réglages",
+  "settings_popup_notification" :"Autorisez-vous Renewal à vous envoyer des notifications ? ",
+  "settings_popup_notification_explain" :"Les notifications peuvent inclure des alertes, des sons er des pastilles. Vous pouvez configurer dans les réglages",
+
+  "settings_popup_cancel" : "Annuler",
+  "settings_popup_refuse" : "Refuser",
+  "settings_popup_gosettings" : "Accéder aux paramètres",
+  "settings_popup_allow" : "Autoriser",
+
   "side_menu_recommendation" : "Recommandation d'article",
   "side_menu_fav" : "Favoris",
   "side_menu_history" : "Historique",

@@ -128,11 +128,11 @@ export default class Param extends Component {
     s.location = s.location === 0 ? 1:0
     if(s.location===1){
       Alert.alert( 
-        'Location',
-        'please accept location acces',
+        I18n.t('settings_popup_location'),
+        I18n.t('settings_popup_location_explain'),
         [
-          {text: 'Cancel', onPress: () => this.changeStateLocation(), style: 'cancel'},
-          {text: 'OK', onPress: () => Linking.openURL('app-settings:')},
+          {text: I18n.t('settings_popup_cancel'), onPress: () => this.changeStateLocation(), style: 'cancel'},
+          {text: I18n.t('settings_popup_gosettings'), onPress: () => Linking.openURL('app-settings:')},
         ],
         { cancelable: false })
       //Linking.openURL('app-settings:')
@@ -158,11 +158,11 @@ export default class Param extends Component {
     s.pedometer = s.pedometer === 0 ? 1:0;
     if(s.pedometer===1){
       Alert.alert( 
-        'Pedometer',
-        'please accept pedometer acces',
+        I18n.t('settings_popup_pedometer'),
+        I18n.t('settings_popup_pedometer_explain'),
         [
-          {text: 'Cancel', onPress: () => this.changeStatePedometer(), style: 'cancel'},
-          {text: 'OK', onPress: () => Linking.openURL('app-settings:')},
+          {text: I18n.t('settings_popup_refuse'), onPress: () => this.changeStatePedometer(), style: 'cancel'},
+          {text: I18n.t('settings_popup_allow'), onPress: () => Linking.openURL('app-settings:')},
         ],
         { cancelable: false })
       //Linking.openURL('app-settings:')
@@ -217,11 +217,11 @@ export default class Param extends Component {
     s.notification = s.notification === 0 ? 1:0;
     if(s.notification===1){
       Alert.alert( 
-        'Notification',
-        'please accept notification acces',
+        I18n.t('settings_popup_notification'),
+        I18n.t('settings_popup_notification_explain'),
         [
-          {text: 'Cancel', onPress: () => this.changeStateNotification(), style: 'cancel'},
-          {text: 'OK', onPress: () => Linking.openURL('app-settings:')},
+          {text: I18n.t('settings_popup_refuse'), onPress: () => this.changeStateNotification(), style: 'cancel'},
+          {text: I18n.t('settings_popup_gosettings'), onPress: () => Linking.openURL('app-settings:')},
         ],
         { cancelable: false })
       //Linking.openURL('app-settings:')

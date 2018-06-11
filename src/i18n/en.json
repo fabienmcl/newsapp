@@ -50,6 +50,19 @@
   "settings_section_more_information_legal": "Legal (other)",
   "settings_button_request_my_data": "Request my data",
 
+  "settings_popup_location": "Localization disabled",
+   "settings_popup_location_explain": "To view local news articles, allow access to Renewal from your device settings",
+   "settings_popup_pedometer": "Pedometer deactivated",
+   "settings_popup_pedometer_explain": "The pedometer allows you to analyze your behavior more precisely.You can configure in the settings",
+   "settings_popup_notification": "Do you allow Renewal to send you notifications?",
+   "settings_popup_notification_explain": "Notifications can include alerts, sounds, and pellets, you can configure in the settings",
+
+   "settings_popup_cancel": "Cancel",
+   "settings_popup_refuse": "Deny",
+   "settings_popup_gosettings": "Access settings",
+   "settings_popup_allow": "Allow",
+
+
   "side_menu_recommendation": "Article recommendation",
   "side_menu_fav": "Favorites",
   "side_menu_history": "History",
