@@ -512,7 +512,7 @@ export default class MessageWebView extends React.Component {
                 <View style={{ alignItems: 'center', justifyContent: 'flex-end'}}>
                     <Text style={{ fontWeight: 'bold', fontSize: 22 }}>{I18n.t('wv_recommendations')}</Text>
                 </View>
-                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', height: SCREEN_HEIGHT/2 }}>
+                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', height: SCREEN_HEIGHT/1.70 }}>
                     <FlatListViewArticle style={{flex: 1}}  ref={x => {this.child = x}}>
                     </FlatListViewArticle>
                 </View>
