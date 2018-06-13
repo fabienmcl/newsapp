@@ -439,7 +439,10 @@ export default class Project extends Component {
           </Right>
         </Header>
         <FlatList
+          //HeaderComponent={HeaderComponent}
+          //FooterComponent={FooterComponent}
           data={ this.state.newscastsState }
+          debug={this.state.debug}
           extraData={this.state}
           ItemSeparatorComponent = {this.FlatListItemSeparator}
           renderItem={({item, index}) => 
@@ -467,11 +470,18 @@ export default class Project extends Component {
               </View>
             </View>   
           }
+          legacyImplementation={false}
           keyExtractor={(item, index) => index.toString()}
           onRefresh={this._clear}
-          refreshing={this.state.refreshing}
-          onEndReached={() => this.state.isLoading==false&& this.state.refreshing==false ?  this.onEndReached() : console.log("attend mon bonhomme")}
-          onEndReachedThreshold={0.5} 
+          refreshing={this.state.refreshing && this.state.isLoading}
+          //onEndReached={() => this.state.isLoading==false&& this.state.refreshing==false ?  this.onEndReached() : console.log("attend mon bonhomme")}
+          //onEndReachedThreshold={0.5} 
+          onEndReachedThreshold={1}
+          onEndReached={({ distanceFromEnd }) => {
+            this.state.isLoading==false&& this.state.refreshing==false && distanceFromEnd>0  
+              ? this.onEndReached() //console.log('on end reached ', distanceFromEnd) 
+              : console.log("attend mon bonhomme")
+          }}
           />
       </View>
       </SideMenu>

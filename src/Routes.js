@@ -33,14 +33,14 @@ export default class Routes extends Component<{}> {
 			<Router>
 				<Stack key="root" hideNavBar={true}>
 					{/*concept swipe*/}
-					<Scene key="conceptSwipe" component={SConcept} title="Le Concept" initial={false}  panHandlers={null}/>
+					<Scene key="conceptSwipe" component={SConcept} title="Le Concept" initial={true}  panHandlers={null}/>
 					{/*login*/}
 					<Scene key="loginapp" component={Loginapp} title="Loginapp"  initial ={false} panHandlers={null}/> 
 					{/*home*/}
-					<Scene key="flatListViewArticle" component={FlatListViewArticle} title="FlatListViewArticle"  title="Renewal" initial ={false} panHandlers={null} /> 
+					<Scene key="flatListViewArticle" component={FlatListViewArticle} title="FlatListViewArticle"  title="Renewal" initial={false} panHandlers={null} /> 
 					<Scene key="flatDemo" component={FlatDemo} title="FlatDemo"  title="Renewal" initial ={false} /> 
 					{/*webview*/}
-					<Scene key="webviewcustom" component={Webviewcustom} initial={true} title="Webviewcustom"  />
+					<Scene key="webviewcustom" component={Webviewcustom} initial={false} title="Webviewcustom"  />
 					{/* sidemenu */}
 					<Scene key="favoris" component={Favoris} title="Favoris" initial={false} panHandlers={null}/>
 					<Scene key="historique" component={Historique} title="Historique" initial={false} panHandlers={null}/>
