@@ -48,6 +48,35 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   }
 })
+let settings = [
+  {
+  location : true,
+  pedometer : true,
+  gyroscope : true,
+  accelerometer : true,
+  magnetometer : true,
+  networks : true,
+  activity : true, 
+  access :true,
+  target:true,
+  notification : true
+
+}];
+const userInformation = [ {
+  firstName : "Empty",
+  lastName : "Empty",
+  image : "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Empty_set.svg/500px-Empty_set.svg.png",
+  sex : "Empty",
+  birth : "01-01-1949",
+  location : "Empty",
+  email : "Empty",
+  phone : "Empty",
+  mail : 0,
+  facebook : 0,
+  twitter : 0,
+  google : 0,
+}];
+
 // Enable fallbacks if you want `en-US` and `en-GB` to fallback to `en`
 I18n.fallbacks = true
 
@@ -69,15 +98,11 @@ export default class SwiperConcept extends Component {
             console.log(result)
 
             if(result === null){
+              //if user not connected, we need to init async storage 
               console.log("true")
-            }else{
-              this.setState({isConnected : true})
-              //var json = JSON.parse(result)
-            //console.log(json)
-            //console.log(json.mail)
-            //json.mail === 1 ? this.setState({isConnected : true}) : console.log();
+              this._initAsyncStorage();
+
             }
-            
           })
           
           
@@ -85,8 +110,28 @@ export default class SwiperConcept extends Component {
           // Error saving data
         }
         await I18n.initAsync();
+        try{
+          AsyncStorage.getItem('userInformationBasic', (err, result)=>{
+            console.log(result)
+            var json = JSON.parse(result)
+            console.log(json.mail)
+            json.mail===0 || json.mail=== false ? this.setState({isConnected : false}) : this.setState({isConnected : true});
+
+          })
+        }catch(error){
+
+        }
         this.setState({isLoading:false})
-      }
+    }
+    _initAsyncStorage = async () =>{
+      console.log(settings);
+      console.log(settings[0])
+      AsyncStorage.setItem('settings', JSON.stringify(settings[0]));
+      console.log(userInformation)
+      console.log(userInformation[0])
+      AsyncStorage.setItem('userInformationBasic', JSON.stringify(userInformation[0]));
+    }
+
     _toggleModal = () =>
         this.setState({ isModalVisible: !this.state.isModalVisible });
     _skipConcept = () =>

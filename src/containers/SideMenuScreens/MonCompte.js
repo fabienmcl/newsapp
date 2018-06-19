@@ -388,6 +388,12 @@ export default class MonCompte extends Component {
     } catch (error) {
       // Error saving data
     }
+    try{
+      AsyncStorage.removeItem('settings',(error, result));
+      AsyncStorage.removeItem('userInformationBasic',(error, result));
+    }catch(error){
+
+    }
     Actions.conceptSwipe();
   }
   render() {

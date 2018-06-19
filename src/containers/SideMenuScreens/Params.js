@@ -69,12 +69,12 @@ export default class Param extends Component {
     try {
       //AsyncStorage.setItem('settings', JSON.stringify(settings[0]));
       AsyncStorage.getItem('settings', (err, result)=>{
-        //console.log(result)
+        console.log(result)
         var json = JSON.parse(result)
-        //console.log(json)
+        console.log(json)
         //console.log(json[0].location)
         this.setState({settings : json, isLoading: false })
-        //console.log(this.state.settings.location)
+        console.log(this.state.settings.location)
 
       })
       
