@@ -377,7 +377,7 @@ export default class MonCompte extends Component {
   };
   disconnect(){
     this.setState({isLoading : true})
-    try {
+    /*try {
       AsyncStorage.setItem('userInformationBasic', JSON.stringify(userInformation[0]));
       AsyncStorage.getItem('userInformationBasic', (err, result)=>{
       var json = JSON.parse(result)
@@ -387,10 +387,13 @@ export default class MonCompte extends Component {
       
     } catch (error) {
       // Error saving data
-    }
+    }*/
     try{
+      AsyncStorage.removeItem('userInformationBasic', (err, result)=>{
+        console.log(result)
+      })
       AsyncStorage.removeItem('settings',(error, result));
-      AsyncStorage.removeItem('userInformationBasic',(error, result));
+      AsyncStorage.removeItem('infoGeoloc',(error, result));
     }catch(error){
 
     }

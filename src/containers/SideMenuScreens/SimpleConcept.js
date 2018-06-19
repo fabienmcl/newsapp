@@ -76,6 +76,15 @@ const userInformation = [ {
   twitter : 0,
   google : 0,
 }];
+var date = new Date().getDate();
+var month = new Date().getMonth() + 1;
+var year = new Date().getFullYear();
+
+const infoGeoloc = [ {
+  last_connect : date + '-' + month + '-' + year,
+  last_dm: null,
+  last_access : null
+}];
 
 // Enable fallbacks if you want `en-US` and `en-GB` to fallback to `en`
 I18n.fallbacks = true
@@ -87,22 +96,31 @@ I18n.translations = {
 export default class SwiperConcept extends Component {
     constructor(props) {
         super(props);
-        this.state = {isModalVisible: false, isConnected : false, isLoading: true,}
+        this.state = {isModalVisible: false, isConnected : false, isLoading: true, userInformationBasic : null}
     }
     async componentDidMount(){
-       
         try {
-    
           //AsyncStorage.setItem('userInformationBasic', JSON.stringify(userInformation[0]));
           AsyncStorage.getItem('userInformationBasic', (err, result)=>{
             console.log(result)
 
             if(result === null){
               //if user not connected, we need to init async storage 
-              console.log("true")
+              console.log("c'est vide")
               this._initAsyncStorage();
-
+            }else{
+              console.log("c est pas vide")
+              var json = JSON.parse(result)
+              console.log(json)
+              this.setState({userInformationBasic : json })
+              if(this.state.userInformationBasic.email === "Empty"){
+                console.log("email est vide")
+              }else{
+                this.setState({isConnected : true})
+              }
             }
+
+
           })
           
           
@@ -110,7 +128,7 @@ export default class SwiperConcept extends Component {
           // Error saving data
         }
         await I18n.initAsync();
-        try{
+        /*try{
           AsyncStorage.getItem('userInformationBasic', (err, result)=>{
             console.log(result)
             var json = JSON.parse(result)
@@ -120,17 +138,25 @@ export default class SwiperConcept extends Component {
           })
         }catch(error){
 
-        }
+        }*/
         this.setState({isLoading:false})
     }
     _initAsyncStorage = async () =>{
-      console.log(settings);
-      console.log(settings[0])
+      //AsyncStorage.removeItem('infoGeoloc',(error, result));
+      //console.log(new Date().getDate())
+      //console.log(settings);
+      //console.log(settings[0])
       AsyncStorage.setItem('settings', JSON.stringify(settings[0]));
-      console.log(userInformation)
-      console.log(userInformation[0])
+      //console.log(userInformation)
+      //console.log(userInformation[0])
       AsyncStorage.setItem('userInformationBasic', JSON.stringify(userInformation[0]));
-    }
+      //console.log(infoGeoloc)
+      //console.log(infoGeoloc[0])
+      AsyncStorage.setItem('infoGeoloc', JSON.stringify(infoGeoloc[0]));
+
+    } 
+
+
 
     _toggleModal = () =>
         this.setState({ isModalVisible: !this.state.isModalVisible });

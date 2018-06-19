@@ -34,7 +34,7 @@ export default class Routes extends Component<{}> {
 			<Router>
 				<Stack key="root" hideNavBar={true}>
 					{/*concept swipe*/}
-					<Scene key="conceptSwipe" component={SConcept} title="Le Concept" initial={true}  panHandlers={null}/>
+					<Scene key="conceptSwipe" component={SConcept} title="Le Concept" initial={false}  panHandlers={null}/>
 					{/*login*/}
 					<Scene key="loginapp" component={Loginapp} title="Loginapp"  initial ={false} panHandlers={null}/> 
 					{/*home*/}
@@ -51,7 +51,7 @@ export default class Routes extends Component<{}> {
 					{/*prototypes*/}
 					<Scene key="listView" component={ListView} title="ListView" initial={false} />	
 					<Scene key="details" component={Details} title="Details" initial={false} />
-					<Scene key="timer" component={Timer} title="Timer" initial={false} />
+					<Scene key="timer" component={Timer} title="Timer" initial={true} />
 					{/*sensors*/}
 					<Scene key="accelerometer" component={Accelerometer} title="Accelerometer" initial={false} />	
 					<Scene key="gyroscope" component={Gyroscope} title="Gyroscope" initial={false} />	
