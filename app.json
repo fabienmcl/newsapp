@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "projectnewsapp",
-    "description": "This project is really great.",
-    "slug": "projectnewsapp",
+    "name": "renewal",
+    "description": "A evaluation platform for news recommender systems",
+    "slug": "renewal",
     "privacy": "public",
     "sdkVersion": "26.0.0",
     "platforms": ["ios", "android"],

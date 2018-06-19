@@ -67,10 +67,17 @@ export default class SwiperConcept extends Component {
           //AsyncStorage.setItem('userInformationBasic', JSON.stringify(userInformation[0]));
           AsyncStorage.getItem('userInformationBasic', (err, result)=>{
             console.log(result)
-            var json = JSON.parse(result)
+
+            if(result === null){
+              console.log("true")
+            }else{
+              this.setState({isConnected : true})
+              //var json = JSON.parse(result)
             //console.log(json)
-            console.log(json.mail)
-            json.mail === 1 ? this.setState({isConnected : true}) : console.log();
+            //console.log(json.mail)
+            //json.mail === 1 ? this.setState({isConnected : true}) : console.log();
+            }
+            
           })
           
           

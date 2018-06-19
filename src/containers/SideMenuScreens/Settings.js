@@ -45,19 +45,34 @@ I18n.translations = {
   'en': require("../../i18n/en"),
   'fr': require('../../i18n/fr'),
 };
+async function alertIfRemoteNotificationsDisabledAsync() {
+  const { Permissions } = Expo;
+  const { status } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+  if (status !== 'granted') {
+    alert('Hey! You might want to enable notifications for my app, they are good.');
+  }
+}
 
-
-
-//Expo.Pedometer.isAvailableAsync()
+async function getLocationAsync() {
+  const { Location, Permissions } = Expo;
+  const { status } = await Permissions.askAsync(Permissions.LOCATION);
+  if (status === 'granted') {
+    //return Location.getCurrentPositionAsync({enableHighAccuracy: true});
+    const location = await Expo.Location.getCurrentPositionAsync({
+      enableHighAccuracy: true,
+    });
+    return location;
+  } else {
+    throw new Error('Location permission not granted');
+  }
+}
 
 export default class Param extends Component {
   constructor(props) {
     super(props);
     this.toggle = this.toggle.bind(this);
     this.state = { isLoading: true, isOpen: false, selectedItem: 'param', location:false, settings:null}
-    YellowBox.ignoreWarnings(
-      ['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',
-      'Unhandled promise rejection: TypeError: this.setState is not a function', 'Unhandled promise rejection: Error: Location permission not granted']);
+    YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
   }
 
   async componentDidMount(){
@@ -71,7 +86,7 @@ export default class Param extends Component {
       AsyncStorage.getItem('settings', (err, result)=>{
         //console.log(result)
         var json = JSON.parse(result)
-        //console.log(json)
+        console.log(json)
         //console.log(json[0].location)
         this.setState({settings : json, isLoading: false })
         //console.log(this.state.settings.location)
@@ -83,54 +98,13 @@ export default class Param extends Component {
       // Error saving data
     }
     //this.getLocationAsync();
+    console.log(getLocationAsync())
     await I18n.initAsync();
-    this._getLocationAsync();
-    //await this.getLocationAsync().then(this.setState({isLoading:false}))
-    console.log(this.state)
+    this.setState({isLoading:false})
 
     
-  
+
   }
-  
- 
- 
-  _getLocationAsync = async () => {
-    const { Location, Permissions } = Expo;
-    let { status } = await Permissions.askAsync(Permissions.LOCATION);
-    if (status !== 'granted') {
-      this.setState({
-        location: 'Permission to access location was denied',
-      });
-      console.log(this.state.location)
-    
-      if(this.state.settings.location===1){
-        Alert.alert( 
-          I18n.t('settings_popup_location'),
-          I18n.t('settings_popup_location_explain'),
-          [
-            {text: I18n.t('settings_popup_cancel'), onPress: () => this.changeStateLocation(), style: 'cancel'},
-            {text: I18n.t('settings_popup_gosettings'), 
-              onPress: async () =>{
-                await Linking.openURL('app-settings:').then(status= await Expo.Permissions.askAsync(Expo.Permissions.LOCATION));
-                
-                if (status === "granted") {
-                  console.log("victoire")
-                }else{
-                  console.log("defaite")
-                }
-              
-              }
-                
-              } 
-          ],
-          { cancelable: false })
-    
-      }
-      
-    }
-  }
- 
-  
   
   _sideMenuPress(){
     console.log("le menu le menu le menu");

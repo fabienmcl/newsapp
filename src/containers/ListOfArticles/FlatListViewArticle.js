@@ -246,16 +246,32 @@ export default class Project extends Component {
       await this.executeSql('insert into newscasts (title, image, url, isSaved, isRejected) values (?, ?, ?,0,0)', [post["title"], post["image"], post["url"]]);
     }
   }
-  
+  checkData = async () => {
+    //SELECT name FROM sqlite_master WHERE type='table' AND name='{table_name}';
+    await this.executeSql('create table if not exists newscastSaved (id integer primary key , done int, title text,image text,url text);');
+    await this.executeSql('create table if not exists newscasts ( id integer primary key , title text not null,image text not null,url text not null,isSaved integer default 0, isRejected integer default 0 );');
+  }
   update = async () => {
+    let isOnloadScren = 0;
     console.log("je suis dans update")
+    if(this.state.newscastSavedState===null && this.state.newscastsState === null){
+      isOnloadScren = 1;
+      //in this case check table from sqlite then, update data
+      this.checkData();
+    }
     await this.executeSql('select * from newscastSaved', []).then(newscastSavedState => this.setState({newscastSavedState})  );
     await this.executeSql('select * from newscasts', []).then(newscastsState => this.setState({newscastsState})  );
-    this.setState({
-      refreshing: false, 
-      isLoading : false,
-    })
-    //console.log(this.state)
+    
+    console.log(this.state);
+    if(isOnloadScren ===1  && (this.state.newscastsState).length === 0){
+      this.init();
+    }else{
+      this.setState({
+        refreshing: false, 
+        isLoading : false,
+      })
+    }
+    
   }
 
   init = async () => {
