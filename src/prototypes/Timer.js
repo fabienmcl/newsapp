@@ -49,11 +49,11 @@ export default class App extends React.Component {
         var day = date.getDate();
         var month = date.getMonth() + 1;
         var year = date.getFullYear();
-        this.setState({
+        await this.setState({
             time: fullTime,
             day : day + '-' + month + '-' + year
-        });
-        console.log(this.state.day+"----"+this.state.time)
+        })
+        await console.log(this.state.day+"----"+this.state.time)
   }
   showConsoleLog() {
       this.GetTime()

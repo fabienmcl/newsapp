@@ -1,4 +1,4 @@
-import Expo, { SQLite, Font, AppLoading } from 'expo';
+import Expo, { SQLite, Font, AppLoading, Accelerometer, Gyroscope, Magnetometer, Location } from 'expo';
 import React, { Component } from 'react';
 import { 
   StyleSheet, 
@@ -11,7 +11,8 @@ import {
   YellowBox, 
   TouchableOpacity, 
   Dimensions,
-  StatusBar
+  StatusBar,
+  NetInfo
 } from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text, List, ListItem } from 'native-base';
@@ -19,6 +20,23 @@ import SideMenu from 'react-native-side-menu';
 import Menu from '../SideMenu/Menu';
 const screen = Dimensions.get('window');
 const db = SQLite.openDatabase('db.db');
+const timer = require('react-native-timer');
+const GEOLOCATION_OPTIONS = { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, timeInterval: 300};
+import I18n from 'ex-react-native-i18n';
+I18n.fallbacks = true
+const deviceLocale = I18n.locale
+I18n.translations = {
+  'en': require("../../i18n/en"),
+  'fr': require('../../i18n/fr'),
+};
+
+function MiniOfflineSign() {
+  return (
+    <View style={styles.offlineContainer}>
+      <Text style={styles.offlineText}>No Internet Connection</Text>
+    </View>
+  );
+}
 
 
 const demoDataNews = [
@@ -163,6 +181,24 @@ const demoDataNewsMore = [
     isRejected : 0
   },*/
 ];
+
+const paquet = [{}];
+// date
+// token => pour identifier l'utilisateur 
+// page courante webview ou liste 
+// sous partie details avec les element de contexte général : location, accélérometre,...
+// ici details de la liste d'article : ici le nombre d'article visible 
+
+/*
+Mise en place : 
+- Timer : récup tout les données du contete général 
+- Scroll Mise à jour des details de la liste d'article 
+- Mise en forme du paquet
+- envoi du paquet à l'API d'alexis
+
+*/
+
+
 export default class Project extends Component {
   constructor(props) {
     super(props);
@@ -174,22 +210,176 @@ export default class Project extends Component {
       selectedItem: 'recommandation', 
       items: null,
       newscastsState : null,
-      newscastSavedState : null
+      newscastSavedState : null,
+      isConnected: true,
+
+
+      date : null,
+      time : null,
+      localisation : null,
+      accelerometerData : null,
+      gyroscopeData : null,
+      magnetometerData : null,
+      networkInfo : null,
+
+
+
     }
     YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
   }
   async componentDidMount(){
     //this.webCall();
     //this.createSqlTable();
+    await I18n.initAsync();
     await Font.loadAsync({
       Roboto: require("native-base/Fonts/Roboto.ttf"),
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
     });
-    this.update();
+    await this.updateListeners();
+    
+
+    console.log(this.state)
+
+    NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
+    //await this._getLocationAsync()
+    //Location.watchPositionAsync(GEOLOCATION_OPTIONS, this.locationChanged);
+    this._subscription();
+
+
+    //await this.update();
+
     //this.init().then(this.select());
     
   }
- 
+  componentWillUnmount() {
+    NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
+    this._unsubscribe();
+  }
+
+  handleConnectivityChange = isConnected => {
+    if (isConnected) {
+      this.setState({ isConnected });
+      NetInfo.getConnectionInfo().then((connectionInfo) => {
+        console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
+        this.setState({ networkInfo : 'type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType });
+        });
+      console.log(this.state.accelerometerData)
+      console.log(this.state.gyroscopeData)
+      console.log(this.state.magnetometerData)
+    } else {
+      this.setState({ isConnected });
+    }
+  };
+  handleLocationChanged = (location) => { 
+    region = {
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+      latitudeDelta: 0.1,
+      longitudeDelta: 0.05,
+    },
+    this.setState({location, region})
+    console.log("latitude:"+location.coords.latitude+" longitude:"+location.coords.longitude );  
+  }
+  _getLocationAsync = async () => {
+    const { Location, Permissions } = Expo;
+    let { status } = await Permissions.askAsync(Permissions.LOCATION);
+    if (status !== 'granted') {
+      this.setState({
+        location: 'Permission to access location was denied',
+      });
+      console.log(this.state.location)
+    
+      if(this.state.settings.location===1){
+        Alert.alert( 
+          I18n.t('settings_popup_location'),
+          I18n.t('settings_popup_location_explain'),
+          [
+            {text: I18n.t('settings_popup_cancel'), onPress: () => this.changeStateLocation(), style: 'cancel'},
+            {text: I18n.t('settings_popup_gosettings'), 
+              onPress: async () =>{
+                await Linking.openURL('app-settings:').then(status= await Expo.Permissions.askAsync(Expo.Permissions.LOCATION));
+                
+                if (status === "granted") {
+                  console.log("victoire")
+                }else{
+                  console.log("defaite")
+                }
+              
+              }
+                
+              } 
+          ],
+          { cancelable: false })
+    
+      }
+      
+    }
+  }
+  _subscription (){
+   
+    this._subscription = Accelerometer.addListener(accelerometerData => {
+      this.setState({ accelerometerData });
+    });
+    Accelerometer.setUpdateInterval(100); 
+    this._subscription = Gyroscope.addListener((result) => {
+      this.setState({gyroscopeData: result});
+    });
+    Gyroscope.setUpdateInterval(100);
+    this._subscription = Magnetometer.addListener((result) => {
+      this.setState({magnetometerData: result});
+    });
+    Magnetometer.setUpdateInterval(100);
+  };
+  _unsubscribe = () => {
+    this._subscription && this._subscription.remove();
+    this._subscription = null;
+  }
+
+  async updateListeners (){
+    await this.updateDate();
+    await this.updateTime();
+    await this.updateNetInfo();
+  }
+
+  async updateDate() {
+    var date = new Date();
+    var day = date.getDate();
+    var month = date.getMonth() + 1;
+    var year = date.getFullYear();
+    await this.setState({
+        date : day + '-' + month + '-' + year
+    })
+  }
+async updateTime(){
+  var date, hour, minutes, seconds, fullTime;
+    date = new Date();
+    //time
+    hour = date.getHours(); 
+    minutes = date.getMinutes();
+    // Checking if the minutes value is less then 10 then add 0 before minutes.
+    if(minutes < 10){
+        minutes = '0' + minutes.toString();
+    }
+    seconds = date.getSeconds();
+    if(seconds < 10){
+        seconds = '0' + seconds.toString();
+    }
+    fullTime = hour.toString() + ':' + minutes.toString() + ':' + seconds.toString();
+    await this.setState({
+        time: fullTime
+    })
+    timer.setTimeout(this, 'consolelog', () => this.updateTime(), 1000);
+  }
+  async updateNetInfo(){
+    
+  
+   
+
+  }
+  
+  
+  
+  
   
   
   
@@ -265,12 +455,11 @@ export default class Project extends Component {
     console.log(this.state);
     if(isOnloadScren ===1  && (this.state.newscastsState).length === 0){
       this.init();
-    }else{
-      this.setState({
-        refreshing: false, 
-        isLoading : false,
-      })
     }
+    this.setState({
+      refreshing: false, 
+      isLoading : false,
+    })
     
   }
 
@@ -416,6 +605,9 @@ export default class Project extends Component {
     //Actions.webviewcustomProto(item);
   }
   render() {
+    if (!this.state.isConnected) {
+      return <MiniOfflineSign />;
+    }
     if (this.state.isLoading) {
       return (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -435,7 +627,7 @@ export default class Project extends Component {
       >
       
       <View style={{ justifyContent: 'center', flex:1,backgroundColor : "#212121",paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight}} >
-      
+    
       <Header style={{backgroundColor: '#212121'}}>
         <StatusBar barStyle="light-content"/>
           <Left>
@@ -454,6 +646,7 @@ export default class Project extends Component {
             </Button>
           </Right>
         </Header>
+        
         <FlatList
           //HeaderComponent={HeaderComponent}
           //FooterComponent={FooterComponent}
@@ -536,7 +729,18 @@ const styles = StyleSheet.create({
     paddingLeft: '3%',
     alignItems: 'center',
     justifyContent: 'center',
-  }
+  },
+  offlineContainer: {
+    backgroundColor: '#b52424',
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    width : screen.width,
+    position: 'absolute',
+    top: 30
+  },
+  offlineText: { color: '#fff' }
 });
 
 /**
