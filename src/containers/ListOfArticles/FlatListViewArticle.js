@@ -12,7 +12,8 @@ import {
   TouchableOpacity, 
   Dimensions,
   StatusBar,
-  NetInfo
+  NetInfo,
+  ScrollView 
 } from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text, List, ListItem } from 'native-base';
@@ -235,18 +236,18 @@ export default class Project extends Component {
       Roboto: require("native-base/Fonts/Roboto.ttf"),
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
     });
-    await this.updateListeners();
+    //await this.updateListeners();
     
 
-    console.log(this.state)
+    //console.log(this.state)
 
-    NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
+    //NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
     //await this._getLocationAsync()
     //Location.watchPositionAsync(GEOLOCATION_OPTIONS, this.locationChanged);
-    this._subscription();
+    //this._subscription();
 
 
-    //await this.update();
+    await this.update();
 
     //this.init().then(this.select());
     
@@ -579,10 +580,107 @@ async updateTime(){
     });
     console.log("_onPressItem")
   };
+  _onScrollItem = (nativeEvent) => {
+    const listeItem = this.state.newscastsState;
+    //console.log("position : en px"+nativeEvent.contentOffset.y)
+    const positionY =  nativeEvent.contentOffset.y <= 0 ? 0.01 : nativeEvent.contentOffset.y
+    //console.log("Taille de la liste"+nativeEvent.contentSize.height)
+    //console.log(this.state.newscastsState.length)
+    let tailleItem =  (screen.height / 17) + (screen.height / 5) + .5 > nativeEvent.contentSize.height/this.state.newscastsState.length ? (screen.height / 17) + (screen.height / 5) + .5 : nativeEvent.contentSize.height/this.state.newscastsState.length;
+   
+    //console.log("Taille d'un item "+tailleItem)
+    const tailleEcran = nativeEvent.layoutMeasurement.height;
+    //console.log("nb item par page"+tailleEcran/tailleItem)
+    const itemsParPage = tailleEcran/tailleItem;
+    //console.log("nb item par page"+itemsParPage)
+    console.log("########################");
 
-  
-  
+    let paquet = [ ];
+    //paquet.push('jjj')
+    //console.log(paquet)
+    let a = positionY/tailleItem;
+    //console.log("%"+a)
+    let indexTop = (a+" ").split('.')[0];
+    //console.log(listeItem[indexTop].title)
 
+    paquet.push(
+      {
+        title : listeItem[indexTop].title,
+        url : listeItem[indexTop].url,
+        percentage : ((100-a.toFixed(2))+" ").split('.')[1]+"%"
+      }
+    )
+
+    
+    let bottomArticle = (positionY+tailleEcran)/tailleItem;
+    //console.log("bottom : "+bottomArticle)
+    let indexB = (bottomArticle+" ").split('.')[0];
+    //console.log(listeItem[indexB].title)
+    
+    
+    let x = parseInt(indexTop);
+    x++;
+    const y = parseInt(indexB);
+    
+    for(x ; x<y;x++){
+      //console.log(listeItem[x].title)
+      paquet.push(
+        {
+          title : listeItem[x].title,
+          url : listeItem[x].url,
+          percentage : "100%"
+        }
+      )
+    }
+    paquet.push(
+      {
+        title : listeItem[indexB].title,
+        url : listeItem[indexB].url,
+        percentage :  (bottomArticle.toFixed(2)+" ").split('.')[1]+"%"
+      }
+    )
+    console.log(paquet)
+
+    /*
+    
+const demoDataNews = [
+  {
+    title: 'À lui seul, l’iPhone X a compté pour 35 % des bénéfices de l’industrie au Q4 2017',
+    plot: "Ciblé pour son prix exorbitant, révoltant pour certains, l'iPhone X fait le bonheur des comptes d'Apple.L’iPhone X a une encoche. L’iPhone X est sorti trop tôt. L’iPhone X est cher. Mais l’iPhone X rapporte beaucoup, beaucoup d’argent, suggérant une marge à nulle autre pareille pour Apple. Les chiffres du cabinet d’analyse Counterpoint, partagés par CNBC, mettent en avant la mainmise du flagship ultra premium sur un marché global très stable : durant le quatrième trimestre de l’année 2017, l’iPhone X a pesé pour 35 % des bénéfices à lui tout seul, malgré des ventes supposément inférieures aux attentes de la firme de Cupertino. C’est dire. ",
+    image: 'https://www.numerama.com/content/uploads/2017/11/iphone-x-une-2.jpg',
+    url:'https://www.numerama.com/tech/346171-a-lui-seul-liphone-x-a-compte-pour-35-des-benefices-de-lindustrie-au-q4-2017.html',
+    isSaved:0,
+    isRejected : 0
+  },
+    if(positionY > 0){
+     
+
+    let a = positionY/tailleItem;
+    if(a < 1 ){
+      a= 1-a ;
+    }
+    console.log("%"+a)
+    const index = a+" ";
+
+
+    console.log(listeItem[index.split('.')[0]].title)
+    
+    }else{
+      let nb = itemsParPage+ " ";
+      let i = 0
+      for(i ; i < ((nb.split('.')[0])-1); i++){
+       console.log("100% : "+listeItem[i].title) 
+      }
+      i++;
+
+      console.log(1-(i-nb)+"% : "+listeItem[i].title)
+    }*/
+   
+
+
+  }
+  
+    
   /*
     Partie Flastlist
   */
@@ -657,23 +755,24 @@ async updateTime(){
           renderItem={({item, index}) => 
             
             <View  onPressItem={this._onPressItem}  >
-              <View style={{flex:1, backgroundColor: item.isRejected ? "#484848" : "#fff" }}>
+              <View style={{flex:1, backgroundColor: item.isRejected ? "#484848" : "#fff"}}>
                 <TouchableOpacity onPress={item.isRejected? console.log("item isRejected") : this._onPressOnItem.bind(this, item)} >
                   <Image source = {{ uri: item.image }} 
                     style={{
                       height: screen.height / 5,
                       opacity: item.isRejected ? 0.3:1,
-                      margin: 7,
+                      margin: 1,
                       borderRadius : 7,
                       justifyContent: 'center', 
                       alignItems: 'center',
+                      
                     }}//style={styles.imageView} 
                     onPress={this._onPressOnItem.bind(this, item)}
                      />
                 </TouchableOpacity>
-                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width:'100%', }}>
+                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width:'100%',height: screen.height / 17}}>
                   <Icon name={item.isSaved ? "ios-download" :"ios-download-outline"} style={styles.iconStyle}    onPress={()=>item.isRejected ? console.log("error") :this._toggleFav( { item, index } )} />
-                    <Text  style={styles.textView} onPress={item.isRejected? console.log("item isRejected") :this._onPressOnItem.bind(this, item)}>{item.title}</Text>
+                    <Text numberOfLines={2} style={styles.textView} onPress={item.isRejected? console.log("item isRejected") :this._onPressOnItem.bind(this, item)}>{item.title}</Text>
                   <Icon name={item.isRejected ? "ios-checkmark" :"ios-close"}  style={{color: 'black', width :'10%', paddingLeft: '3%', alignItems: 'center', justifyContent: 'center',color: item.isRejected ? "green" :"red"}}   onPress={()=>this._toggleReject( { item, index } )} />
                 </View>
               </View>
@@ -690,6 +789,17 @@ async updateTime(){
             this.state.isLoading==false&& this.state.refreshing==false && distanceFromEnd>0  
               ? this.onEndReached() //console.log('on end reached ', distanceFromEnd) 
               : console.log("attend mon bonhomme")
+          }}
+          ref={ (el) => this._flatList = el }
+          onLayout={ ({nativeEvent}) => {
+            const {width, height} = nativeEvent.layout;
+            this.setState({
+              width, height
+            });
+          } }
+          
+          onScroll={ ({ nativeEvent }) => {
+            this._onScrollItem(nativeEvent);
           }}
           />
       </View>
@@ -721,6 +831,8 @@ const styles = StyleSheet.create({
     padding:10,
     color: '#000',
     width : '80%',
+    margin:0,
+    padding:0
 
   },
   iconStyle:{
@@ -729,6 +841,8 @@ const styles = StyleSheet.create({
     paddingLeft: '3%',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingTop : 0,
+    paddingBottom : 0
   },
   offlineContainer: {
     backgroundColor: '#b52424',

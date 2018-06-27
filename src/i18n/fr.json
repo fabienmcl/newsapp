@@ -7,7 +7,7 @@
   "concept_sn_explain" : "cliquez ici pour plus d'informations",
   "concept_skip" : "Passer / Se connecter",
 
-  "opening_email" : "Connection avec votre email",
+  "opening_email" : "Connexion avec votre email",
   "opening_or" : "Ou connectez-vous avec",
 
   "form_email" : "Email",
@@ -34,7 +34,7 @@
   "settings_section_recommendations" : "Gestion des recommandations",
   "settings_section_recommendations_explain" : "Certains articles sont basées sur ce que vous faites ailleurs. Mais vous verrez toujours des articles sur votre utilisation au sein de l'application.",
 
-  "settings_section_recommendations_activity" : "Basé sur votre activé",
+  "settings_section_recommendations_activity" : "Basé sur votre activité",
   "settings_section_recommendations_activity_explain" : " Certaines recommandation d'articles sont basées sur activité en ligne sur les réseaux sociaux .",
   "settings_section_recommendations_access" : "Conservation et accès aux informations",
   "settings_section_recommendations_access_explain" : "La conservation d'informations ou l'accès à des informations déjà conservées sur votre appareil, par exemple des identifiants de l'appareil.",
@@ -76,9 +76,9 @@
   "account_phone" : "Téléphone",
   "account_phone_popup" : "configurez votre numéro de téléphone",
   "account_social_network" : "Connectez-vous avec vos réseau sociaux",
-  "account_button_disconnect" : "Deconnection",
+  "account_button_disconnect" : "Deconnexion",
   
-  "wv_opinion" : "Ton avsi sur l'article :",
+  "wv_opinion" : "Ton avis sur l'article :",
   "wv_share" : "Partage l'article",
   "wv_recommendations" : "Recommandations d'articles :",
 
