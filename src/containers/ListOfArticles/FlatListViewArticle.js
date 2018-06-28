@@ -213,7 +213,9 @@ export default class Project extends Component {
       newscastsState : null,
       newscastSavedState : null,
       isConnected: true,
-
+      time_launch : null,
+      y:null,
+      paquet : [],
 
       date : null,
       time : null,
@@ -227,6 +229,10 @@ export default class Project extends Component {
 
     }
     YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
+    this.viewabilityConfig = {
+      waitForInteraction: true,
+      viewAreaCoveragePercentThreshold: 95
+  }
   }
   async componentDidMount(){
     //this.webCall();
@@ -236,19 +242,20 @@ export default class Project extends Component {
       Roboto: require("native-base/Fonts/Roboto.ttf"),
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
     });
-    //await this.updateListeners();
+    await this.updateListeners();
     
 
     //console.log(this.state)
 
-    //NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
+    NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
     //await this._getLocationAsync()
     //Location.watchPositionAsync(GEOLOCATION_OPTIONS, this.locationChanged);
-    //this._subscription();
+    
 
-
+    //await this.initializeSensors();
     await this.update();
-
+    console.log(this.state)
+    //await this._subscription();
     //this.init().then(this.select());
     
   }
@@ -257,6 +264,37 @@ export default class Project extends Component {
     this._unsubscribe();
   }
 
+  initializeSensors = async () =>{
+    NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
+    //await this._getLocationAsync()
+    //Location.watchPositionAsync(GEOLOCATION_OPTIONS, this.locationChanged);
+    this._subscription();
+    this.updateListeners();
+
+    //this.sendPackage();
+  }
+  sendPackage = async ({act}) =>{
+    console.log(act)
+    console.log("send package")
+    this.state.date === null ? this.updateListeners() : this.updateTime()
+    let packageData= [];
+    packageData.push({
+      date : this.state.date,
+      time : this.state.time,
+      time_launch : this.state.time_launch,
+      action : {act},
+      cliqueOn: null,
+      localisation : this.state.localisation,
+      accelerometerData : this.state.accelerometerData,
+      gyroscopeData : this.state.gyroscopeData,
+      magnetometerData : this.state.magnetometerData,
+      networkInfo : this.state.networkInfo,
+      screen : "recommendations_divers",
+      data : this.state.paquet
+    });
+    console.log(packageData);
+    //timer.setTimeout(this, 'sendPackage', () => this.sendPackage(), 1000);
+  }
   handleConnectivityChange = isConnected => {
     if (isConnected) {
       this.setState({ isConnected });
@@ -317,19 +355,18 @@ export default class Project extends Component {
     }
   }
   _subscription (){
-   
     this._subscription = Accelerometer.addListener(accelerometerData => {
       this.setState({ accelerometerData });
     });
-    Accelerometer.setUpdateInterval(100); 
+    Accelerometer.setUpdateInterval(1000); 
     this._subscription = Gyroscope.addListener((result) => {
       this.setState({gyroscopeData: result});
     });
-    Gyroscope.setUpdateInterval(100);
+    Gyroscope.setUpdateInterval(1000);
     this._subscription = Magnetometer.addListener((result) => {
       this.setState({magnetometerData: result});
     });
-    Magnetometer.setUpdateInterval(100);
+    Magnetometer.setUpdateInterval(1000);
   };
   _unsubscribe = () => {
     this._subscription && this._subscription.remove();
@@ -339,7 +376,7 @@ export default class Project extends Component {
   async updateListeners (){
     await this.updateDate();
     await this.updateTime();
-    await this.updateNetInfo();
+   //await this.updateNetInfo();
   }
 
   async updateDate() {
@@ -366,16 +403,18 @@ async updateTime(){
         seconds = '0' + seconds.toString();
     }
     fullTime = hour.toString() + ':' + minutes.toString() + ':' + seconds.toString();
+    if(this.state.time_launch === null){
+      await this.setState({
+        time_launch : fullTime
+      })
+    }
+    
     await this.setState({
         time: fullTime
-    })
-    timer.setTimeout(this, 'consolelog', () => this.updateTime(), 1000);
-  }
-  async updateNetInfo(){
-    
-  
-   
+    });
 
+   
+    //timer.setTimeout(this, 'consolelog', () => this.updateTime(), 1000);
   }
   
   
@@ -453,7 +492,7 @@ async updateTime(){
     await this.executeSql('select * from newscastSaved', []).then(newscastSavedState => this.setState({newscastSavedState})  );
     await this.executeSql('select * from newscasts', []).then(newscastsState => this.setState({newscastsState})  );
     
-    console.log(this.state);
+    //console.log(this.state);
     if(isOnloadScren ===1  && (this.state.newscastsState).length === 0){
       this.init();
     }
@@ -580,34 +619,37 @@ async updateTime(){
     });
     console.log("_onPressItem")
   };
-  _onScrollItem = (nativeEvent) => {
+  _onScrollItem = async (nativeEvent) => {
+    console.log("nb de news "+this.state.newscastsState.length)
     const listeItem = this.state.newscastsState;
+    console.log(listeItem)
     //console.log("position : en px"+nativeEvent.contentOffset.y)
     const positionY =  nativeEvent.contentOffset.y <= 0 ? 0.01 : nativeEvent.contentOffset.y
     //console.log("Taille de la liste"+nativeEvent.contentSize.height)
     //console.log(this.state.newscastsState.length)
     let tailleItem =  (screen.height / 17) + (screen.height / 5) + .5 > nativeEvent.contentSize.height/this.state.newscastsState.length ? (screen.height / 17) + (screen.height / 5) + .5 : nativeEvent.contentSize.height/this.state.newscastsState.length;
-   
+   console.log(tailleItem)
     //console.log("Taille d'un item "+tailleItem)
     const tailleEcran = nativeEvent.layoutMeasurement.height;
     //console.log("nb item par page"+tailleEcran/tailleItem)
     const itemsParPage = tailleEcran/tailleItem;
     //console.log("nb item par page"+itemsParPage)
     console.log("########################");
-
+    console.log("nb de news "+this.state.newscastsState.length)
+    
+    console.log("item par page"+itemsParPage+" taille item "+tailleItem)
     let paquet = [ ];
     //paquet.push('jjj')
     //console.log(paquet)
     let a = positionY/tailleItem;
-    //console.log("%"+a)
     let indexTop = (a+" ").split('.')[0];
-    //console.log(listeItem[indexTop].title)
-
+    let percentage = ((100-a.toFixed(2))+" ").split('.')[1] +"%";
+    percentage = percentage === "undefined%" ? "100%" : percentage;
     paquet.push(
       {
         title : listeItem[indexTop].title,
         url : listeItem[indexTop].url,
-        percentage : ((100-a.toFixed(2))+" ").split('.')[1]+"%"
+        percentage : percentage//((100-a.toFixed(2))+" ").split('.')[1] +"%"
       }
     )
 
@@ -640,45 +682,13 @@ async updateTime(){
       }
     )
     console.log(paquet)
-
-    /*
-    
-const demoDataNews = [
-  {
-    title: 'À lui seul, l’iPhone X a compté pour 35 % des bénéfices de l’industrie au Q4 2017',
-    plot: "Ciblé pour son prix exorbitant, révoltant pour certains, l'iPhone X fait le bonheur des comptes d'Apple.L’iPhone X a une encoche. L’iPhone X est sorti trop tôt. L’iPhone X est cher. Mais l’iPhone X rapporte beaucoup, beaucoup d’argent, suggérant une marge à nulle autre pareille pour Apple. Les chiffres du cabinet d’analyse Counterpoint, partagés par CNBC, mettent en avant la mainmise du flagship ultra premium sur un marché global très stable : durant le quatrième trimestre de l’année 2017, l’iPhone X a pesé pour 35 % des bénéfices à lui tout seul, malgré des ventes supposément inférieures aux attentes de la firme de Cupertino. C’est dire. ",
-    image: 'https://www.numerama.com/content/uploads/2017/11/iphone-x-une-2.jpg',
-    url:'https://www.numerama.com/tech/346171-a-lui-seul-liphone-x-a-compte-pour-35-des-benefices-de-lindustrie-au-q4-2017.html',
-    isSaved:0,
-    isRejected : 0
-  },
-    if(positionY > 0){
-     
-
-    let a = positionY/tailleItem;
-    if(a < 1 ){
-      a= 1-a ;
-    }
-    console.log("%"+a)
-    const index = a+" ";
-
-
-    console.log(listeItem[index.split('.')[0]].title)
-    
-    }else{
-      let nb = itemsParPage+ " ";
-      let i = 0
-      for(i ; i < ((nb.split('.')[0])-1); i++){
-       console.log("100% : "+listeItem[i].title) 
-      }
-      i++;
-
-      console.log(1-(i-nb)+"% : "+listeItem[i].title)
-    }*/
-   
-
-
+    console.log(nativeEvent)
+    await this.setState({paquet : paquet})
+    let act = "Scroll";
+    await this.sendPackage({act})
   }
+
+
   
     
   /*
@@ -752,11 +762,11 @@ const demoDataNews = [
           debug={this.state.debug}
           extraData={this.state}
           ItemSeparatorComponent = {this.FlatListItemSeparator}
-          renderItem={({item, index}) => 
+          renderItem={({item, index, nativeEvent}) => 
             
             <View  onPressItem={this._onPressItem}  >
               <View style={{flex:1, backgroundColor: item.isRejected ? "#484848" : "#fff"}}>
-                <TouchableOpacity onPress={item.isRejected? console.log("item isRejected") : this._onPressOnItem.bind(this, item)} >
+                <TouchableOpacity onPress={item.isRejected? console.log("item isRejected") : this._onPressOnItem.bind(this, item, nativeEvent)} >
                   <Image source = {{ uri: item.image }} 
                     style={{
                       height: screen.height / 5,
@@ -767,12 +777,15 @@ const demoDataNews = [
                       alignItems: 'center',
                       
                     }}//style={styles.imageView} 
-                    onPress={this._onPressOnItem.bind(this, item)}
+                    onPress={this._onPressOnItem.bind(this, item, nativeEvent)
+                    //onPress={this._onScrollItem(nativeEvent)
+                    
+                    }
                      />
                 </TouchableOpacity>
                 <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width:'100%',height: screen.height / 17}}>
                   <Icon name={item.isSaved ? "ios-download" :"ios-download-outline"} style={styles.iconStyle}    onPress={()=>item.isRejected ? console.log("error") :this._toggleFav( { item, index } )} />
-                    <Text numberOfLines={2} style={styles.textView} onPress={item.isRejected? console.log("item isRejected") :this._onPressOnItem.bind(this, item)}>{item.title}</Text>
+                    <Text numberOfLines={2} style={styles.textView} onPress={item.isRejected? console.log("item isRejected") :this._onPressOnItem.bind(this, item, )}>{item.title}</Text>
                   <Icon name={item.isRejected ? "ios-checkmark" :"ios-close"}  style={{color: 'black', width :'10%', paddingLeft: '3%', alignItems: 'center', justifyContent: 'center',color: item.isRejected ? "green" :"red"}}   onPress={()=>this._toggleReject( { item, index } )} />
                 </View>
               </View>
@@ -791,13 +804,21 @@ const demoDataNews = [
               : console.log("attend mon bonhomme")
           }}
           ref={ (el) => this._flatList = el }
+          
+          //initialScrollIndex = {0}
           onLayout={ ({nativeEvent}) => {
+            console.log("onLayout")
+            console.log(nativeEvent)
+            this._flatList.scrollToOffset({
+              offset: 1,
+              animated: false
+           })/*
             const {width, height} = nativeEvent.layout;
             this.setState({
-              width, height
-            });
+              y : height
+            });*/
           } }
-          
+          viewabilityConfig={this.viewabilityConfig}
           onScroll={ ({ nativeEvent }) => {
             this._onScrollItem(nativeEvent);
           }}
