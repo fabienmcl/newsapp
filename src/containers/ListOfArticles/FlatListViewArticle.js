@@ -620,30 +620,35 @@ async updateTime(){
     console.log("_onPressItem")
   };
   _onScrollItem = async (nativeEvent) => {
-    console.log("nb de news "+this.state.newscastsState.length)
+    //console.log("nb de news "+this.state.newscastsState.length)
     const listeItem = this.state.newscastsState;
-    console.log(listeItem)
+    //console.log(listeItem)
     //console.log("position : en px"+nativeEvent.contentOffset.y)
     const positionY =  nativeEvent.contentOffset.y <= 0 ? 0.01 : nativeEvent.contentOffset.y
     //console.log("Taille de la liste"+nativeEvent.contentSize.height)
     //console.log(this.state.newscastsState.length)
     let tailleItem =  (screen.height / 17) + (screen.height / 5) + .5 > nativeEvent.contentSize.height/this.state.newscastsState.length ? (screen.height / 17) + (screen.height / 5) + .5 : nativeEvent.contentSize.height/this.state.newscastsState.length;
-   console.log(tailleItem)
+   //console.log(tailleItem)
     //console.log("Taille d'un item "+tailleItem)
     const tailleEcran = nativeEvent.layoutMeasurement.height;
     //console.log("nb item par page"+tailleEcran/tailleItem)
     const itemsParPage = tailleEcran/tailleItem;
     //console.log("nb item par page"+itemsParPage)
     console.log("########################");
-    console.log("nb de news "+this.state.newscastsState.length)
+    //console.log("nb de news "+this.state.newscastsState.length)
     
-    console.log("item par page"+itemsParPage+" taille item "+tailleItem)
+    //console.log("item par page"+itemsParPage+" taille item "+tailleItem)
     let paquet = [ ];
     //paquet.push('jjj')
     //console.log(paquet)
     let a = positionY/tailleItem;
-    let indexTop = (a+" ").split('.')[0];
-    let percentage = ((100-a.toFixed(2))+" ").split('.')[1] +"%";
+    console.log(a)
+    console.log(a.toFixed(2))
+    console.log((100-a.toFixed(2)).toFixed(2))
+    let indexTop = (a+"").split('.')[0];
+    //let beforepercentage = 100-a.toFixed(2) >=10  
+    let percentage = ((100-a.toFixed(2)).toFixed(2)+"").split('.')[1] +"%";
+    
     percentage = percentage === "undefined%" ? "100%" : percentage;
     paquet.push(
       {
@@ -674,15 +679,18 @@ async updateTime(){
         }
       )
     }
+    percentage = ((100-bottomArticle.toFixed(2)).toFixed(2)+"").split('.')[1] +"%";
+    
+    percentage = percentage === "undefined%" ? "100%" : percentage;
     paquet.push(
       {
         title : listeItem[indexB].title,
         url : listeItem[indexB].url,
-        percentage :  (bottomArticle.toFixed(2)+" ").split('.')[1]+"%"
+        percentage : percentage
       }
     )
-    console.log(paquet)
-    console.log(nativeEvent)
+    //console.log(paquet)
+    //console.log(nativeEvent)
     await this.setState({paquet : paquet})
     let act = "Scroll";
     await this.sendPackage({act})
@@ -708,9 +716,19 @@ async updateTime(){
   }
   _onPressOnItem (item) {
     //Alert.alert(item.title);
-    console.log(item.title);
-    Actions.webviewcustom(item);
-    //Actions.webviewcustomProto(item);
+    let a = "Press : "+ item.url;
+    this.sendPackage({a})
+    /*console.log(item.title);
+
+    let pack = {
+    title: item.title,
+    url: item.url,
+    networkInfo : this.state.networkInfo,
+    time : this.state.time,
+    date: this.state.date
+    }
+    //Actions.webviewcustom(item);
+    Actions.webviewcustom(pack);*/
   }
   render() {
     if (!this.state.isConnected) {

@@ -43,6 +43,14 @@ I18n.translations = {
   'fr': require('../../i18n/fr'),
 };
 
+/*this.setState({
+            networkInfo : this.props.navigation.state.params.networkInfo,
+            date : this.props.navigation.state.params.date,
+            time : this.props.navigation.state.params.time,
+            title : this.props.navigation.state.params.title,
+            url : this.props.navigation.state.params.url,
+
+        })*/
 // fix https://github.com/facebook/react-native/issues/10865
 // thx https://github.com/kyle-ilantzis !
 const patchPostMessageJsCode = `(${String(function() {
@@ -73,8 +81,10 @@ const patchPostMessageJsCode = `(${String(function() {
             maxScrollReached
         }
         maxScrollReached = (this.scrollY > maxScrollReached) ? this.scrollY : maxScrollReached;
-        window.postMessage(JSON.stringify('['+window.counter+'] message_from_webview : scroll_detect x='+this.scrollX+' y='+this.scrollY+' time='+msToTime(elapsed)))
-        window.postMessage(JSON.stringify('['+window.counter+'] message_from_webview : maxScrollReached='+maxScrollReached))
+        //window.postMessage(JSON.stringify('['+window.counter+'] message_from_webview : scroll_detect x='+this.scrollX+' y='+this.scrollY+' time='+msToTime(elapsed)))
+        //window.postMessage(JSON.stringify('['+window.counter+'] message_from_webview : maxScrollReached='+maxScrollReached))
+        //window.postMessage(JSON.stringify('['+window.counter+'] message_from_webview : innerHeight='+window.innerHeight))
+        window.postMessage(JSON.stringify('['+window.counter+'] : [{application : "renewal", timeOnPage :'+ msToTime(elapsed)+', positionX : '+this.scrollX+', positionY : '+this.scrollY+', maxScrollReachedY : '+maxScrollReached+', contentSizeX : '+window.innerWidth+',contentSizeY :'+ window.innerHeight+',}]'))
     } 
     patchedPostMessage.toString = function() {
         return String(Object.hasOwnProperty).replace('hasOwnProperty', 'postMessage')
@@ -323,7 +333,10 @@ export default class MessageWebView extends React.Component {
     render() {
         //console.log(this.props.navigation.state.params.data); 
         const { html, source, url, onMessage, ...props } = this.props
-        //console.log(this.props)
+        console.log(this.props)
+        this.setState({
+            
+        })
         //this.props.navigation.setParams({otherParam: this.props.navigation.state.params.title})
         
         const menu = <Menu onItemSelected={this.onMenuItemSelected} />;
