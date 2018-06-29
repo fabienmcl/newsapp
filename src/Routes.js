@@ -16,6 +16,7 @@ import MonCompte from './containers/SideMenuScreens/MonCompte';
 import Concept from './containers/SideMenuScreens/Concept';
 import SConcept from './containers/SideMenuScreens/SimpleConcept';
 import Param from './containers/SideMenuScreens/Params';
+import ScrenCenter from './containers/SideMenu/ScreenCenter';
 {/*prototypes*/}
 import ListView from './prototypes/ListView/ListView';
 import Details from './prototypes/ListView/Movie';
@@ -40,9 +41,11 @@ export default class Routes extends Component<{}> {
 					{/*login*/}
 					<Scene key="loginapp" component={Loginapp} title="Loginapp"  initial ={false} panHandlers={null}/> 
 					{/*home*/}
-					<Scene key="flatListViewArticle" component={FlatListViewArticle} title="FlatListViewArticle"  title="Renewal" initial={true} panHandlers={null} /> 
+					<Scene key="flatListViewArticle" component={FlatListViewArticle} title="FlatListViewArticle"  title="Renewal" initial={false} panHandlers={null} /> 
 					<Scene key="flatDemo" component={FlatDemo} title="FlatDemo"  title="Renewal" initial ={false} /> 
 					<Scene key="webcallDemo" component={WebcallDemo} title="webcallDemo"   initial ={false} /> 
+					<Scene key="screnCenter" component={ScrenCenter} title="RENEWAL"  initial={true} panHandlers={null} /> 
+					
 					{/*webview*/}
 					<Scene key="webviewcustom" component={Webviewcustom} initial={false} title="Webviewcustom"  />
 					{/* sidemenu */}
