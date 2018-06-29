@@ -199,6 +199,9 @@ Mise en place :
 
 */
 
+ 
+
+ 
 
 export default class Project extends Component {
   constructor(props) {
@@ -703,6 +706,38 @@ async updateTime(){
     Partie Flastlist
   */
 
+ renderItem=({item, index, nativeEvent}) => (
+            
+  <View  onPressItem={this._onPressItem}  >
+    <View style={{flex:1, backgroundColor: item.isRejected ? "#484848" : "#fff"}}>
+      <TouchableOpacity onPress={item.isRejected? console.log("item isRejected") : this._onPressOnItem.bind(this, item, nativeEvent)} >
+        <Image source = {{ uri: item.image }} 
+          style={{
+            height: screen.height / 5,
+            opacity: item.isRejected ? 0.3:1,
+            margin: 1,
+            borderRadius : 7,
+            justifyContent: 'center', 
+            alignItems: 'center',
+            
+          }}//style={styles.imageView} 
+          onPress={this._onPressOnItem.bind(this, item, nativeEvent)
+          //onPress={this._onScrollItem(nativeEvent)
+          
+          }
+           />
+      </TouchableOpacity>
+      <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width:'100%',height: screen.height / 17}}>
+        <Icon name={item.isSaved ? "ios-download" :"ios-download-outline"} style={styles.iconStyle}    onPress={()=>item.isRejected ? console.log("error") :this._toggleFav( { item, index } )} />
+          <Text numberOfLines={2} style={styles.textView} onPress={item.isRejected? console.log("item isRejected") :this._onPressOnItem.bind(this, item, )}>{item.title}</Text>
+        <Icon name={item.isRejected ? "ios-checkmark" :"ios-close"}  style={{color: 'black', width :'10%', paddingLeft: '3%', alignItems: 'center', justifyContent: 'center',color: item.isRejected ? "green" :"red"}}   onPress={()=>this._toggleReject( { item, index } )} />
+      </View>
+    </View>
+  </View>   
+  )
+  getItemLayout= (data, index) => (
+    {length: (screen.height / 17) + (screen.height / 5), offset: (screen.height / 17) + (screen.height / 5) * index, index}
+  );
   FlatListItemSeparator = () => {
     return (
       <View
@@ -730,6 +765,7 @@ async updateTime(){
     //Actions.webviewcustom(item);
     Actions.webviewcustom(pack);*/
   }
+  
   render() {
     if (!this.state.isConnected) {
       return <MiniOfflineSign />;
@@ -780,35 +816,7 @@ async updateTime(){
           debug={this.state.debug}
           extraData={this.state}
           ItemSeparatorComponent = {this.FlatListItemSeparator}
-          renderItem={({item, index, nativeEvent}) => 
-            
-            <View  onPressItem={this._onPressItem}  >
-              <View style={{flex:1, backgroundColor: item.isRejected ? "#484848" : "#fff"}}>
-                <TouchableOpacity onPress={item.isRejected? console.log("item isRejected") : this._onPressOnItem.bind(this, item, nativeEvent)} >
-                  <Image source = {{ uri: item.image }} 
-                    style={{
-                      height: screen.height / 5,
-                      opacity: item.isRejected ? 0.3:1,
-                      margin: 1,
-                      borderRadius : 7,
-                      justifyContent: 'center', 
-                      alignItems: 'center',
-                      
-                    }}//style={styles.imageView} 
-                    onPress={this._onPressOnItem.bind(this, item, nativeEvent)
-                    //onPress={this._onScrollItem(nativeEvent)
-                    
-                    }
-                     />
-                </TouchableOpacity>
-                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width:'100%',height: screen.height / 17}}>
-                  <Icon name={item.isSaved ? "ios-download" :"ios-download-outline"} style={styles.iconStyle}    onPress={()=>item.isRejected ? console.log("error") :this._toggleFav( { item, index } )} />
-                    <Text numberOfLines={2} style={styles.textView} onPress={item.isRejected? console.log("item isRejected") :this._onPressOnItem.bind(this, item, )}>{item.title}</Text>
-                  <Icon name={item.isRejected ? "ios-checkmark" :"ios-close"}  style={{color: 'black', width :'10%', paddingLeft: '3%', alignItems: 'center', justifyContent: 'center',color: item.isRejected ? "green" :"red"}}   onPress={()=>this._toggleReject( { item, index } )} />
-                </View>
-              </View>
-            </View>   
-          }
+          renderItem={({item, index, nativeEvent}) => this.renderItem({item, index, nativeEvent})}
           legacyImplementation={false}
           keyExtractor={(item, index) => index.toString()}
           onRefresh={this._clear}
@@ -836,6 +844,7 @@ async updateTime(){
               y : height
             });*/
           } }
+          getItemLayout={(data, index)=>this.getItemLayout(data, index)}
           viewabilityConfig={this.viewabilityConfig}
           onScroll={ ({ nativeEvent }) => {
             this._onScrollItem(nativeEvent);

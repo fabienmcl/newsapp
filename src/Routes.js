@@ -20,6 +20,8 @@ import Param from './containers/SideMenuScreens/Params';
 import ListView from './prototypes/ListView/ListView';
 import Details from './prototypes/ListView/Movie';
 import Timer from './prototypes/Timer';
+import WebcallDemo from './containers/ListOfArticles/FlowerList';
+import SimpleWebView from './containers/WebView/SimpleWV';
 {/*sensors*/}
 import Accelerometer from './prototypes/Sensors/Accelerometer';
 import Gyroscope from './prototypes/Sensors/Gyroscope';
@@ -40,6 +42,7 @@ export default class Routes extends Component<{}> {
 					{/*home*/}
 					<Scene key="flatListViewArticle" component={FlatListViewArticle} title="FlatListViewArticle"  title="Renewal" initial={true} panHandlers={null} /> 
 					<Scene key="flatDemo" component={FlatDemo} title="FlatDemo"  title="Renewal" initial ={false} /> 
+					<Scene key="webcallDemo" component={WebcallDemo} title="webcallDemo"   initial ={false} /> 
 					{/*webview*/}
 					<Scene key="webviewcustom" component={Webviewcustom} initial={false} title="Webviewcustom"  />
 					{/* sidemenu */}
@@ -52,6 +55,7 @@ export default class Routes extends Component<{}> {
 					<Scene key="listView" component={ListView} title="ListView" initial={false} />	
 					<Scene key="details" component={Details} title="Details" initial={false} />
 					<Scene key="timer" component={Timer} title="Timer" initial={false} />
+					<Scene key="simpleWebView" component={SimpleWebView} title="SimpleWebView" initial={false} />
 					{/*sensors*/}
 					<Scene key="accelerometer" component={Accelerometer} title="Accelerometer" initial={false} />	
 					<Scene key="gyroscope" component={Gyroscope} title="Gyroscope" initial={false} />	

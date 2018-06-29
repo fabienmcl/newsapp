@@ -120,13 +120,6 @@ class FlatListDemo extends Component {
           refreshing={this.state.refreshing}
           onEndReached={this.handleLoadMore}
           onEndReachedThreshold={50}
-          onViewableItemsChanged={({ viewableItems, changed }) => {
-            console.log("Visible items are", viewableItems);
-            console.log("Changed in this iteration", changed);
-          }}
-          viewabilityConfig={{
-            itemVisiblePercentThreshold: 50
-          }}
         />
       //</List>
     );
