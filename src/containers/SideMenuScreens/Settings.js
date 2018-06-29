@@ -70,7 +70,6 @@ async function getLocationAsync() {
 export default class Param extends Component {
   constructor(props) {
     super(props);
-    this.toggle = this.toggle.bind(this);
     this.state = { isLoading: true, isOpen: false, selectedItem: 'param', location:false, settings:null}
     YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
   }
@@ -106,44 +105,7 @@ export default class Param extends Component {
 
   }
   
-  _sideMenuPress(){
-    console.log("le menu le menu le menu");
-    this.toggle();
-  }
-  toggle() {
-    this.setState({
-      isOpen: !this.state.isOpen,
-    });
-  }
-
-  updateMenuState(isOpen) {
-    this.setState({ isOpen });
-    if(this.state.selectedItem != 'param'){
-      console.log("chargement de la page "+this.state.selectedItem)
-      switch(this.state.selectedItem){
-        case 'favoris' : Actions.favoris() 
-          break;
-        case 'historique' : Actions.historique()
-          break;
-        case 'compte' : Actions.monCompte()
-          break;
-        case 'recommandation' : Actions.flatListViewArticle()
-          break;
-        case 'concept' : Actions.concept()
-          break;
-      }
-      this.setState({
-        selectedItem: 'concept',
-      });
-    }
-    
-  }
-
-  onMenuItemSelected = item =>
-    this.setState({
-      isOpen: false,
-      selectedItem: item,
-  });
+  
  
   changeStateLocation(){
     const s = this.state.settings;
@@ -275,29 +237,10 @@ export default class Param extends Component {
         </View>
       );
     }
-   
-    const menu = <Menu onItemSelected={this.onMenuItemSelected} />;
     return (
-      <SideMenu
-        menu={menu}
-        isOpen={this.state.isOpen}
-        onChange={isOpen => this.updateMenuState(isOpen)}
-        disableGestures={false}
-      >
+      
         <View style={{justifyContent: 'center', flex:1, backgroundColor : "#212121",paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight}}>
-          <Header style={{backgroundColor: '#212121'}}>
-            <StatusBar barStyle="light-content"/>
-            <Left >
-              <Button transparent>
-                <Icon name='menu' style={{ color: '#fff'}}   onPress={()=>this._sideMenuPress()} />
-              </Button>
-            </Left>
-            <Body >
-              <Title style={{color:'white'}}>{I18n.t('settings_header')}</Title>
-            </Body>
-            <Right>
-            </Right>
-          </Header>
+          
           <Content>
             <List>
               <ListItem itemDivider style={{backgroundColor:'#eeeeee'}}>
@@ -519,7 +462,6 @@ export default class Param extends Component {
           </Button>
         </Content> 
       </View>
-    </SideMenu>
    );
   }
 }

@@ -33,7 +33,8 @@ import DiverseRecommendation from '../ListOfArticles/FlatListViewArticle';
 import Favorites from '../SideMenuScreens/Favorite';
 import History from '../SideMenuScreens/History';
 import Account from '../SideMenuScreens/Account';
-import Concept from '../SideMenuScreens/SimpleConcept'
+import Concept from '../SideMenuScreens/SimpleConcept';
+import Settings from '../SideMenuScreens/Settings';
 
 
 
@@ -173,7 +174,12 @@ export default class Project extends Component {
       case 'concept' : 
         return (
           <Concept />
+        );
+      case 'param' : 
+        return (
+          <Settings />
         )
+      
     }
     return null;
   }
