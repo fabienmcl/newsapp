@@ -29,7 +29,7 @@ I18n.translations = {
 };
 
 //Import Screen
-import DiverseRecommendation from '../ListOfArticles/FlatListViewArticle';
+import DiverseRecommendation from '../ListOfArticles/FlatListViewDiverseRecommendation';
 import Favorites from '../SideMenuScreens/Favorite';
 import History from '../SideMenuScreens/History';
 import Account from '../SideMenuScreens/Account';
@@ -74,34 +74,10 @@ export default class Project extends Component {
       Roboto: require("native-base/Fonts/Roboto.ttf"),
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
     });
-    //console.log(this.state)
-
-   
-    
-    console.log(this.state)
-    //await this._subscription();
-    //this.init().then(this.select());
-    
   }
   componentWillUnmount() {
   }
-
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
- 
-
-  
-  
-  
-
   /*
     Partie side menu
   */
@@ -118,26 +94,6 @@ export default class Project extends Component {
   updateMenuState(isOpen) {
     this.setState({ isOpen });
     console.log("updateMenu")
-    /*
-    if(this.state.selectedItem != 'recommandation'){
-      console.log("chargement de la page "+this.state.selectedItem)
-      switch(this.state.selectedItem){
-        case 'favoris' : Actions.favoris() 
-          break;
-        case 'historique' : Actions.historique()
-          break;
-        case 'compte' : Actions.monCompte()
-          break;
-        case 'concept' : Actions.concept()
-          break;
-        case 'param' : Actions.param()
-          break;
-      }
-      this.setState({
-        selectedItem: 'recommandation',
-      });
-    }*/
-    
   }
 
   onMenuItemSelected = item =>
@@ -209,20 +165,16 @@ export default class Project extends Component {
         isOpen={this.state.isOpen}
         onChange={isOpen => this.updateMenuState(isOpen)}
       >
-      
       <View style={{ justifyContent: 'center', flex:1,backgroundColor : "#212121",paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight}} >
-    
-      <Header style={{backgroundColor: '#212121'}}>
-        <StatusBar barStyle="light-content"/>
+        <Header style={{backgroundColor: '#212121'}}>
+          <StatusBar barStyle="light-content"/>
           <Left>
-              
             <Button transparent>
               <Icon name='menu' style={{ color: '#fff'}}   onPress={()=>this._sideMenuPress()} />
             </Button>
-              
           </Left>
           <Body>
-            <Title style={{color:'white'}}>Renewal</Title>
+            <Title style={{color:'white'}}>RENEWAL</Title>
           </Body>
           <Right>
           </Right>
@@ -230,7 +182,7 @@ export default class Project extends Component {
         {content}
       </View>
       </SideMenu>
-   );
+    );
   }
 }
 
