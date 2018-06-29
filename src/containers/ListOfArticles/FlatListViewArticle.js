@@ -22,6 +22,7 @@ import Menu from '../SideMenu/Menu';
 const screen = Dimensions.get('window');
 const db = SQLite.openDatabase('db.db');
 const timer = require('react-native-timer');
+import FlastlistDemo from './FlatListDemo';
 const GEOLOCATION_OPTIONS = { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, timeInterval: 300};
 import I18n from 'ex-react-native-i18n';
 I18n.fallbacks = true
@@ -586,6 +587,7 @@ async updateTime(){
 
   updateMenuState(isOpen) {
     this.setState({ isOpen });
+    /*
     if(this.state.selectedItem != 'recommandation'){
       console.log("chargement de la page "+this.state.selectedItem)
       switch(this.state.selectedItem){
@@ -603,7 +605,7 @@ async updateTime(){
       this.setState({
         selectedItem: 'recommandation',
       });
-    }
+    }*/
     
   }
 
@@ -611,7 +613,7 @@ async updateTime(){
     this.setState({
       isOpen: false,
       selectedItem: item,
-  });
+    });
   _onPressItem = (id) => {
     // updater functions are preferred for transactional updates
     this.setState((state) => {
@@ -776,7 +778,10 @@ async updateTime(){
           <ActivityIndicator size="large" />
         </View>
       );
-    }
+    }/*
+    switch(this.state.selectedItem){
+      case 'favoris' : return (<FlastlistDemo />);
+    }*/
     const menu = <Menu onItemSelected={this.onMenuItemSelected} />;
     return (
       
