@@ -112,8 +112,13 @@ export default class Project extends Component {
   //Renewal 
   GetItem (item) {
     //Alert.alert(item.title);
-    console.log(item.title);
-    Actions.webviewcustom(item);
+    let pack = {
+        title: item.title,
+        url:item.url,
+        previous : "webview"
+    }
+    Actions.webview(pack);
+   
   }
   FlatListItemSeparator = () => {
     return (
