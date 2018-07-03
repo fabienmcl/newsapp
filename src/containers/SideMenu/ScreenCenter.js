@@ -114,23 +114,23 @@ export default class Project extends Component {
 
   contentSwitch(){
     switch(this.props.navigation.state.params.screen){
-      case "favoris" :
+      case "Favorite" :
         return (
           <Favorites />
         );
-      case "historique" :
+      case "History" :
         return (
           <History />
         );
-      case "compte" : 
+      case "Account" : 
         return (
           <Account />
         );
-      case "concept" : 
+      case "SimpleConcept" : 
         return (
           <Concept />
         );
-      case "param" : 
+      case "Settings" : 
         return (
           <Settings />
         );
@@ -144,7 +144,7 @@ export default class Project extends Component {
   }
   contentHeaderSwitch(){
     switch(this.props.navigation.state.params.screen){
-      case "favoris" :
+      case "Favorite" :
         return (
           <Body style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }} >
             <Button transparent>
@@ -153,7 +153,7 @@ export default class Project extends Component {
             <Title style={{color:'white'}}>{I18n.t('side_menu_fav')}</Title>
           </Body>
         );
-      case "historique" :
+      case "History" :
         return (
           <Body style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }} >
             <Button transparent>
@@ -162,7 +162,7 @@ export default class Project extends Component {
             <Title style={{color:'white'}}>{I18n.t('side_menu_history')}</Title>
           </Body>
         );
-      case "compte" : 
+      case "Account" : 
         return (
           <Body style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }} >
             <Button transparent>
@@ -171,7 +171,7 @@ export default class Project extends Component {
             <Title style={{color:'white'}}>{I18n.t('side_menu_account')}</Title>
           </Body>
         );
-      case "concept" : 
+      case "SimpleConcept" : 
         return (
           <Body style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }} >
             <Button transparent>
@@ -181,7 +181,7 @@ export default class Project extends Component {
           </Body>
           
         );
-      case "param" : 
+      case "Settings" : 
         return (
           <Body style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }} >
             <Button transparent>

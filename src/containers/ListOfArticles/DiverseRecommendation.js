@@ -30,7 +30,7 @@ export default class Project extends Component {
     let pack = {
       title: 'À lui seul, l’iPhone X a compté pour 35 % des bénéfices de l’industrie au Q4 2017',
       url:'https://www.numerama.com/tech/346171-a-lui-seul-liphone-x-a-compte-pour-35-des-benefices-de-lindustrie-au-q4-2017.html',
-      previous : "recommandation"
+      previous : "DiverseRecommendation"
     }
     console.log(pack);
     Actions.webview(pack)
