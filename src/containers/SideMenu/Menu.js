@@ -43,27 +43,27 @@ export default function Menu({ onItemSelected }) {
             <Title style={{color:'white'}}>Renewal</Title>
           </Body>
           <Right>
-            <Button transparent onPress={() =>  onItemSelected('param')}>
+            <Button transparent onPress={() =>  onItemSelected("param")}>
               <Icon name='ios-settings-outline' style={{color:'white'}}/>
             </Button>
            </Right>
         </Header>
         <Content  style={{backgroundColor:'#212121'}} >
             <List style={{backgroundColor:'#424242', marginTop:5}}>
-                <ListItem iconLeft onPress={() =>  onItemSelected('recommandation')}>
-                    <Icon name="ios-trending-up-outline" style={styles.iconItem} />
+                <ListItem iconLeft onPress={() =>  onItemSelected("recommandation")}>
+                    <Icon name="ios-home-outline" style={styles.iconItem} />
                     <Text style={styles.textItem} >{I18n.t('side_menu_recommendation')}</Text>
                 </ListItem>
-                <ListItem iconLeft onPress={() => onItemSelected('favoris')}>
+                <ListItem iconLeft onPress={() => onItemSelected("favoris")}>
                     <Icon name="ios-star-outline" style={styles.iconItem} />
                     <Text style={styles.textItem}  >{I18n.t('side_menu_fav')}</Text>
                 </ListItem>
-                <ListItem iconLeft onPress={() => onItemSelected('historique')}>
+                <ListItem iconLeft onPress={() => onItemSelected("historique")}>
                     <Icon name="ios-stats-outline" style={styles.iconItem} />
                     <Text style={styles.textItem}  >{I18n.t('side_menu_history')}</Text>
                 </ListItem>
-                <ListItem iconLeft onPress={() => onItemSelected('compte')}>
-                    <Icon name="ios-person" style={styles.iconItem} />
+                <ListItem iconLeft onPress={() => onItemSelected("compte")}>
+                    <Icon name="ios-person-outline" style={styles.iconItem} />
                     <Text style={styles.textItem} > {I18n.t('side_menu_account')} </Text>
                 </ListItem>
             </List>
@@ -71,7 +71,7 @@ export default function Menu({ onItemSelected }) {
         </Content>
         <Footer style={{ backgroundColor: '#212121'}} >
           <FooterTab>
-            <Button full onPress={() => onItemSelected('concept')}>
+            <Button full onPress={() => onItemSelected("concept")}>
               <Text >{I18n.t('side_menu_concept')}</Text>
             </Button>
           </FooterTab>

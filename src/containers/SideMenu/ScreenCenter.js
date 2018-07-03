@@ -29,14 +29,24 @@ I18n.translations = {
 };
 
 //Import Screen
-import DiverseRecommendation from '../ListOfArticles/FlatListViewDiverseRecommendation';
+import DiverseRecommendation from '../ListOfArticles/DiverseRecommendation';
 import Favorites from '../SideMenuScreens/Favorite';
 import History from '../SideMenuScreens/History';
 import Account from '../SideMenuScreens/Account';
 import Concept from '../SideMenuScreens/SimpleConcept';
 import Settings from '../SideMenuScreens/Settings';
 
-
+function MiniOfflineSign() {
+  return (
+    <View style={styles.offlineContainer}>
+      <Text style={styles.offlineText}>{I18n.t('no_connection')}</Text>
+  </View>
+/*
+    <View style={{flex:1,height: 30, alignItems: 'center',}}>
+      <Text style={styles.offlineText}>No Internet Connection</Text>
+    </View>*/
+  );
+}
 
 export default class Project extends Component {
   constructor(props) {
@@ -46,26 +56,10 @@ export default class Project extends Component {
       isLoading: true, 
       isOpen: false, 
       refreshing: true,
-      selectedItem: 'recommandation', 
+      selectedItem: null,//this.props.navigation.state.params.screen === undefined ?  "recommandation" : this.props.navigation.state.params.screen != undefined, 
       items: null,
-      newscastsState : null,
-      newscastSavedState : null,
-      isConnected: true,
-      time_launch : null,
-      y:null,
-      paquet : [],
-
-      date : null,
-      time : null,
-      localisation : null,
-      accelerometerData : null,
-      gyroscopeData : null,
-      magnetometerData : null,
-      networkInfo : null,
-
-
-
     }
+    //this.props.navigation.state.params.screen = "recommandation"
     YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
    
   }
@@ -74,15 +68,30 @@ export default class Project extends Component {
       Roboto: require("native-base/Fonts/Roboto.ttf"),
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
     });
+    await I18n.initAsync();
+    console.log(this.props)
+    //await this.update()
+    //NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
   }
   componentWillUnmount() {
+    NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
   }
-  
+
+  handleConnectivityChange = isConnected => {
+    if (isConnected) {
+      this.setState({ isConnected });
+      NetInfo.getConnectionInfo().then((connectionInfo) => {
+        console.log('Initial, type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType);
+        this.setState({ networkInfo : 'type: ' + connectionInfo.type + ', effectiveType: ' + connectionInfo.effectiveType });
+        });
+    } else {
+      this.setState({ isConnected });
+    }
+  };
   /*
     Partie side menu
   */
   _sideMenuPress(){
-    console.log("le menu le menu le menu");
     this.toggle();
   }
   toggle() {
@@ -93,70 +102,115 @@ export default class Project extends Component {
 
   updateMenuState(isOpen) {
     this.setState({ isOpen });
-    console.log("updateMenu")
   }
 
-  onMenuItemSelected = item =>
+  onMenuItemSelected = item =>{
     this.setState({
       isOpen: false,
       selectedItem: item,
     });
-  
+    this.props.navigation.state.params.screen = item;
+  }
 
-
-  
-  
-  
   contentSwitch(){
-    switch(this.state.selectedItem){
-      case 'recommandation' : 
-        return (
-          <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          < ActivityIndicator size="large" />
-          </View>
-        );
-      case 'favoris' :
+    switch(this.props.navigation.state.params.screen){
+      case "favoris" :
         return (
           <Favorites />
         );
-      case 'historique' :
+      case "historique" :
         return (
           <History />
         );
-      case 'compte' : 
+      case "compte" : 
         return (
           <Account />
         );
-      case 'concept' : 
+      case "concept" : 
         return (
           <Concept />
         );
-      case 'param' : 
+      case "param" : 
         return (
           <Settings />
-        )
+        );
+      default : 
+        return (
+          this.state.isConnected === false ? <View style={{flex:1}} ><MiniOfflineSign /></View> : <DiverseRecommendation />
+        );
+      
+    }
+    return null;
+  }
+  contentHeaderSwitch(){
+    switch(this.props.navigation.state.params.screen){
+      case "favoris" :
+        return (
+          <Body style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }} >
+            <Button transparent>
+              <Icon name='ios-star' style={{ color: '#fff'}}   />
+            </Button>
+            <Title style={{color:'white'}}>{I18n.t('side_menu_fav')}</Title>
+          </Body>
+        );
+      case "historique" :
+        return (
+          <Body style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }} >
+            <Button transparent>
+              <Icon name='ios-stats' style={{ color: '#fff'}}   />
+            </Button>
+            <Title style={{color:'white'}}>{I18n.t('side_menu_history')}</Title>
+          </Body>
+        );
+      case "compte" : 
+        return (
+          <Body style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }} >
+            <Button transparent>
+              <Icon name='ios-person' style={{ color: '#fff'}}    />
+            </Button>
+            <Title style={{color:'white'}}>{I18n.t('side_menu_account')}</Title>
+          </Body>
+        );
+      case "concept" : 
+        return (
+          <Body style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }} >
+            <Button transparent>
+              <Icon name='ios-cafe' style={{ color: '#fff'}}   />
+            </Button>
+            <Title style={{color:'white'}}>{I18n.t('side_menu_concept')}</Title>
+          </Body>
+          
+        );
+      case "param" : 
+        return (
+          <Body style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }} >
+            <Button transparent>
+              <Icon name='ios-settings' style={{ color: '#fff'}}    />
+            </Button>
+            <Title style={{color:'white'}}>{I18n.t('side_menu_account')}</Title>
+          </Body>
+        );
+      default : 
+        return (
+          <Body style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }} >
+            <Button transparent>
+              <Icon name='ios-home' style={{ color: '#fff'}}    />
+            </Button>
+            <Title style={{color:'white'}}>RENEWAL</Title>
+          </Body>
+      );
       
     }
     return null;
   }
   
   render() {
-    /*
-    if (!this.state.isConnected) {
-      return <MiniOfflineSign />;
-    }
-    if (this.state.isLoading) {
-      return (
-        <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-          <ActivityIndicator size="large" />
-        </View>
-      );
-    }*/
     let content = this.contentSwitch();
+    let contentHeader = this.contentHeaderSwitch();
     
     
     const menu = <Menu onItemSelected={this.onMenuItemSelected} />;
-    console.log(this.state.selectedItem)
+    //console.log(this.state.selectedItem)
 
 
     return (
@@ -173,9 +227,7 @@ export default class Project extends Component {
               <Icon name='menu' style={{ color: '#fff'}}   onPress={()=>this._sideMenuPress()} />
             </Button>
           </Left>
-          <Body>
-            <Title style={{color:'white'}}>RENEWAL</Title>
-          </Body>
+          {contentHeader}
           <Right>
           </Right>
         </Header>
@@ -230,11 +282,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width : screen.width,
     position: 'absolute',
-    top: 30
   },
-  offlineText: { color: '#fff' }
+  offlineText: { 
+    color: '#fff', }
 });
-
-/**
- * https://react-native.canny.io/feature-requests/p/scrollview-animation-events-eg-onscrollanimationend
- */

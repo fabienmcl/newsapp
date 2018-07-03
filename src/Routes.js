@@ -9,6 +9,7 @@ import FlatListViewArticle from './containers/ListOfArticles/FlatListViewArticle
 import FlatDemo from './containers/ListOfArticles/FlatListDemo';
 {/*webview*/}
 import Webviewcustom from './containers/WebView/MessageWebView';
+import Webview from './containers/WebView/WebView';
 {/*sidemenu*/}
 import Favoris from './containers/SideMenuScreens/Favoris';
 import Historique from './containers/SideMenuScreens/Historique';
@@ -21,8 +22,7 @@ import ScrenCenter from './containers/SideMenu/ScreenCenter';
 import ListView from './prototypes/ListView/ListView';
 import Details from './prototypes/ListView/Movie';
 import Timer from './prototypes/Timer';
-import WebcallDemo from './containers/ListOfArticles/FlowerList';
-import SimpleWebView from './containers/WebView/SimpleWV';
+import WebcallDemo from './containers/ListOfArticles/DiverseRecommendation';
 {/*sensors*/}
 import Accelerometer from './prototypes/Sensors/Accelerometer';
 import Gyroscope from './prototypes/Sensors/Gyroscope';
@@ -43,11 +43,14 @@ export default class Routes extends Component<{}> {
 					{/*home*/}
 					<Scene key="flatListViewArticle" component={FlatListViewArticle} title="FlatListViewArticle"  title="Renewal" initial={false} panHandlers={null} /> 
 					<Scene key="flatDemo" component={FlatDemo} title="FlatDemo"  title="Renewal" initial ={false} /> 
-					<Scene key="webcallDemo" component={WebcallDemo} title="webcallDemo"   initial ={false} /> 
+					<Scene key="webcallDemo" component={WebcallDemo} title="webcallDemo"   initial ={false} />
 					<Scene key="screnCenter" component={ScrenCenter} title="RENEWAL"  initial={true} panHandlers={null} /> 
+					
 					
 					{/*webview*/}
 					<Scene key="webviewcustom" component={Webviewcustom} initial={false} title="Webviewcustom"  />
+					{/*webview back*/}
+					<Scene key="webview" component={Webview} initial={false} title="Webview"  />
 					{/* sidemenu */}
 					<Scene key="favoris" component={Favoris} title="Favoris" initial={false} panHandlers={null}/>
 					<Scene key="historique" component={Historique} title="Historique" initial={false} panHandlers={null}/>
@@ -58,7 +61,6 @@ export default class Routes extends Component<{}> {
 					<Scene key="listView" component={ListView} title="ListView" initial={false} />	
 					<Scene key="details" component={Details} title="Details" initial={false} />
 					<Scene key="timer" component={Timer} title="Timer" initial={false} />
-					<Scene key="simpleWebView" component={SimpleWebView} title="SimpleWebView" initial={false} />
 					{/*sensors*/}
 					<Scene key="accelerometer" component={Accelerometer} title="Accelerometer" initial={false} />	
 					<Scene key="gyroscope" component={Gyroscope} title="Gyroscope" initial={false} />	

@@ -246,26 +246,26 @@ export default class Project extends Component {
       Roboto: require("native-base/Fonts/Roboto.ttf"),
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
     });
-    await this.updateListeners();
+    //await this.updateListeners();
     
 
     //console.log(this.state)
 
-    NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
+    //NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
     //await this._getLocationAsync()
     //Location.watchPositionAsync(GEOLOCATION_OPTIONS, this.locationChanged);
     
 
     //await this.initializeSensors();
     await this.update();
-    console.log(this.state)
+    //console.log(this.state)
     //await this._subscription();
     //this.init().then(this.select());
     
   }
   componentWillUnmount() {
-    NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
-    this._unsubscribe();
+   // NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
+    //this._unsubscribe();
   }
 
   initializeSensors = async () =>{
@@ -753,8 +753,8 @@ async updateTime(){
   }
   _onPressOnItem (item) {
     //Alert.alert(item.title);
-    let a = "Press : "+ item.url;
-    this.sendPackage({a})
+    //let a = "Press : "+ item.url;
+    //this.sendPackage({a})
     /*console.log(item.title);
 
     let pack = {
@@ -763,9 +763,8 @@ async updateTime(){
     networkInfo : this.state.networkInfo,
     time : this.state.time,
     date: this.state.date
-    }
-    //Actions.webviewcustom(item);
-    Actions.webviewcustom(pack);*/
+    }*/
+    Actions.webviewcustom(item);
   }
   
   render() {

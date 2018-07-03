@@ -85,6 +85,8 @@
   "wv_share": "Sharing the article", 
   "wv_recommendations": "Article recommendations:",
 
+  "no_connection" : "No Internet Connection",
+
   "hello world": "hello world",
   "greeting": "Hi!"
 }
