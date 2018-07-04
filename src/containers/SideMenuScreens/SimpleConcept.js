@@ -12,6 +12,7 @@ import {
   AsyncStorage,
   ActivityIndicator
 } from 'react-native';
+import Expo, { Font, AppLoading } from 'expo';
 import s1 from '../../images/slide1.png'
 import s2 from '../../images/slidey.png'
 import s3 from '../../images/slidez.png'
@@ -99,7 +100,13 @@ export default class SwiperConcept extends Component {
         super(props);
         this.state = {isModalVisible: false, isConnected : false, isLoading: true, userInformationBasic : null}
     }
+
     async componentDidMount(){
+        await Font.loadAsync({
+          Roboto: require("native-base/Fonts/Roboto.ttf"),
+          Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+          Arial: require('native-base/Fonts/Roboto.ttf')
+        });
         try {
           //AsyncStorage.setItem('userInformationBasic', JSON.stringify(userInformation[0]));
           AsyncStorage.getItem('userInformationBasic', (err, result)=>{
@@ -129,17 +136,7 @@ export default class SwiperConcept extends Component {
           // Error saving data
         }
         await I18n.initAsync();
-        /*try{
-          AsyncStorage.getItem('userInformationBasic', (err, result)=>{
-            console.log(result)
-            var json = JSON.parse(result)
-            console.log(json.mail)
-            json.mail===0 || json.mail=== false ? this.setState({isConnected : false}) : this.setState({isConnected : true});
-
-          })
-        }catch(error){
-
-        }*/
+        
         this.setState({isLoading:false})
     }
     _initAsyncStorage = async () =>{
