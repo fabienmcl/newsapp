@@ -17,7 +17,6 @@ import {
     WebView,
 } from "react-native";
 import { View } from 'react-native-animatable';
-import { Icon } from 'native-base'
 import HomeScreen from './HomeScreen/HomeScreen'
 import AuthScreen from './AuthScreen'
 import Expo, { SQLite, Font, AppLoading } from 'expo';

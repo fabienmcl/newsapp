@@ -1,7 +1,6 @@
 import React, { Component} from 'react'
-import { KeyboardAvoidingView, LayoutAnimation, Platform, StyleSheet, UIManager } from 'react-native'
+import { KeyboardAvoidingView, LayoutAnimation, Platform, StyleSheet, UIManager, Text } from 'react-native'
 import { Image, View } from 'react-native-animatable'
-import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text, List, ListItem } from 'native-base';
 import imgLogo from '../../images/logo.png'
 import metrics from '../../config/metrics'
 
@@ -99,7 +98,9 @@ export default class AuthScreen extends Component {
           <View>
           </View>
         ) : (
-          <Icon name={"ios-close"} onPress={()=>this.setState({visibleForm: null})} style={{color: 'black', width :'10%', paddingLeft: '3%', alignItems: 'center', justifyContent: 'center',color:"red"}}   />
+          <Text  
+            onPress={()=>this.setState({visibleForm: null})} style={{color: 'black', width :'10%', paddingLeft: '3%', alignItems: 'center', justifyContent: 'center',color:"red"}}  > X </Text>
+        
         )}
             
         <Image

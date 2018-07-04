@@ -16,7 +16,7 @@ import {
   ScrollView 
 } from 'react-native';
 import {Actions} from 'react-native-router-flux';
-import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text, List, ListItem } from 'native-base';
+import { Root, Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text, List, ListItem } from 'native-base';
 import SideMenu from 'react-native-side-menu';
 import Menu from '../SideMenu/Menu';
 const screen = Dimensions.get('window');
@@ -58,18 +58,21 @@ export default class Project extends Component {
       refreshing: true,
       selectedItem: null,//this.props.navigation.state.params.screen === undefined ?  "recommandation" : this.props.navigation.state.params.screen != undefined, 
       items: null,
+      loading: true,
     }
     //this.props.navigation.state.params.screen = "recommandation"
     YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
    
   }
+  
   async componentDidMount(){
     await Font.loadAsync({
       Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
+      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
     });
     await I18n.initAsync();
     console.log(this.props)
+    this.setState({ loading: false });
     //await this.update()
     //NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
   }
@@ -212,6 +215,13 @@ export default class Project extends Component {
     const menu = <Menu onItemSelected={this.onMenuItemSelected} />;
     //console.log(this.state.selectedItem)
 
+    if (this.state.loading) {
+      return (
+        <Root>
+          <AppLoading />
+        </Root>
+      );
+    }
 
     return (
       <SideMenu

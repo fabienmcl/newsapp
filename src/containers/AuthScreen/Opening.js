@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { StyleSheet, Alert,AsyncStorage,ActivityIndicator } from 'react-native'
+import { StyleSheet, Alert,AsyncStorage,ActivityIndicator, TouchableOpacity, Image, Text} from 'react-native'
 import { View } from 'react-native-animatable'
-import { Container, Content, Left,Button, Right, Body, Icon, Text} from 'native-base';
 import { AuthSession, Constants, Font  } from 'expo';
 import {Actions} from 'react-native-router-flux';
 import CustomButton from '../../components/CustomButton'
@@ -143,11 +142,15 @@ export default class Opening extends Component {
       <View style={styles.container}>
         
         <View animation={'zoomIn'} delay={600} duration={400}>
-        
-        <Button iconLeft block onPress={this.props.onSignInPress} style={{backgroundColor:'#212121'}} > 
-          <Icon name="ios-at-outline" /> 
-          <Text style={{color:'white'}}>{I18n.t('opening_email')}</Text>
-        </Button>
+        <TouchableOpacity style={styles.EmailStyle} activeOpacity={0.5} onPress={this.props.onSignInPress}>
+          <Image 
+            source={require('../../images/email.png')} 
+            style={styles.ImageIconStyle} 
+          />
+          <View style={styles.SeparatorLine} />
+            <Text style={styles.TextStyle}> {I18n.t('opening_email')}</Text>
+          </TouchableOpacity>
+
         </View>
         <View style={styles.separatorContainer} animation={'zoomIn'} delay={700} duration={400}>
           <View style={styles.separatorLine} />
@@ -155,13 +158,33 @@ export default class Opening extends Component {
           <View style={styles.separatorLine} />
         </View>
         <View animation={'zoomIn'} delay={700} duration={400}>
-          <Button iconLeft block  danger onPress={()=>this.loginG()}><Icon name="logo-google" /> <Text> Google </Text></Button>
+        <TouchableOpacity style={styles.GooglePlusStyle} activeOpacity={0.5} onPress={()=>this.loginG()}>
+          <Image 
+            source={require('../../images/Google_Plus.png')} 
+            style={styles.ImageIconStyle} 
+          />
+          <View style={styles.SeparatorLine} />
+            <Text style={styles.TextStyle}> Login Using Google </Text>
+          </TouchableOpacity>
         </View>
-        <View style={{ marginVertical: 20}} animation={'zoomIn'} delay={700} duration={400}>
-          <Button iconLeft block primary onPress={()=>this.logInFB()}><Icon name="logo-facebook" /> <Text> Facebook </Text></Button>
-        </View>
+        
         <View animation={'zoomIn'} delay={700} duration={400}>
-        <Button iconLeft block info onPress={() => Alert.alert(
+        <TouchableOpacity style={styles.FacebookStyle} activeOpacity={0.5} onPress={()=>this.logInFB()}>
+ 
+         <Image 
+          source={require('../../images/Facebook_Login_Button.png')} 
+          style={styles.ImageIconStyle} 
+          />
+ 
+         <View style={styles.SeparatorLine} />
+ 
+         <Text style={styles.TextStyle}> Login Using Facebook </Text>
+ 
+       </TouchableOpacity>
+        </View>
+        
+        <View animation={'zoomIn'} delay={700} duration={400}>
+        <TouchableOpacity style={styles.TwitterStyle} activeOpacity={0.5} onPress={() => Alert.alert(
                   'lifehack',
                   'Delete Twitter from your phone, because it is the worst',
                   [
@@ -169,7 +192,19 @@ export default class Opening extends Component {
                     {text: 'OK', onPress: this.onDeleteBTN},
                   ],
                   { cancelable: false }
-                )}><Icon name="logo-twitter" /> <Text> Twitter </Text></Button>
+                )}>
+ 
+         <Image 
+          source={require('../../images/twitter.png')} 
+          style={styles.ImageIconStyle} 
+          />
+ 
+         <View style={styles.SeparatorLine} />
+ 
+         <Text style={styles.TextStyle}> Login Using Twitter </Text>
+ 
+       </TouchableOpacity>
+        
         </View>
       </View>
     )
@@ -208,5 +243,72 @@ const styles = StyleSheet.create({
   },
   signInButtonText: {
     color: 'white'
+  },
+  FacebookStyle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#485a96',
+    borderWidth: .5,
+    borderColor: '#fff',
+    height: 40,
+    borderRadius: 5 ,
+    margin: 5,
+   
+  },
+  GooglePlusStyle: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#dc4e41',
+    borderWidth: .5,
+    borderColor: '#fff',
+    height: 40,
+    borderRadius: 5 ,
+    margin: 5,
+  
+ },
+ TwitterStyle: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  backgroundColor: '#00aced',
+  borderWidth: .5,
+  borderColor: '#fff',
+  height: 40,
+  borderRadius: 5 ,
+  margin: 5,
+ 
+},
+ EmailStyle: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  backgroundColor: '#212121',
+  borderWidth: .5,
+  borderColor: '#fff',
+  height: 40,
+  borderRadius: 5 ,
+  margin: 5,
+
+},
+  ImageIconStyle: {
+     padding: 10,
+     margin: 5,
+     height: 25,
+     width: 25,
+     resizeMode : 'stretch',
+   
+  },
+  TextStyle :{
+   
+    color: "#fff",
+    marginBottom : 4,
+    marginRight :20,
+    
+  },
+   
+  SeparatorLine :{
+   
+  backgroundColor : '#fff',
+  width: 1,
+  height: 40
+   
   }
 })
