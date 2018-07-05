@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {Router, Stack, Scene} from 'react-native-router-flux';
-
+{/*initial path*/}
+import InitialPath from './containers/InitialPath';
 {/*login*/}
 import Loginapp from './containers/LoginAnimation';
 import HomeSreen from './containers/HomeScreen/HomeScreen';
@@ -36,6 +37,8 @@ export default class Routes extends Component<{}> {
 		return(
 			<Router>
 				<Stack key="root" hideNavBar={true}>
+					{/*initial path*/}
+					<Scene key="initialPath" component={InitialPath} title="RENEWAL" initial={true}  panHandlers={null}/>
 					{/*concept swipe*/}
 					<Scene key="conceptSwipe" component={SConcept} title="Le Concept" initial={false}  panHandlers={null}/>
 					{/*login*/}
@@ -44,7 +47,7 @@ export default class Routes extends Component<{}> {
 					<Scene key="flatListViewArticle" component={FlatListViewArticle} title="FlatListViewArticle"  title="Renewal" initial={false} panHandlers={null} /> 
 					<Scene key="flatDemo" component={FlatDemo} title="FlatDemo"  title="Renewal" initial ={false} /> 
 					<Scene key="webcallDemo" component={WebcallDemo} title="webcallDemo"   initial ={false} />
-					<Scene key="screnCenter" component={ScrenCenter} title="RENEWAL"  initial={true} panHandlers={null} /> 
+					<Scene key="screnCenter" component={ScrenCenter} title="RENEWAL"  initial={false} panHandlers={null} /> 
 					
 					
 					{/*webview*/}
