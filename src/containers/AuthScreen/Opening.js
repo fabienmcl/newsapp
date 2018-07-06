@@ -58,7 +58,7 @@ export default class Opening extends Component {
         //this.setState({ userInfo });
         //console.log(userInfo)
         this.updateWithFacebook(userInfo)
-        Actions.flatListViewArticle()
+        Actions.screnCenter()
     }
   }
   updateWithFacebook(userInfo){
@@ -83,7 +83,7 @@ export default class Opening extends Component {
       // Error saving data
       console.log("error")
     }
-    Actions.flatListViewArticle()
+    Actions.screnCenter()
   }
   async  signInWithGoogleAsync() {
     try {
@@ -124,7 +124,7 @@ export default class Opening extends Component {
       // Error saving data
       console.log("error")
     }
-    Actions.flatListViewArticle()
+    Actions.screnCenter()
   }
   loginG = async () => {
     const result = await this.signInWithGoogleAsync()
