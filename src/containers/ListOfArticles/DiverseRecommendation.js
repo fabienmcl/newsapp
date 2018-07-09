@@ -1,5 +1,5 @@
+import Expo, { SQLite, Font, AppLoading  } from 'expo';
 import React, { Component } from 'react';
- 
 import { 
   StyleSheet, 
   Platform, 
@@ -12,11 +12,10 @@ import {
   Alert, 
   YellowBox 
 } from 'react-native';
-import {  Icon, Text, } from 'native-base';
-import Expo, { SQLite, Font, AppLoading} from 'expo';
+import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text, List, ListItem } from 'native-base';
 import {Actions} from 'react-native-router-flux';
 const screen = Dimensions.get('window');
-
+const db = SQLite.openDatabase('db.db');
 
 const demoDataNews = [
   {
@@ -162,7 +161,8 @@ export default class Project extends Component {
         displayDataSource : null,
         page : 1,
         nbItemPerPage : 5,
-
+        newscastSavedState : null,
+        refreshing: false
       }
       YellowBox.ignoreWarnings([
         'Warning: componentWillMount is deprecated',
@@ -174,10 +174,56 @@ export default class Project extends Component {
       Roboto: require("native-base/Fonts/Roboto.ttf"),
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
     });
-    this.webCall();
+    
+    
+    await this._initSqlTable();
+    await this._downloadSqlTableSaved();
+    await this.webCall();
+    await this._checkSavedItems()
+    
     //this.getMoviesFromApi();
     //this.getNewsFromApi();
    // await this._generateDisplayItems()
+  }
+  executeSql = async (sql, params = []) => {
+    return new Promise((resolve, reject) => db.transaction(tx => {
+      tx.executeSql(sql, params, (_, { rows }) => resolve(rows._array), reject)
+    }))
+  }
+  _initSqlTable = async () => {
+    //await this.executeSql('DROP TABLE newscastSaved;');
+    //await this.executeSql('DROP TABLE newscasts;');
+    await this.executeSql('create table if not exists newscastSaved (id integer primary key , done int, title text,image text,url text);');
+    //await this.executeSql('create table if not exists newscasts ( id integer primary key , title text not null,image text not null,url text not null,isSaved integer default 0, isRejected integer default 0 );');
+  }
+  _updateSelectedItems = async()=>{
+    console.log("update")
+    await this.executeSql('select * from newscastSaved', []).then(newscastSavedState => this.setState({newscastSavedState})  );
+    await this._checkSavedItems();
+  }
+  _downloadSqlTableSaved= async () => {
+    await this.executeSql('select * from newscastSaved', []).then(newscastSavedState => this.setState({newscastSavedState})  );
+  }
+  _checkSavedItems(){
+    let display = this.state.displayDataSource;
+    if(this.state.newscastSavedState != null){
+      //console.log(this.state.newscastSavedState[0])
+      for(let j=0;this.state.displayDataSource.length!=j;j++){
+        //console.log(this.state.newscastSavedState[i].url)
+        display[j].isSaved=0;
+        for(let i=0;this.state.newscastSavedState.length !=i;i++){
+          //console.log(this.state.displayDataSource[j].url)
+          if(this.state.newscastSavedState[i].url === this.state.displayDataSource[j].url ){
+            console.log("it's match!")
+            display[j].isSaved = 1
+    
+          }
+        }
+      }
+      this.setState({
+        displayDataSource : display
+      })
+    }
   }
   _generateDisplayItems(){
     console.log("display")
@@ -209,7 +255,8 @@ export default class Project extends Component {
       />
     );
   }
-  webCall(){
+  async webCall(){
+    //return fetch('https://129.175.22.71:4243/url/bulk/100')
     return fetch('https://reactnativecode.000webhostapp.com/FlowersList.php')
       .then((response) => response.json())
       .then((responseJson) => {
@@ -242,7 +289,7 @@ export default class Project extends Component {
     let pack = this.state.displayDataSource;
     let i = this.state.displayDataSource === null ? 0 : this.state.displayDataSource.length;
     if(this.state.nbItemPerPage*this.state.page < this.state.globalDataSource.length){
-      while(i != this.state.nbItemPerPage*this.state.page){
+      while(i != this.state.nbItemPerPage*this.state.page ){
         //console.log(i)
         //console.log(this.state.globalDataSource[i])
         i++;
@@ -251,28 +298,23 @@ export default class Project extends Component {
       this.setState({
         page : this.state.page+1,
         displayDataSource : pack
-      })  
+      }) 
     }
   }
   _toggleFav = async({ item, index })=>{
-   /* console.log(item.title);
-    //this.update()
-    if(!item.isSaved){
-      await this.executeSql('insert into newscastSaved (done, title, image, url ) values (0, ?, ?, ?)', [item.title, item.image, item.url]).then(
-        await this.executeSql('update  newscasts set isSaved = ? where title = ?', [!item.isSaved, item.title]).then(this.update().then(Actions.refresh()))
-      )
-    }else{
-      await this.executeSql('delete from newscastSaved  where title = ?', [item.title]).then(
-        await this.executeSql('update  newscasts set isSaved = ? where title = ?', [!item.isSaved, item.title]).then(this.update().then(Actions.refresh()))
-      )
-    }*/
-    
-    //return true
     let display = this.state.displayDataSource;
     display[index].isSaved = !display[index].isSaved
     this.setState({
       displayDataSource : display
     })
+
+    display[index].isSaved ? 
+      await this.executeSql('insert into newscastSaved (done, title, image, url ) values (0, ?, ?, ?)', [display[index].title, display[index].image, display[index].url])
+      :
+      await this.executeSql('delete from newscastSaved  where title = ?', [display[index].title])
+    
+   console.log("{savedNews : [Title : "+item.title+", url : "+item.url+"]}");
+
   }
   _toggleReject = async({ item, index })=>{
     let display = this.state.displayDataSource;
@@ -280,9 +322,7 @@ export default class Project extends Component {
     this.setState({
       displayDataSource : display
     })
-
-    //await this.executeSql('update  newscasts set isRejected = ? where title = ?', [!item.isRejected, item.title]).then(this.update().then(Actions.refresh()))
-    //return true
+    console.log("{rejectNews : [Title : "+item.title+", url : "+item.url+"]}");
   }
   async getMoviesFromApi() {
     let response = null;
@@ -415,6 +455,7 @@ export default class Project extends Component {
       }
     )
     console.log(paquet)
+    this._updateSelectedItems()
   }
   FlatListItemSeparator = () => {
       return (
@@ -444,7 +485,6 @@ export default class Project extends Component {
           extraData={this.state}
           ItemSeparatorComponent = {this.FlatListItemSeparator}
           renderItem={({item, index, nativeEvent}) => this.renderItem({item, index, nativeEvent})}
-          //legacyImplementation={false}
           keyExtractor={(item, index) => index.toString()}
           //onRefresh={this._clear}
           //refreshing={this.state.refreshing && this.state.isLoading}

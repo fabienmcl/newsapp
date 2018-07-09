@@ -56,11 +56,10 @@ export default class Project extends Component {
       isLoading: true, 
       isOpen: false, 
       refreshing: true,
-      selectedItem: null,//this.props.navigation.state.params.screen === undefined ?  "recommandation" : this.props.navigation.state.params.screen != undefined, 
+      selectedItem: null,
       items: null,
       loading: true,
     }
-    //this.props.navigation.state.params.screen = "recommandation"
     YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
    
   }
@@ -71,10 +70,9 @@ export default class Project extends Component {
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf")
     });
     await I18n.initAsync();
-    console.log(this.props)
+    //console.log(this.props)
     this.setState({ loading: false });
-    //await this.update()
-    //NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
+    NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
   }
   componentWillUnmount() {
     NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
@@ -116,6 +114,9 @@ export default class Project extends Component {
   }
 
   contentSwitch(){
+    if(this.state.isConnected === false){
+      return <View style={{flex:1}} ><MiniOfflineSign /></View>
+    }
     switch(this.props.navigation.state.params.screen){
       case "Favorite" :
         return (
