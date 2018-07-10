@@ -177,13 +177,18 @@ export default class Project extends Component {
     
     
     await this._initSqlTable();
-    await this._downloadSqlTableSaved();
+    //await this._downloadSqlTableSaved();
     await this.webCall();
-    await this._checkSavedItems()
+    //await this._checkSavedItems()
     
+    await this._updateSelectedItems()
+    this.fetchEvent("[{Event : 'launch', timestamp :"+Date.now()+"}]")
     //this.getMoviesFromApi();
     //this.getNewsFromApi();
    // await this._generateDisplayItems()
+  }
+  fetchEvent =  async (something)=>{
+    console.log(something);
   }
   executeSql = async (sql, params = []) => {
     return new Promise((resolve, reject) => db.transaction(tx => {
@@ -257,7 +262,9 @@ export default class Project extends Component {
   }
   async webCall(){
     //return fetch('https://129.175.22.71:4243/url/bulk/100')
-    return fetch('https://reactnativecode.000webhostapp.com/FlowersList.php')
+    //return fetch('https://api.renewal-research.com/news/url/bulk/99')
+    return fetch('https://facebook.github.io/react-native/movies.json')
+    //return fetch('https://reactnativecode.000webhostapp.com/FlowersList.php')
       .then((response) => response.json())
       .then((responseJson) => {
         this.setState({
@@ -266,6 +273,7 @@ export default class Project extends Component {
           globalDataSource : demoDataNews
         }, function() {
              // In this block you can do something with new state.
+             console.log(this.state.dataSource)
             let pack = []
             let i = this.state.displayDataSource === null ? 0 : this.state.displayDataSource.length;
             while(i != this.state.nbItemPerPage*this.state.page){
@@ -300,6 +308,7 @@ export default class Project extends Component {
         displayDataSource : pack
       }) 
     }
+    this._updateSelectedItems()
   }
   _toggleFav = async({ item, index })=>{
     let display = this.state.displayDataSource;
@@ -313,7 +322,7 @@ export default class Project extends Component {
       :
       await this.executeSql('delete from newscastSaved  where title = ?', [display[index].title])
     
-   console.log("{savedNews : [Title : "+item.title+", url : "+item.url+"]}");
+    this.fetchEvent("[{Event : 'savedNews', timestamp :"+Date.now()+", title : "+display[index].title+", url : "+display[index].url+"}]")
 
   }
   _toggleReject = async({ item, index })=>{
@@ -454,8 +463,8 @@ export default class Project extends Component {
         percentage : percentage
       }
     )
+     
     console.log(paquet)
-    this._updateSelectedItems()
   }
   FlatListItemSeparator = () => {
       return (

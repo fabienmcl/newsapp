@@ -65,6 +65,9 @@ const patchPostMessageJsCode = `(${String(function() {
       }
     var start = new Date();
     var maxScrollReached = 0;
+    window.onload = function(){ 
+        window.postMessage(JSON.stringify('[onload] : [{application : "renewal", timeOnPage'+new Date()+' }]'))
+    }
     window.onscroll = function(){
         //alert("scroll "+this.scrollY)
         window.counter++;
@@ -73,8 +76,7 @@ const patchPostMessageJsCode = `(${String(function() {
             maxScrollReached
         }
         maxScrollReached = (this.scrollY > maxScrollReached) ? this.scrollY : maxScrollReached;
-        window.postMessage(JSON.stringify('['+window.counter+'] message_from_webview : scroll_detect x='+this.scrollX+' y='+this.scrollY+' time='+msToTime(elapsed)))
-        window.postMessage(JSON.stringify('['+window.counter+'] message_from_webview : maxScrollReached='+maxScrollReached))
+        window.postMessage(JSON.stringify('['+window.counter+'] : [{application : "renewal", timeOnPage :'+ msToTime(elapsed)+', positionX : '+this.scrollX+', positionY : '+this.scrollY+', maxScrollReachedY : '+maxScrollReached+', contentSizeX : '+document.documentElement.scrollWidth+',contentSizeY :'+ document.documentElement.scrollHeight+',}]'))
     } 
     patchedPostMessage.toString = function() {
         return String(Object.hasOwnProperty).replace('hasOwnProperty', 'postMessage')
