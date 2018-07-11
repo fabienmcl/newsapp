@@ -247,6 +247,7 @@ export default class Project extends Component {
       url:item.url,
       previous : "DiverseRecommendation"
     }
+    this.fetchEvent("pressOnItem", "itemClickedTitle : "+item.title+" itemClickedUrl : "+item.url)
     Actions.webview(pack)
   }
   GetItem (flower_name) {

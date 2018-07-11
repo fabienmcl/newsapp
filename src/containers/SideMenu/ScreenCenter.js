@@ -36,6 +36,11 @@ import Account from '../SideMenuScreens/Account';
 import Concept from '../SideMenuScreens/SimpleConcept';
 import Settings from '../SideMenuScreens/Settings';
 
+//import sensors
+import accelerometerSensor  from '../Sensors/AccelerometerSensor';
+import gyroscopeSensor from '../Sensors/GyroscopeSensor';
+import locationSensor from '../Sensors/LocationSensor';
+
 function MiniOfflineSign() {
   return (
     <View style={styles.offlineContainer}>
@@ -73,9 +78,15 @@ export default class Project extends Component {
     //console.log(this.props)
     this.setState({ loading: false });
     NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
+    accelerometerSensor._subscribe();
+    gyroscopeSensor._subscribe();
+    locationSensor._subscribe();
   }
   componentWillUnmount() {
     NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
+    accelerometerSensor._unsubscribe();
+    gyroscopeSensor._unsubscribe();
+    locationSensor._unsubscribe();
   }
 
   handleConnectivityChange = isConnected => {
@@ -104,12 +115,18 @@ export default class Project extends Component {
   updateMenuState(isOpen) {
     this.setState({ isOpen });
   }
-
+  fetchEvent =  async (something, someData)=>{
+    return someData === null ? 
+      console.log("[{Event : "+something+", timestamp :"+Date.now()+"}]")
+      :
+      console.log("[{Event : "+something+", timestamp :"+Date.now()+","+someData+"}]")
+  }
   onMenuItemSelected = item =>{
     this.setState({
       isOpen: false,
       selectedItem: item,
     });
+    this.fetchEvent("menuItemSelected", "goToScreen : "+item+", from : "+this.props.navigation.state.params.screen)
     this.props.navigation.state.params.screen = item;
   }
 

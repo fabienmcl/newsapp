@@ -207,6 +207,12 @@ export default class MessageWebView extends React.Component {
         }
         
       }
+    fetchEvent =  async (something, someData)=>{
+        return someData === null ? 
+            console.log("[{Event : "+something+", timestamp :"+Date.now()+"}]")
+            :
+            console.log("[{Event : "+something+", timestamp :"+Date.now()+","+someData+"}]")
+    }
     _handleScroll = (event) => {
         if(this.state.isInScroll == true){
             console.log("scroll detect position: "+event.nativeEvent.contentOffset.y+" isInScroll: "+this.state.isInScroll )
@@ -368,7 +374,8 @@ export default class MessageWebView extends React.Component {
           //}*/
       }
     
-      onMenuItemSelected = item =>{
+    onMenuItemSelected = item =>{
+        this.fetchEvent("menuItemSelected", "goToScreen : "+item+", fromTitle : "+this.props.navigation.state.params.title+" fromUrl : "+this.props.navigation.state.params.url)
         this.props.navigation.state.params.previous === item ? this.props.navigation.goBack() : Actions.screnCenter({screen : item})
         //Actions.screnCenter({screen : item})
         /*
@@ -418,7 +425,7 @@ export default class MessageWebView extends React.Component {
                 <StatusBar barStyle="light-content"/>
                 <Left style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
                     <Button transparent>
-                        <Icon name='ios-arrow-back-outline' style={{ color: '#fff'}}   onPress={()=>this.props.navigation.goBack()} />
+                        <Icon name='ios-arrow-back-outline' style={{ color: '#fff'}}   onPress={()=>this.fetchEvent("back", "fromTitle : "+this.props.navigation.state.params.title+" fromUrl : "+this.props.navigation.state.params.url)&&this.props.navigation.goBack()} />
                     </Button>
                     <Button transparent>
                         <Icon name='menu' style={{ color: '#fff'}}   onPress={()=>this._sideMenuPress()} />
