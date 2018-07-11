@@ -66,7 +66,8 @@ const patchPostMessageJsCode = `(${String(function() {
     var start = new Date();
     var maxScrollReached = 0;
     window.onload = function(){ 
-        window.postMessage(JSON.stringify('[onload] : [{application : "renewal", timeOnPage'+new Date()+' }]'))
+        window.postMessage(JSON.stringify({ appTag : 'renewal', event: 'onload', timestamp : Date.now(),  contentSizeX : document.documentElement.scrollWidth,contentSizeY : document.documentElement.scrollHeight}))
+        //window.postMessage("{ appTag : 'renewal', event: 'onload', timestamp : '"+Date.now()+"'}")
     }
     window.onscroll = function(){
         //alert("scroll "+this.scrollY)
@@ -76,7 +77,8 @@ const patchPostMessageJsCode = `(${String(function() {
             maxScrollReached
         }
         maxScrollReached = (this.scrollY > maxScrollReached) ? this.scrollY : maxScrollReached;
-        window.postMessage(JSON.stringify('['+window.counter+'] : [{application : "renewal", timeOnPage :'+ msToTime(elapsed)+', positionX : '+this.scrollX+', positionY : '+this.scrollY+', maxScrollReachedY : '+maxScrollReached+', contentSizeX : '+document.documentElement.scrollWidth+',contentSizeY :'+ document.documentElement.scrollHeight+',}]'))
+        window.postMessage(JSON.stringify({ appTag : 'renewal', event: 'scroll', timestamp : Date.now(),  positionX : this.scrollX, positionY : this.scrollY, maxScrollReachedY : maxScrollReached}))
+        //window.postMessage(JSON.stringify('['+window.counter+'] : [{application : renewal, timeOnPage :'+ msToTime(elapsed)+', positionX : '+this.scrollX+', positionY : '+this.scrollY+', maxScrollReachedY : '+maxScrollReached+',}]'))
     } 
     patchedPostMessage.toString = function() {
         return String(Object.hasOwnProperty).replace('hasOwnProperty', 'postMessage')
@@ -132,6 +134,30 @@ export default class MessageWebView extends React.Component {
             url: this.props.navigation.state.params.url,
             subject: `Je recommande l'article : ${this.props.navigation.state.params.title}` //  for email 
         }).then(result => console.log(result)).catch(errorMsg => console.log(errorMsg));
+    }
+    
+    onMessageFromWebView (something){
+        try{
+            let mess = JSON.parse(something)
+            //console.log(mess)
+            //console.log(mess.appTag)
+            if(mess.appTag === "renewal"){
+                switch (mess.event){
+                    case "onload" : 
+                        console.log({title : this.props.navigation.state.params.title, url : this.props.navigation.state.params.url, event : mess.event, timestamp : mess.timestamp, contentSizeX : mess.contentSizeX, contentSizeY : mess.contentSizeY}) 
+                        break;
+                    case "scroll" : 
+                        console.log({title : this.props.navigation.state.params.title, url : this.props.navigation.state.params.url, event : mess.event, timestamp : mess.timestamp, positionX : mess.positionX, positionY:mess.positionY, maxScrollReachedY : mess.maxScrollReached})
+                        break;
+                    default : 
+                        console.log("other event not catched");
+
+                }
+            }
+        }catch(e){
+
+        }
+        
     }
     /*
     static navigationOptions = ({ navigation }) => {
@@ -458,7 +484,12 @@ export default class MessageWebView extends React.Component {
                 source={{uri:this.props.navigation.state.params.url}}
                
                 ref={x => {this.WebView = x}}
-                onMessage={e => console.log(JSON.parse(JSON.stringify(e.nativeEvent.data)))}
+                onMessage={e => 
+                    //console.log(JSON.stringify(e.nativeEvent.data))
+                    this.onMessageFromWebView(e.nativeEvent.data)
+                    //this.onMessageFromWebView(JSON.parse(e.nativeEvent.data))
+                    //this.onMessageFromWebView(JSON.parse(JSON.stringify(e.nativeEvent.data)))
+                }
                 style={{height: SCREEN_HEIGHT_CUSTOM_REST-(SCREEN_HEIGHT_CUSTOM_HEADER+(SCREEN_HEIGHT_CUSTOM_HEADER)), width:'100%' }}
             />
             

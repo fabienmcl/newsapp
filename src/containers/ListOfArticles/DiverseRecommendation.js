@@ -182,13 +182,16 @@ export default class Project extends Component {
     //await this._checkSavedItems()
     
     await this._updateSelectedItems()
-    this.fetchEvent("[{Event : 'launch', timestamp :"+Date.now()+"}]")
+    this.fetchEvent("launch",null)
     //this.getMoviesFromApi();
     //this.getNewsFromApi();
    // await this._generateDisplayItems()
   }
-  fetchEvent =  async (something)=>{
-    console.log(something);
+  fetchEvent =  async (something, someData)=>{
+    return someData === null ? 
+      console.log("[{Event : "+something+", timestamp :"+Date.now()+"}]")
+      :
+      console.log("[{Event : "+something+", timestamp :"+Date.now()+","+someData+"}]")
   }
   executeSql = async (sql, params = []) => {
     return new Promise((resolve, reject) => db.transaction(tx => {
@@ -311,6 +314,7 @@ export default class Project extends Component {
     this._updateSelectedItems()
   }
   _toggleFav = async({ item, index })=>{
+
     let display = this.state.displayDataSource;
     display[index].isSaved = !display[index].isSaved
     this.setState({
@@ -321,8 +325,10 @@ export default class Project extends Component {
       await this.executeSql('insert into newscastSaved (done, title, image, url ) values (0, ?, ?, ?)', [display[index].title, display[index].image, display[index].url])
       :
       await this.executeSql('delete from newscastSaved  where title = ?', [display[index].title])
-    
-    this.fetchEvent("[{Event : 'savedNews', timestamp :"+Date.now()+", title : "+display[index].title+", url : "+display[index].url+"}]")
+    display[index].isSaved ? 
+      this.fetchEvent('savedNews'," title : "+display[index].title+", url : "+display[index].url)
+      :
+      this.fetchEvent('unsavedNews'," title : "+display[index].title+", url : "+display[index].url)
 
   }
   _toggleReject = async({ item, index })=>{
@@ -331,7 +337,10 @@ export default class Project extends Component {
     this.setState({
       displayDataSource : display
     })
-    console.log("{rejectNews : [Title : "+item.title+", url : "+item.url+"]}");
+    display[index].isRejected ? 
+      this.fetchEvent('rejectNews'," title : "+display[index].title+", url : "+display[index].url)
+      :
+      this.fetchEvent('unrejectNews'," title : "+display[index].title+", url : "+display[index].url)
   }
   async getMoviesFromApi() {
     let response = null;
@@ -420,9 +429,10 @@ export default class Project extends Component {
     console.log(a.toFixed(2))
     console.log((100-a.toFixed(2)).toFixed(2))
     let indexTop = (a+"").split('.')[0];
-    //let beforepercentage = 100-a.toFixed(2) >=10  
+    console.log((100-a.toFixed(2)).toFixed(2)+"%")
+    //let beforepercentage = 100-a.toFixed(2) >=10 
     let percentage = ((100-a.toFixed(2)).toFixed(2)+"").split('.')[1] +"%";
-    
+    console.log(percentage)
     percentage = percentage === "undefined%" ? "100%" : percentage;
     paquet.push(
       {
@@ -463,7 +473,7 @@ export default class Project extends Component {
         percentage : percentage
       }
     )
-     
+    this.fetchEvent('scroll'," displayItem : "+paquet)
     console.log(paquet)
   }
   FlatListItemSeparator = () => {
