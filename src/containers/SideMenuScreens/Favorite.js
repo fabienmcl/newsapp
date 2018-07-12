@@ -46,9 +46,14 @@ export default class Favoris extends Component {
     });
     this.update();
   }
-  
-
-  
+  _onPressOnItem (item) {
+    let pack = {
+      title: item.title,
+      url:item.url,
+      previous : "Favorite"
+    }
+    Actions.webview(pack)
+  }  
 
   
  
@@ -73,13 +78,13 @@ export default class Favoris extends Component {
           ItemSeparatorComponent = {this.FlatListItemSeparator}
           renderItem={({item, index}) => 
           <View style={{backgroundColor:'white'}}>
-            <TouchableOpacity onPress={()=> Actions.webviewcustom(item)} >
+            <TouchableOpacity onPress={()=> this._onPressOnItem(item)} >
               <Image source = {{ uri: item.image }} style={styles.imageView}/>
             </TouchableOpacity>
             <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start', width:'100%', }}>
             <TouchableOpacity
               key={item.id}
-              onPress={()=> Actions.webviewcustom(item)}
+              onPress={()=> this._onPressOnItem(item)}
               style={{
                 padding: 5,
                 backgroundColor: 'white',
