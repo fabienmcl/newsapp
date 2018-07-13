@@ -1,6 +1,7 @@
 import Expo, { SQLite, Font, AppLoading, Accelerometer, Gyroscope, Magnetometer, Location } from 'expo';
 import React, { Component } from 'react';
 import { 
+  AppState,
   StyleSheet, 
   Platform, 
   View, 
@@ -58,6 +59,7 @@ export default class Project extends Component {
     super(props);
     this.toggle = this.toggle.bind(this);
     this.state = { 
+      appState: AppState.currentState,
       isLoading: true, 
       isOpen: false, 
       refreshing: true,
@@ -78,17 +80,24 @@ export default class Project extends Component {
     //console.log(this.props)
     this.setState({ loading: false });
     NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
-    accelerometerSensor._subscribe();
-    gyroscopeSensor._subscribe();
-    locationSensor._subscribe();
+    AppState.addEventListener('change', this._handleAppStateChange);
+    //accelerometerSensor._subscribe();
+    //gyroscopeSensor._subscribe();
+    //locationSensor._subscribe();
   }
   componentWillUnmount() {
     NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
-    accelerometerSensor._unsubscribe();
-    gyroscopeSensor._unsubscribe();
-    locationSensor._unsubscribe();
+    AppState.removeEventListener('change', this._handleAppStateChange);
+    //accelerometerSensor._unsubscribe();
+    //gyroscopeSensor._unsubscribe();
+    //locationSensor._unsubscribe();
   }
-
+  _handleAppStateChange = (nextAppState) => {
+    if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
+      console.log('App has come to the foreground!')
+    }
+    this.setState({appState: nextAppState});
+  }
   handleConnectivityChange = isConnected => {
     if (isConnected) {
       this.setState({ isConnected });
@@ -240,7 +249,15 @@ export default class Project extends Component {
         </Root>
       );
     }
-
+    /*
+    if(this.state.appState==="background" ){
+      this.componentWillUnmount();
+      return (
+        <Root>
+          <AppLoading />
+        </Root>
+      );
+    }*/
     return (
       <SideMenu
         menu={menu}
