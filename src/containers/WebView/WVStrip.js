@@ -43,14 +43,6 @@ I18n.translations = {
   'fr': require('../../i18n/fr'),
 };
 
-/*this.setState({
-            networkInfo : this.props.navigation.state.params.networkInfo,
-            date : this.props.navigation.state.params.date,
-            time : this.props.navigation.state.params.time,
-            title : this.props.navigation.state.params.title,
-            url : this.props.navigation.state.params.url,
-
-        })*/
 // fix https://github.com/facebook/react-native/issues/10865
 // thx https://github.com/kyle-ilantzis !
 const patchPostMessageJsCode = `(${String(function() {
@@ -73,6 +65,10 @@ const patchPostMessageJsCode = `(${String(function() {
       }
     var start = new Date();
     var maxScrollReached = 0;
+    window.onload = function(){ 
+        window.postMessage(JSON.stringify({ appTag : 'renewal', event: 'onload', timestamp : Date.now(),  contentSizeX : document.documentElement.scrollWidth,contentSizeY : document.documentElement.scrollHeight}))
+        //window.postMessage("{ appTag : 'renewal', event: 'onload', timestamp : '"+Date.now()+"'}")
+    }
     window.onscroll = function(){
         //alert("scroll "+this.scrollY)
         window.counter++;
@@ -81,10 +77,8 @@ const patchPostMessageJsCode = `(${String(function() {
             maxScrollReached
         }
         maxScrollReached = (this.scrollY > maxScrollReached) ? this.scrollY : maxScrollReached;
-        //window.postMessage(JSON.stringify('['+window.counter+'] message_from_webview : scroll_detect x='+this.scrollX+' y='+this.scrollY+' time='+msToTime(elapsed)))
-        //window.postMessage(JSON.stringify('['+window.counter+'] message_from_webview : maxScrollReached='+maxScrollReached))
-        //window.postMessage(JSON.stringify('['+window.counter+'] message_from_webview : innerHeight='+window.innerHeight))
-        window.postMessage(JSON.stringify('['+window.counter+'] : [{application : "renewal", timeOnPage :'+ msToTime(elapsed)+', positionX : '+this.scrollX+', positionY : '+this.scrollY+', maxScrollReachedY : '+maxScrollReached+', contentSizeX : '+window.innerWidth+',contentSizeY :'+ window.innerHeight+',}]'))
+        window.postMessage(JSON.stringify({ appTag : 'renewal', event: 'scroll', timestamp : Date.now(),  positionX : this.scrollX, positionY : this.scrollY, maxScrollReachedY : maxScrollReached}))
+        //window.postMessage(JSON.stringify('['+window.counter+'] : [{application : renewal, timeOnPage :'+ msToTime(elapsed)+', positionX : '+this.scrollX+', positionY : '+this.scrollY+', maxScrollReachedY : '+maxScrollReached+',}]'))
     } 
     patchedPostMessage.toString = function() {
         return String(Object.hasOwnProperty).replace('hasOwnProperty', 'postMessage')
@@ -141,6 +135,30 @@ export default class MessageWebView extends React.Component {
             subject: `Je recommande l'article : ${this.props.navigation.state.params.title}` //  for email 
         }).then(result => console.log(result)).catch(errorMsg => console.log(errorMsg));
     }
+    
+    onMessageFromWebView (something){
+        try{
+            let mess = JSON.parse(something)
+            //console.log(mess)
+            //console.log(mess.appTag)
+            if(mess.appTag === "renewal"){
+                switch (mess.event){
+                    case "onload" : 
+                        console.log({title : this.props.navigation.state.params.title, url : this.props.navigation.state.params.url, event : mess.event, timestamp : mess.timestamp, contentSizeX : mess.contentSizeX, contentSizeY : mess.contentSizeY}) 
+                        break;
+                    case "scroll" : 
+                        console.log({title : this.props.navigation.state.params.title, url : this.props.navigation.state.params.url, event : mess.event, timestamp : mess.timestamp, positionX : mess.positionX, positionY:mess.positionY, maxScrollReachedY : mess.maxScrollReached})
+                        break;
+                    default : 
+                        console.log("other event not catched");
+
+                }
+            }
+        }catch(e){
+
+        }
+        
+    }
     /*
     static navigationOptions = ({ navigation }) => {
         const { params } = navigation.state;
@@ -189,6 +207,12 @@ export default class MessageWebView extends React.Component {
         }
         
       }
+    fetchEvent =  async (something, someData)=>{
+        return someData === null ? 
+            console.log("[{Event : "+something+", timestamp :"+Date.now()+"}]")
+            :
+            console.log("[{Event : "+something+", timestamp :"+Date.now()+","+someData+"}]")
+    }
     _handleScroll = (event) => {
         if(this.state.isInScroll == true){
             console.log("scroll detect position: "+event.nativeEvent.contentOffset.y+" isInScroll: "+this.state.isInScroll )
@@ -305,16 +329,41 @@ export default class MessageWebView extends React.Component {
     
       updateMenuState(isOpen) {
         this.setState({ isOpen });
+        console.log("menu update")
+        /*
         if(this.state.selectedItem != 'wv'){
+            console.log(this.state.selectedItem)
+            switch(this.state.selectedItem){
+                /*case 'favoris' :Actions.screnCenter('favoris')
+                    break;
+                case 'recommandation' : 
+                    this.props.navigation.state.params.previous === 'recommandation' ? this.props.navigation.goBack() : Actions.screnCenter()
+                    break;  
+            }/*
+            if( this.state.selectedItem === 'recommandation'){
+                console.log("a")
+                return this.props.navigation.state.params.previous === 'recommandation' ? this.props.navigation.goBack() : Actions.screnCenter()
+            }
+            return Actions.screnCenter('favoris')
+            */
+            /*else{
+                console.log("b")
+                Actions.screnCenter(this.state.selectedItem)
+            }*/
+        //}
+        /*
+        //if(this.state.selectedItem != 'wv'){
             console.log("chargement de la page "+this.state.selectedItem)
             switch(this.state.selectedItem){
-                case 'favoris' : Actions.favoris() 
+                case 'favoris' :Actions.screnCenter(this.state.selectedItem)
                     break;
                 case 'historique' : Actions.historique()
                     break;
                 case 'compte' : Actions.monCompte()
                     break;
-                case 'recommandation' : Actions.flatListViewArticle()
+                case 'recommandation' : 
+                    this.props.navigation.state.params.previous === 'recommandation' ? this.props.navigation.goBack() : Actions.screnCenter()
+                
                     break;
                 case 'concept' : Actions.concept()
                     break;    
@@ -322,21 +371,31 @@ export default class MessageWebView extends React.Component {
             this.setState({
               selectedItem: 'wv',
             });
-          }
+          //}*/
       }
     
-      onMenuItemSelected = item =>
+    onMenuItemSelected = item =>{
+        this.fetchEvent("menuItemSelected", "goToScreen : "+item+", fromTitle : "+this.props.navigation.state.params.title+" fromUrl : "+this.props.navigation.state.params.url)
+        this.props.navigation.state.params.previous === item ? this.props.navigation.goBack() : Actions.screnCenter({screen : item})
+        //Actions.screnCenter({screen : item})
+        /*
+
         this.setState({
           isOpen: false,
           selectedItem: item,
-      });
+        });
+        console.log(item)
+        if(item === 'recommandation'){
+            this.props.navigation.state.params.previous === 'recommandation' ? this.props.navigation.goBack() : Actions.screnCenter()
+        }else{
+            console.log("else")
+            Actions.screnCenter(item)
+        }*/
+    }
     render() {
         //console.log(this.props.navigation.state.params.data); 
         const { html, source, url, onMessage, ...props } = this.props
-        console.log(this.props)
-        this.setState({
-            
-        })
+        //console.log(this.props)
         //this.props.navigation.setParams({otherParam: this.props.navigation.state.params.title})
         
         const menu = <Menu onItemSelected={this.onMenuItemSelected} />;
@@ -366,7 +425,7 @@ export default class MessageWebView extends React.Component {
                 <StatusBar barStyle="light-content"/>
                 <Left style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
                     <Button transparent>
-                        <Icon name='ios-arrow-back-outline' style={{ color: '#fff'}}   onPress={()=>this.props.navigation.goBack()} />
+                        <Icon name='ios-arrow-back-outline' style={{ color: '#fff'}}   onPress={()=>this.fetchEvent("back", "fromTitle : "+this.props.navigation.state.params.title+" fromUrl : "+this.props.navigation.state.params.url)&&this.props.navigation.goBack()} />
                     </Button>
                     <Button transparent>
                         <Icon name='menu' style={{ color: '#fff'}}   onPress={()=>this._sideMenuPress()} />
@@ -391,7 +450,6 @@ export default class MessageWebView extends React.Component {
                
                 /*
                 //onTouchStart={ () => console.log( 'touch start' ) }
-
                 //onTouchMove={ () => console.log( 'touch move' ) }
                 
                 //onTouchEnd={ () => console.log( 'touch end' ) }
@@ -433,7 +491,12 @@ export default class MessageWebView extends React.Component {
                 source={{uri:this.props.navigation.state.params.url}}
                
                 ref={x => {this.WebView = x}}
-                onMessage={e => console.log(JSON.parse(JSON.stringify(e.nativeEvent.data)))}
+                onMessage={e => 
+                    //console.log(JSON.stringify(e.nativeEvent.data))
+                    this.onMessageFromWebView(e.nativeEvent.data)
+                    //this.onMessageFromWebView(JSON.parse(e.nativeEvent.data))
+                    //this.onMessageFromWebView(JSON.parse(JSON.stringify(e.nativeEvent.data)))
+                }
                 style={{height: SCREEN_HEIGHT_CUSTOM_REST-(SCREEN_HEIGHT_CUSTOM_HEADER+(SCREEN_HEIGHT_CUSTOM_HEADER)), width:'100%' }}
             />
             
@@ -550,12 +613,10 @@ const styles = StyleSheet.create({
     }
  })
 /*
-
 <TouchableOpacity activeOpacity={0.5} onPress={this.SampleFunction} style={styles.TouchableOpacityStyle} >
                 <Image source={{uri : 'https://reactnativecode.com/wp-content/uploads/2017/11/Floating_Button.png'}} 
                     style={styles.FloatingButtonStyle} />
             </TouchableOpacity>
-
             , 
     TouchableOpacityStyle:{
  

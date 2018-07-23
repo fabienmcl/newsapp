@@ -167,6 +167,7 @@ export default class Project extends Component {
       YellowBox.ignoreWarnings([
         'Warning: componentWillMount is deprecated',
         'Warning: componentWillReceiveProps is deprecated',
+        'TypeError: undefined is not an object'
       ]);
   }
   async componentDidMount(){
@@ -177,9 +178,7 @@ export default class Project extends Component {
     
     
     await this._initSqlTable();
-    //await this._downloadSqlTableSaved();
     await this.webCall();
-    //await this._checkSavedItems()
     
     await this._updateSelectedItems()
     this.fetchEvent("launch",null)
@@ -297,9 +296,10 @@ export default class Project extends Component {
         console.error(error);
       });
   }
-  _ItemLoadMore = () => {
+  /*_ItemLoadMore = () => {
     let pack = this.state.displayDataSource;
     let i = this.state.displayDataSource === null ? 0 : this.state.displayDataSource.length;
+    //if(this.state.displayDataSource[this.state.displayDataSource.length]!=this.state.globalDataSource[this.state.globalDataSource.length] || this.state.nbItemPerPage*this.state.page < this.state.globalDataSource.length){
     if(this.state.nbItemPerPage*this.state.page < this.state.globalDataSource.length){
       while(i != this.state.nbItemPerPage*this.state.page ){
         //console.log(i)
@@ -312,6 +312,20 @@ export default class Project extends Component {
         displayDataSource : pack
       }) 
     }
+    this._updateSelectedItems()
+  }*/
+  _ItemLoadMore = () => {
+    let pack = this.state.displayDataSource;
+    let i = this.state.displayDataSource === null ? 0 : this.state.displayDataSource.length;
+    let j = this.state.nbItemPerPage*this.state.page > this.state.globalDataSource.length ? this.state.globalDataSource.length : this.state.nbItemPerPage*this.state.page;
+    while(i!=j){
+      pack.push(this.state.globalDataSource[i])
+      i++;
+    }
+    this.setState({
+      page : this.state.page+1,
+      displayDataSource : pack
+    })
     this._updateSelectedItems()
   }
   _toggleFav = async({ item, index })=>{
@@ -403,6 +417,88 @@ export default class Project extends Component {
   getItemLayout= (data, index) => (
     {length: (screen.height / 17) + (screen.height / 5), offset: (screen.height / 17) + (screen.height / 5) * index, index}
   );
+  percentageCalculator= async(sizeOneNews, position)=>{
+    let currentItemIndex = 0;
+    if(sizeOneNews > position){
+      currentItemIndex = 0;
+    }else{
+      currentItemIndex = (position/sizeOneNews+"").split('.')[0];
+    }
+    currentItemIndex++;
+    console.log(currentItemIndex)
+    let positionEndItem = currentItemIndex*sizeOneNews
+    //console.log(sizeOneNews)
+    //console.log(position)
+    console.log("##################")
+    //console.log("positon end "+positionEndItem)
+    //console.log(positionEndItem-position)
+    let p = ((100*(positionEndItem-position))/sizeOneNews+"").split('.')[0]
+    //console.log("percent top :"+p)
+    currentItemIndex--;
+    return {
+        index : currentItemIndex,
+        title : this.state.displayDataSource[currentItemIndex].title, 
+        url : this.state.displayDataSource[currentItemIndex].url, 
+        percent : p+"%"
+      };
+  }
+  percentageCalculatorBottom= async(sizeOneNews, position, sizeGlobalDisplay)=>{
+    if(position < sizeGlobalDisplay) {
+      let currentItemIndex = (position/sizeOneNews+"").split('.')[0];
+    
+    let positionEndItem = currentItemIndex*sizeOneNews
+    //console.log(sizeOneNews)=
+    //console.log("##################")
+    //console.log(position)
+    //console.log("positon end "+positionEndItem)
+    //console.log(position-positionEndItem)
+    let p = ((100*(position-positionEndItem))/sizeOneNews+"").split('.')[0]
+    //console.log("percent bottom :"+p)
+    currentItemIndex++;
+    currentItemIndex--;
+    return {
+        index : currentItemIndex,
+        title : this.state.displayDataSource[currentItemIndex].title, 
+        url : this.state.displayDataSource[currentItemIndex].url, 
+        percent : p+"%"
+      };
+    }else{
+      return null
+    }
+    
+  }
+  _onScrollItem = async (nativeEvent) => {
+    const sizeGlobalDisplay = nativeEvent.contentSize.height;
+    const displayLenght = this.state.displayDataSource.length;
+    let tailleItem =  (screen.height / 17) + (screen.height / 5) + .5 > sizeGlobalDisplay/displayLenght ? (screen.height / 17) + (screen.height / 5) + .5 : sizeGlobalDisplay/displayLenght;
+    const tailleEcran = nativeEvent.layoutMeasurement.height;
+    console.log("taille ecran"+ tailleEcran)
+
+    let paquet = [ ];
+    const itemTop = await this.percentageCalculator(tailleItem, nativeEvent.contentOffset.y);
+    paquet.push(itemTop)
+    const itemBottom = await this.percentageCalculatorBottom(tailleItem, nativeEvent.contentOffset.y+tailleEcran,sizeGlobalDisplay);
+    let i = await itemTop.index;
+    let j = itemBottom === null ? this.state.displayDataSource.length : itemBottom.index;
+    console.log("j : "+j)
+    i++;
+    for(i; i<j;i++){
+      paquet.push(
+        {
+          index : i,
+          title : this.state.displayDataSource[i].title,
+          url : this.state.displayDataSource[i].url,
+          percentage : "100%"
+        }
+      )
+    }
+    paquet.push(itemBottom)
+    
+    console.log(paquet)
+    console.log(tailleEcran/tailleItem)
+    
+  }
+  /*
   _onScrollItem = async (nativeEvent) => {
     //console.log("nb de news "+this.state.newscastsState.length)
     const listeItem = this.state.displayDataSource;
@@ -476,7 +572,7 @@ export default class Project extends Component {
     )
     this.fetchEvent('scroll'," displayItem : "+paquet)
     console.log(paquet)
-  }
+  }*/
   FlatListItemSeparator = () => {
       return (
         <View

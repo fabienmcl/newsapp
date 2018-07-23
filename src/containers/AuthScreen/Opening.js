@@ -18,7 +18,10 @@ I18n.translations = {
 export default class Opening extends Component {
   constructor(props) {
     super(props)
-    this.state = {isLoading: true,}
+    this.state = {
+      isLoading: true,
+      token : null
+    }
   }
   async componentWillMount() {
     await Expo.Font.loadAsync({
@@ -94,8 +97,9 @@ export default class Opening extends Component {
       });
 
       if (result.type === 'success') {
-        //console.log(result)
+        console.log(result)
         this.updateWithGoogle(result)
+        this.fetchAuth(result.user.email, result.user.id);
         return result.accessToken;
       } else {
         return {cancelled: true};
@@ -119,12 +123,26 @@ export default class Opening extends Component {
     console.log(u)
     try {
       AsyncStorage.setItem('userInformationBasic', JSON.stringify(this.state.userInformationBasic));
+
+      Actions.screnCenter()
       
     } catch (error) {
       // Error saving data
       console.log("error")
     }
-    Actions.screnCenter()
+
+  }
+  fetchAuth(login, password){
+    //console.log(""+login+""+password)
+    return fetch('https://api.renewal-research.com/auth/'+login+'/'+password)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log(responseJson)
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    //Actions.screnCenter()
   }
   loginG = async () => {
     const result = await this.signInWithGoogleAsync()

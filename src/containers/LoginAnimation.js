@@ -15,6 +15,7 @@ import {
     Slider,
     ScrollView,
     WebView,
+    AsyncStorage
 } from "react-native";
 import { View } from 'react-native-animatable';
 import HomeScreen from './HomeScreen/HomeScreen'
@@ -46,11 +47,41 @@ export default class WebV extends Component {
   }
   _simulateLogin = (username, password) => {
     this.setState({ isLoading: true })
+    fetch('https://api.renewal-research.com/auth/'+username+'/'+password)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log(responseJson)
+        try {
+          AsyncStorage.setItem('token', JSON.stringify(responseJson));
+          
+        } catch (error) {
+          // Error saving data
+          console.log("Error saving data")
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
     setTimeout(() => this.setState({ isLoggedIn: true, isLoading: false }), 1000)
   }
 
   _simulateSignup = (username, password, fullName) => {
     this.setState({ isLoading: true })
+    fetch('https://api.renewal-research.com/'+username+'/'+password)
+      .then((response) => response.json())
+      .then((responseJson) => {
+        console.log(responseJson)
+        try {
+          AsyncStorage.setItem('token', JSON.stringify(responseJson));
+          
+        } catch (error) {
+          // Error saving data
+          console.log("Error saving data")
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
     setTimeout(() => this.setState({ isLoggedIn: true, isLoading: false }), 1000)
   }
   render() {
