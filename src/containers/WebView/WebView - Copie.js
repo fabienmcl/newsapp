@@ -42,6 +42,8 @@ I18n.translations = {
   'en': require("../../i18n/en"),
   'fr': require('../../i18n/fr'),
 };
+import javasciptInjectionWithPatchPostMessage from './injectionJS';
+import WebViewFunction from './WebviewFunction';
 
 // fix https://github.com/facebook/react-native/issues/10865
 // thx https://github.com/kyle-ilantzis !
@@ -483,11 +485,10 @@ export default class MessageWebView extends React.Component {
                 //scrollEventThrottle={ 100 }*/
                
             >  
-            
             <WebView
                 {...props}
                 javaScriptEnabled
-                injectedJavaScript={patchPostMessageJsCode}
+                injectedJavaScript={javasciptInjectionWithPatchPostMessage}
                 source={{uri:this.props.navigation.state.params.url}}
                
                 ref={x => {this.WebView = x}}
@@ -498,7 +499,7 @@ export default class MessageWebView extends React.Component {
                     //this.onMessageFromWebView(JSON.parse(JSON.stringify(e.nativeEvent.data)))
                 }
                 style={{height: SCREEN_HEIGHT_CUSTOM_REST-(SCREEN_HEIGHT_CUSTOM_HEADER+(SCREEN_HEIGHT_CUSTOM_HEADER)), width:'100%' }}
-            />
+            />*
             
             <View  style={styles.MainContainer} > 
                 <ScrollView 

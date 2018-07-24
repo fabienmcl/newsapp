@@ -15,7 +15,7 @@ import Account from './containers/SideMenuScreens/Account';
 import SConcept from './containers/SideMenuScreens/SimpleConcept';
 import Settings from './containers/SideMenuScreens/Settings';
 {/*webview*/}
-import Webview from './containers/WebView/WVContainer';
+import Webview from './containers/WebView/WebView';
 {/*prototypes*/}
 import ListView from './prototypes/ListView/ListView';
 import Details from './prototypes/ListView/Movie';

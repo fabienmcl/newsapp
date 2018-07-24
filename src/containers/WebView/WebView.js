@@ -42,50 +42,10 @@ I18n.translations = {
   'en': require("../../i18n/en"),
   'fr': require('../../i18n/fr'),
 };
+import javasciptInjectionWithPatchPostMessage from './injectionJS';
+import WebViewFunction from './WebviewFunction';
 
-// fix https://github.com/facebook/react-native/issues/10865
-// thx https://github.com/kyle-ilantzis !
-const patchPostMessageJsCode = `(${String(function() {
-    var originalPostMessage = window.postMessage
-    var patchedPostMessage = function(message, targetOrigin, transfer) {
-        originalPostMessage(message, targetOrigin, transfer)
-    }
-    window.counter = 0;
-    function msToTime(duration) {
-        var milliseconds = parseInt((duration%1000)/100)
-            , seconds = parseInt((duration/1000)%60)
-            , minutes = parseInt((duration/(1000*60))%60)
-            , hours = parseInt((duration/(1000*60*60))%24);
-    
-        hours = (hours < 10) ? "0" + hours : hours;
-        minutes = (minutes < 10) ? "0" + minutes : minutes;
-        seconds = (seconds < 10) ? "0" + seconds : seconds;
-    
-        return hours + ":" + minutes + ":" + seconds + "." + milliseconds;
-      }
-    var start = new Date();
-    var maxScrollReached = 0;
-    window.onload = function(){ 
-        window.postMessage(JSON.stringify({ appTag : 'renewal', event: 'onload', timestamp : Date.now(),  contentSizeX : document.documentElement.scrollWidth,contentSizeY : document.documentElement.scrollHeight}))
-        //window.postMessage("{ appTag : 'renewal', event: 'onload', timestamp : '"+Date.now()+"'}")
-    }
-    window.onscroll = function(){
-        //alert("scroll "+this.scrollY)
-        window.counter++;
-        var elapsed = new Date() - start;
-        if(this.scrollY > maxScrollReached){
-            maxScrollReached
-        }
-        maxScrollReached = (this.scrollY > maxScrollReached) ? this.scrollY : maxScrollReached;
-        window.postMessage(JSON.stringify({ appTag : 'renewal', event: 'scroll', timestamp : Date.now(),  positionX : this.scrollX, positionY : this.scrollY, maxScrollReachedY : maxScrollReached}))
-        //window.postMessage(JSON.stringify('['+window.counter+'] : [{application : renewal, timeOnPage :'+ msToTime(elapsed)+', positionX : '+this.scrollX+', positionY : '+this.scrollY+', maxScrollReachedY : '+maxScrollReached+',}]'))
-    } 
-    patchedPostMessage.toString = function() {
-        return String(Object.hasOwnProperty).replace('hasOwnProperty', 'postMessage')
-    }
-    window.postMessage = patchedPostMessage
-})})();` 
- 
+
 export default class MessageWebView extends React.Component {
     constructor(props) {
         super(props)
@@ -109,7 +69,12 @@ export default class MessageWebView extends React.Component {
     async componentDidMount(){
         await I18n.initAsync();
         this.setState({isLoading:false})
-      }
+    }
+    //Strip part 
+
+    /*
+    Animated
+    */
     spring () {
         this.springValue.setValue(0.3)
         setTimeout(() => {
@@ -122,64 +87,9 @@ export default class MessageWebView extends React.Component {
                 }
               ).start()
         }
-        
-        
         , 300)
-        
-    }
-    ShareMessage=()=>{
-        Share.share({
-            title: this.props.navigation.state.params.title,
-            message: `Bonjour, \n je pense que l'article : ${this.props.navigation.state.params.title} pourrait t'interresser. \n `,
-            url: this.props.navigation.state.params.url,
-            subject: `Je recommande l'article : ${this.props.navigation.state.params.title}` //  for email 
-        }).then(result => console.log(result)).catch(errorMsg => console.log(errorMsg));
     }
     
-    onMessageFromWebView (something){
-        try{
-            let mess = JSON.parse(something)
-            //console.log(mess)
-            //console.log(mess.appTag)
-            if(mess.appTag === "renewal"){
-                switch (mess.event){
-                    case "onload" : 
-                        console.log({title : this.props.navigation.state.params.title, url : this.props.navigation.state.params.url, event : mess.event, timestamp : mess.timestamp, contentSizeX : mess.contentSizeX, contentSizeY : mess.contentSizeY}) 
-                        break;
-                    case "scroll" : 
-                        console.log({title : this.props.navigation.state.params.title, url : this.props.navigation.state.params.url, event : mess.event, timestamp : mess.timestamp, positionX : mess.positionX, positionY:mess.positionY, maxScrollReachedY : mess.maxScrollReached})
-                        break;
-                    default : 
-                        console.log("other event not catched");
-
-                }
-            }
-        }catch(e){
-
-        }
-        
-    }
-    /*
-    static navigationOptions = ({ navigation }) => {
-        const { params } = navigation.state;
-        
-        return {
-          title: params ? params.otherParam : 'Details Screen',
-          headerStyle:{height:SCREEN_HEIGHT_CUSTOM_HEADER},
-          headerRight: (
-            <TouchableOpacity onPress={() => Actions.listview()}>
-                <Icon name="md-close" style={{ color: 'black' }} />
-            </TouchableOpacity>
-          ),
-        }
-    }; */
-    postMessage(action) {
-        try{
-            this.WebView.postMessage(JSON.stringify(action))
-        }catch(error){
-            console.error(error);
-        }
-    }
     _onPress= (event) => {
         //console.log(event.nativeEvent)
         this.setState(previousState => {
@@ -205,13 +115,6 @@ export default class MessageWebView extends React.Component {
             //setTimeout(() => {this.setState({isOpen: false})}, 500)
             //setTimeout(() => {this.setState({icon: "md-arrow-dropup", isOpen: false})}, 1000)
         }
-        
-      }
-    fetchEvent =  async (something, someData)=>{
-        return someData === null ? 
-            console.log("[{Event : "+something+", timestamp :"+Date.now()+"}]")
-            :
-            console.log("[{Event : "+something+", timestamp :"+Date.now()+","+someData+"}]")
     }
     _handleScroll = (event) => {
         if(this.state.isInScroll == true){
@@ -317,80 +220,193 @@ export default class MessageWebView extends React.Component {
     _onMomentumScrollEnd = (event) => {
         console.log("jn")
     }
-      _sideMenuPress(){
+    ShareMessage=()=>{
+        Share.share({
+            title: this.props.navigation.state.params.title,
+            message: `Bonjour, \n je pense que l'article : ${this.props.navigation.state.params.title} pourrait t'interresser. \n `,
+            url: this.props.navigation.state.params.url,
+            subject: `Je recommande l'article : ${this.props.navigation.state.params.title}` //  for email 
+        }).then(result => console.log(result)).catch(errorMsg => console.log(errorMsg));
+    }
+
+    //WebView content part
+
+
+    /*
+    WebView content fixed message 
+    */
+    onMessageFromWebView (something){
+        try{
+            let mess = JSON.parse(something)
+            if(mess.appTag === "renewal"){
+                switch (mess.event){
+                    case "onload" : 
+                        console.log({title : this.props.navigation.state.params.title, url : this.props.navigation.state.params.url, event : mess.event, timestamp : mess.timestamp, contentSizeX : mess.contentSizeX, contentSizeY : mess.contentSizeY}) 
+                        break;
+                    case "scroll" : 
+                        console.log({title : this.props.navigation.state.params.title, url : this.props.navigation.state.params.url, event : mess.event, timestamp : mess.timestamp, positionX : mess.positionX, positionY:mess.positionY, maxScrollReachedY : mess.maxScrollReached})
+                        break;
+                    default : 
+                        console.log("other event not catched");
+
+                }
+            }
+        }catch(e){
+
+        } 
+    }
+    postMessage(action) {
+        try{
+            this.WebView.postMessage(JSON.stringify(action))
+        }catch(error){
+            console.error(error);
+        }
+    }
+
+    // side menu part 
+    _sideMenuPress(){
         console.log("le menu le menu le menu");
         this.toggle();
-      }
-      toggle() {
+    }
+    toggle() {
         this.setState({
           isOpen: !this.state.isOpen,
         });
-      }
+    }
     
-      updateMenuState(isOpen) {
+    updateMenuState(isOpen) {
         this.setState({ isOpen });
         console.log("menu update")
-        /*
-        if(this.state.selectedItem != 'wv'){
-            console.log(this.state.selectedItem)
-            switch(this.state.selectedItem){
-                /*case 'favoris' :Actions.screnCenter('favoris')
-                    break;
-                case 'recommandation' : 
-                    this.props.navigation.state.params.previous === 'recommandation' ? this.props.navigation.goBack() : Actions.screnCenter()
-                    break;  
-            }/*
-            if( this.state.selectedItem === 'recommandation'){
-                console.log("a")
-                return this.props.navigation.state.params.previous === 'recommandation' ? this.props.navigation.goBack() : Actions.screnCenter()
-            }
-            return Actions.screnCenter('favoris')
-            */
-            /*else{
-                console.log("b")
-                Actions.screnCenter(this.state.selectedItem)
-            }*/
-        //}
-        /*
-        //if(this.state.selectedItem != 'wv'){
-            console.log("chargement de la page "+this.state.selectedItem)
-            switch(this.state.selectedItem){
-                case 'favoris' :Actions.screnCenter(this.state.selectedItem)
-                    break;
-                case 'historique' : Actions.historique()
-                    break;
-                case 'compte' : Actions.monCompte()
-                    break;
-                case 'recommandation' : 
-                    this.props.navigation.state.params.previous === 'recommandation' ? this.props.navigation.goBack() : Actions.screnCenter()
-                
-                    break;
-                case 'concept' : Actions.concept()
-                    break;    
-            }
-            this.setState({
-              selectedItem: 'wv',
-            });
-          //}*/
-      }
+    }
     
     onMenuItemSelected = item =>{
         this.fetchEvent("menuItemSelected", "goToScreen : "+item+", fromTitle : "+this.props.navigation.state.params.title+" fromUrl : "+this.props.navigation.state.params.url)
         this.props.navigation.state.params.previous === item ? this.props.navigation.goBack() : Actions.screnCenter({screen : item})
-        //Actions.screnCenter({screen : item})
-        /*
+    }
 
-        this.setState({
-          isOpen: false,
-          selectedItem: item,
-        });
-        console.log(item)
-        if(item === 'recommandation'){
-            this.props.navigation.state.params.previous === 'recommandation' ? this.props.navigation.goBack() : Actions.screnCenter()
-        }else{
-            console.log("else")
-            Actions.screnCenter(item)
-        }*/
+    //fetch fucntion
+    
+    fetchEvent =  async (something, someData)=>{
+        return someData === null ? 
+            console.log("[{Event : "+something+", timestamp :"+Date.now()+"}]")
+            :
+            console.log("[{Event : "+something+", timestamp :"+Date.now()+","+someData+"}]")
+    }
+   
+    renderHeader(){
+        return (
+            <Header style={{backgroundColor: '#212121'}}>
+                <StatusBar barStyle="light-content"/>
+                <Left style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
+                    <Button transparent>
+                        <Icon name='ios-arrow-back-outline' style={{ color: '#fff'}}   onPress={()=>this.fetchEvent("back", "fromTitle : "+this.props.navigation.state.params.title+" fromUrl : "+this.props.navigation.state.params.url)&&this.props.navigation.goBack()} />
+                    </Button>
+                    <Button transparent>
+                        <Icon name='menu' style={{ color: '#fff'}}   onPress={()=>this._sideMenuPress()} />
+                    </Button>
+                </Left>
+                <Body>
+                    <Title style={{color:'white'}}>{this.props.navigation.state.params.title}</Title>
+                </Body>
+                <Right>
+                </Right>
+            </Header>
+        );
+    }
+    renderContent(){
+        return(
+            <ScrollView  style={{flex:1}} scrollEnabled={this.state.scrollIsEnabled} ref={x => {this.scrollView = x}} keyboardShouldPersistTaps="always"
+                onScroll={this._handleScroll} 
+                scrollEventThrottle={100} //min 1 et max 16 (+de scroll detect)
+                onScrollBeginDrag={this._handleScrollBegin.bind(this)}
+                onScrollEndDrag={this._handleScrollEnd.bind(this)}
+            >  
+                <WebView
+                    //{...props}
+                    javaScriptEnabled
+                    ref={x => {this.WebView = x}}
+                    injectedJavaScript={WebViewFunction._JavaScriptInjection()}
+                    source={{uri:this.props.navigation.state.params.url}}
+                    onMessage={e => 
+                        //console.log(JSON.stringify(e.nativeEvent.data))
+                        this.onMessageFromWebView(e.nativeEvent.data)
+                        //this.onMessageFromWebView(JSON.parse(e.nativeEvent.data))
+                        //this.onMessageFromWebView(JSON.parse(JSON.stringify(e.nativeEvent.data)))
+                    }
+                    style={{height: SCREEN_HEIGHT_CUSTOM_REST-(SCREEN_HEIGHT_CUSTOM_HEADER+(SCREEN_HEIGHT_CUSTOM_HEADER)), width:'100%' }}
+                />
+                {this.renderStrip()}
+           </ScrollView>
+        );
+    }
+    renderStrip(){
+        return(
+            <View  style={styles.MainContainer} > 
+                <ScrollView 
+                    onTouchStart={()=>this.touchStartIcon() }
+                    onScroll={this._handleScroll} 
+                    scrollEventThrottle={100} //min 1 et max 16 (+de scroll detect)
+                    onScrollBeginDrag={this._handleScrollBegin.bind(this)}
+                    onScrollEndDrag={this._handleScrollEnd.bind(this)}
+                >
+                    <Animatable.View animation="bounce" easing="ease-in-out" iterationCount="infinite" >
+                        <TouchableOpacity onPress={this._onPress} style={{ paddingLeft:SCREEN_WIDTH_CUSTOM_PADDING, width:'100%'}} onPress={this._onPress} >
+                            <Icon name={this.state.icon} style={{ color: 'black'}}/> 
+                        </TouchableOpacity>
+                    </Animatable.View>
+                </ScrollView>
+                    <View style={{ alignItems: 'center', justifyContent: 'flex-end' }}>
+                        <Text style={{ fontWeight: 'bold', fontSize: 22 }}>{I18n.t('wv_opinion')} </Text>
+                    </View>
+                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', flex:1 }}>
+                        <TouchableOpacity> 
+                            <Icon name="md-heart-outline" style={{ color: 'black' }} />
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <Slider
+                                style={{ width: 150 }}
+                                step={1}
+                                minimumValue={0}
+                                maximumValue={100}
+                                value={50}
+                            />
+                        </TouchableOpacity>  
+                        <TouchableOpacity> 
+                            <Icon name="md-heart" style={{ color: 'black' }} />
+                        </TouchableOpacity>
+                    </View>
+                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', flex:1 }} >
+                        <TouchableOpacity> 
+                            <Icon name="md-sad" style={{ color: 'black' }} />
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <Slider
+                                style={{ width: 150 }}
+                                step={1}
+                                minimumValue={0}
+                                maximumValue={100}
+                                value={50}
+                            />
+                        </TouchableOpacity>  
+                        <TouchableOpacity  > 
+                            <Icon name="md-happy" style={{ color: 'black' }} />
+                        </TouchableOpacity>
+                    </View>
+                <View style={{ alignItems: 'center', justifyContent: 'flex-end'}}>
+                    <Button iconLeft block onPress={ this.ShareMessage }>
+                        <Icon name='share' />
+                        <Text>{I18n.t('wv_share')}</Text>
+                    </Button>
+                </View>
+                <View style={{ alignItems: 'center', justifyContent: 'flex-end'}}>
+                    <Text style={{ fontWeight: 'bold', fontSize: 22 }}>{I18n.t('wv_recommendations')}</Text>
+                </View>
+                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', height: SCREEN_HEIGHT/1.70 }}>
+                    <FlatListViewArticle style={{flex: 1}}  ref={x => {this.child = x}}>
+                    </FlatListViewArticle>
+                </View>
+            </View>
+        );
     }
     render() {
         //console.log(this.props.navigation.state.params.data); 
@@ -407,194 +423,10 @@ export default class MessageWebView extends React.Component {
                 menuPosition={'left'}
                 onChange={isOpen => this.updateMenuState(isOpen)}
             >
-            <View  style={{justifyContent: 'center', flex:1, backgroundColor : "#212121", paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight}} >
-            {/*
-            <Header
-                leftComponent={
-                    <Header
-                        leftComponent={{ icon: 'chevron-left', color: '#fff', onPress:()=>this.props.navigation.goBack() }}
-                        rightComponent={{ icon: 'menu', color: '#fff', onPress:()=>this._sideMenuPress() }}
-                        outerContainerStyles={{ backgroundColor: '#212121', padding : 0, margin : 0, borderBottomColor:'black', borderBottomWidth:0}}
-                    />
-                }
-                centerComponent={{ text: this.props.navigation.state.params.title , style: { color: '#fff' } }}
-                outerContainerStyles={{ backgroundColor: '#212121', borderBottomWidth:0 }}
-            />
-            */}
-            <Header style={{backgroundColor: '#212121'}}>
-                <StatusBar barStyle="light-content"/>
-                <Left style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
-                    <Button transparent>
-                        <Icon name='ios-arrow-back-outline' style={{ color: '#fff'}}   onPress={()=>this.fetchEvent("back", "fromTitle : "+this.props.navigation.state.params.title+" fromUrl : "+this.props.navigation.state.params.url)&&this.props.navigation.goBack()} />
-                    </Button>
-                    <Button transparent>
-                        <Icon name='menu' style={{ color: '#fff'}}   onPress={()=>this._sideMenuPress()} />
-                    </Button>
-                </Left>
-                <Body>
-                    <Title style={{color:'white'}}>{this.props.navigation.state.params.title}</Title>
-                </Body>
-                <Right>
-                    {/*<Button transparent>
-                        <Icon name='menu' style={{ color: '#fff'}}   onPress={()=>this._sideMenuPress()} />
-                    </Button>
-                    */}
-                </Right>
-            </Header>
-            <ScrollView  style={{flex:1}} scrollEnabled={this.state.scrollIsEnabled} ref={x => {this.scrollView = x}} keyboardShouldPersistTaps="always"
-                onScroll={this._handleScroll} 
-                scrollEventThrottle={100} //min 1 et max 16 (+de scroll detect)
-                onScrollBeginDrag={this._handleScrollBegin.bind(this)}
-                onScrollEndDrag={this._handleScrollEnd.bind(this)}
-                
-               
-                /*
-                //onTouchStart={ () => console.log( 'touch start' ) }
-                //onTouchMove={ () => console.log( 'touch move' ) }
-                
-                //onTouchEnd={ () => console.log( 'touch end' ) }
-                
-                //onScrollBeginDrag={ () => console.log( 'scroll begin' ) }
-                
-                //onScrollEndDrag={ () => console.log( 'scroll end' ) }
-                
-                //onMomentumScrollBegin={ () => console.log( 'momentum begin' ) }
-                
-                onMomentumScrollEnd={ () => console.log( 'momentum end' ) }
-                
-                onStartShouldSetResponder={ () => console.log( 'on start' ) }
-                
-                onStartShouldSetResponderCapture={ () => console.log( 'on start capture' ) }
-                
-                onScrollShouldSetResponder={ () => console.log( 'on scroll' ) }
-                
-                onResponderGrant={ () => console.log( 'granted' ) }
-                
-                onResponderTerminationRequest={ () => console.log( 'term req' ) }
-                
-                onResponderTerminate={ () => console.log( 'term' ) }
-                
-                onResponderRelease={ () => console.log( 'release' ) }
-                
-                onResponderReject={ () => console.log( 'reject' ) }
-                
-                onScrollAnimationEnd={ () => console.log( 'anim end' ) }
-                
-                //scrollEventThrottle={ 100 }*/
-               
-            >  
+                <View  style={{justifyContent: 'center', flex:1, backgroundColor : "#212121", paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight}} >
+                    {this.renderHeader()}
+                    {this.renderContent()}
             
-            <WebView
-                {...props}
-                javaScriptEnabled
-                injectedJavaScript={patchPostMessageJsCode}
-                source={{uri:this.props.navigation.state.params.url}}
-               
-                ref={x => {this.WebView = x}}
-                onMessage={e => 
-                    //console.log(JSON.stringify(e.nativeEvent.data))
-                    this.onMessageFromWebView(e.nativeEvent.data)
-                    //this.onMessageFromWebView(JSON.parse(e.nativeEvent.data))
-                    //this.onMessageFromWebView(JSON.parse(JSON.stringify(e.nativeEvent.data)))
-                }
-                style={{height: SCREEN_HEIGHT_CUSTOM_REST-(SCREEN_HEIGHT_CUSTOM_HEADER+(SCREEN_HEIGHT_CUSTOM_HEADER)), width:'100%' }}
-            />
-            
-            <View  style={styles.MainContainer} > 
-                <ScrollView 
-                
-                onTouchStart={()=>this.touchStartIcon() }
-
-                //onTouchMove={ () => console.log( '################## touch move' ) }
-                
-                //onTouchEnd={ () => console.log( '################# touch end' ) }
-                onScroll={this._handleScroll} 
-                scrollEventThrottle={100} //min 1 et max 16 (+de scroll detect)
-                onScrollBeginDrag={this._handleScrollBegin.bind(this)}
-                onScrollEndDrag={this._handleScrollEnd.bind(this)}
-                >
-                <Animatable.View animation="bounce" easing="ease-in-out" iterationCount="infinite" >
-                <TouchableOpacity onPress={this._onPress} style={{ paddingLeft:SCREEN_WIDTH_CUSTOM_PADDING, width:'100%'}} onPress={this._onPress} >
-                    
-                    <Icon name={this.state.icon} style={{ color: 'black'}}/> 
-    
-                </TouchableOpacity>
-                </Animatable.View>
-                </ScrollView>
-                <View style={{ alignItems: 'center', justifyContent: 'flex-end' }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 22 }}>{I18n.t('wv_opinion')} </Text>
-                </View>
-
-                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', flex:1 }}>
-                        <TouchableOpacity> 
-                            <Icon name="md-heart-outline" style={{ color: 'black' }} />
-                        </TouchableOpacity>
-                        <TouchableOpacity>
-                            <Slider
-                                style={{ width: 150 }}
-                                step={1}
-                                minimumValue={0}
-                                maximumValue={100}
-                                value={50}
-                            />
-                        </TouchableOpacity>  
-                        <TouchableOpacity> 
-                            <Icon name="md-heart" style={{ color: 'black' }} />
-                        </TouchableOpacity>
-                </View>
-                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', flex:1 }} >
-                        <TouchableOpacity> 
-                            <Icon name="md-sad" style={{ color: 'black' }} />
-                        </TouchableOpacity>
-                        <TouchableOpacity>
-                            <Slider
-                                style={{ width: 150 }}
-                                step={1}
-                                minimumValue={0}
-                                maximumValue={100}
-                                value={50}
-                            />
-                        </TouchableOpacity>  
-                        <TouchableOpacity  > 
-                            <Icon name="md-happy" style={{ color: 'black' }} />
-                        </TouchableOpacity>
-                </View>
-                <View style={{ alignItems: 'center', justifyContent: 'flex-end'}}>
-                    <Button iconLeft block onPress={ this.ShareMessage }>
-                        <Icon name='share' />
-                        <Text>{I18n.t('wv_share')}</Text>
-                    </Button>
-                </View>
-                {/*
-                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', flex:1 }}>
-                        <TouchableOpacity onPress={ this.ShareMessage }>
-                            <Image style={{ width: 60, height: 60 }}
-                                source={require('../../images/facebook.png')}/>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={()=>console.log("twitter")}>
-                            <Image style={{ width: 60, height: 60 }}
-                                source={require('../../images/twitter.png')}/>
-                            </TouchableOpacity>  
-                        <TouchableOpacity onPress={()=>console.log("linkedin")}>
-                            <Image style={{ width: 60, height: 60 }}
-                                source={require('../../images/linkedin.png')}/>
-                            </TouchableOpacity>  
-                        <TouchableOpacity onPress={()=>console.log("whatsapp")}>
-                            <Image style={{ width: 60, height: 60 }}
-                                source={require('../../images/whatsapp.png')}/>
-                        </TouchableOpacity> 
-                </View>
-                */}
-                <View style={{ alignItems: 'center', justifyContent: 'flex-end'}}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 22 }}>{I18n.t('wv_recommendations')}</Text>
-                </View>
-                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', height: SCREEN_HEIGHT/1.70 }}>
-                    <FlatListViewArticle style={{flex: 1}}  ref={x => {this.child = x}}>
-                    </FlatListViewArticle>
-                </View>
-            </View>
-      
-            </ScrollView>
             </View>
             </SideMenu>
         )

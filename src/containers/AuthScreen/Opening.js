@@ -61,6 +61,8 @@ export default class Opening extends Component {
         //this.setState({ userInfo });
         //console.log(userInfo)
         this.updateWithFacebook(userInfo)
+        await this._fetchAuth(result.user.email, result.user.id,"fb");
+      
         Actions.screnCenter()
     }
   }
@@ -99,7 +101,7 @@ export default class Opening extends Component {
       if (result.type === 'success') {
         console.log(result)
         this.updateWithGoogle(result)
-        this.fetchAuth(result.user.email, result.user.id);
+        
         return result.accessToken;
       } else {
         return {cancelled: true};
@@ -108,7 +110,7 @@ export default class Opening extends Component {
       return {error: true};
     }
   }
-  updateWithGoogle(result){
+  async updateWithGoogle(result){
     console.log(result)
     const u = this.state.userInformationBasic;
     u.firstName = result.user.givenName;
@@ -123,7 +125,7 @@ export default class Opening extends Component {
     console.log(u)
     try {
       AsyncStorage.setItem('userInformationBasic', JSON.stringify(this.state.userInformationBasic));
-
+      await this._fetchAuth(result.user.email, result.user.id,"google");
       Actions.screnCenter()
       
     } catch (error) {
@@ -132,9 +134,59 @@ export default class Opening extends Component {
     }
 
   }
+
+  /*
+  fetch(`https://api.parse.com/1/users?foo=${encodeURIComponent(data.foo)}&bar=${encodeURIComponent(data.bar)}`, {
+  method: "GET",
+  headers: headers,   
+  body:body
+})
+  */
+ _fetchAuth= async (username, password, socialNetwork) => {
+    
+  this.setState({ isLoading: true })
+  
+    
+  await fetch('https://api.renewal-research.com/auth/'+username+'/'+socialNetwork+'/'+password, {
+    method: "PUT",
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },   
+    body:JSON.stringify({
+      username,
+      password
+    })
+  })
+  .then( await fetch('https://api.renewal-research.com/auth/'+username+'/'+socialNetwork+'/'+password, {
+    method: "GET",
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },   
+    body:undefined
+  })
+  .then((response) => 
+    response.json()
+  ).then((responseJson)=>{
+    console.log(responseJson), 
+    console.log(responseJson.user_token)
+    AsyncStorage.setItem('token', JSON.stringify(responseJson.user_token));
+  
+  })
+  
+).catch((error) => {
+    console.error(error);
+  });
+  setTimeout(() => this.setState({isLoading: false }), 1000)
+  }
   fetchAuth(login, password){
     //console.log(""+login+""+password)
-    return fetch('https://api.renewal-research.com/auth/'+login+'/'+password)
+    return fetch('https://api.renewal-research.com/auth/'+login+'/'+password,{
+      method: "GET",
+      headers: headers,   
+      body:body
+    })
       .then((response) => response.json())
       .then((responseJson) => {
         console.log(responseJson)

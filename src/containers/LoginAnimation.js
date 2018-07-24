@@ -65,24 +65,83 @@ export default class WebV extends Component {
     setTimeout(() => this.setState({ isLoggedIn: true, isLoading: false }), 1000)
   }
 
-  _simulateSignup = (username, password, fullName) => {
+  _simulateSignup = async (username, password, fullName) => {
+    
     this.setState({ isLoading: true })
-    fetch('https://api.renewal-research.com/'+username+'/'+password)
-      .then((response) => response.json())
-      .then((responseJson) => {
-        console.log(responseJson)
-        try {
-          AsyncStorage.setItem('token', JSON.stringify(responseJson));
-          
-        } catch (error) {
-          // Error saving data
-          console.log("Error saving data")
-        }
+    
+      
+    await fetch('https://api.renewal-research.com/auth/'+username+'/email/'+password, {
+      method: "PUT",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },   
+      body:JSON.stringify({
+        username,
+        password
       })
+    })
+    .then( await fetch('https://api.renewal-research.com/auth/'+username+'/email/'+password, {
+      method: "GET",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },   
+      body:undefined
+    })
+    .then((response) => 
+      response.json()
+    ).then((responseJson)=>console.log(responseJson["user_token"]))
+    
+  ).catch((error) => {
+      console.error(error);
+    });
+    setTimeout(() => this.setState({ isLoggedIn: true, isLoading: false }), 1000)
+     
+    
+    /*
+    
+    fetch('https://api.renewal-research.com/auth/'+username+'/email/'+password, {
+      method: "PUT",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },   
+      body:JSON.stringify({
+        username,
+        password
+      })
+    })
+      .then((response) => 
+        fetch('https://api.renewal-research.com/auth/'+username+'/email/'+password, {
+          method: "GET",
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },   
+          body:undefined
+        }).then((resp) => resp.json())
+        .then((responseJson) => {
+          console.log(responseJson)}
+        )
+        /*.then((responseJson) => {
+          console.log(responseJson)
+          try {
+            AsyncStorage.setItem('token', JSON.stringify(responseJson));
+            
+          } catch (error) {
+            // Error saving data
+            console.log("Error saving data")
+          }
+        })*//*
+      
+      )
+      
       .catch((error) => {
         console.error(error);
       });
-    setTimeout(() => this.setState({ isLoggedIn: true, isLoading: false }), 1000)
+      */
+    
   }
   render() {
     
