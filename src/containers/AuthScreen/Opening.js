@@ -126,7 +126,7 @@ export default class Opening extends Component {
     try {
       AsyncStorage.setItem('userInformationBasic', JSON.stringify(this.state.userInformationBasic));
       await this._fetchAuth(result.user.email, result.user.id,"google");
-      Actions.screnCenter()
+      await Actions.screnCenter()
       
     } catch (error) {
       // Error saving data
@@ -171,7 +171,7 @@ export default class Opening extends Component {
   ).then((responseJson)=>{
     console.log(responseJson), 
     console.log(responseJson.user_token)
-    AsyncStorage.setItem('token', JSON.stringify(responseJson.user_token));
+    AsyncStorage.setItem('token', responseJson.user_token);
   
   })
   

@@ -162,7 +162,8 @@ export default class Project extends Component {
         page : 1,
         nbItemPerPage : 5,
         newscastSavedState : null,
-        refreshing: false
+        refreshing: false,
+        token : null
       }
       YellowBox.ignoreWarnings([
         'Warning: componentWillMount is deprecated',
@@ -181,6 +182,15 @@ export default class Project extends Component {
     await this.webCall();
     
     await this._updateSelectedItems()
+    try {
+      AsyncStorage.getItem('token', (err, result)=>{
+       this.setState({token: result});
+       console.log("mon token de merde "+result)
+       })
+     } catch (error) {
+       // Error saving data
+       console.log("oh mon dieu le token a disparu")
+     }
     this.fetchEvent("launch",null)
     //this.getMoviesFromApi();
     //this.getNewsFromApi();
@@ -498,81 +508,7 @@ export default class Project extends Component {
     console.log(tailleEcran/tailleItem)
     
   }
-  /*
-  _onScrollItem = async (nativeEvent) => {
-    //console.log("nb de news "+this.state.newscastsState.length)
-    const listeItem = this.state.displayDataSource;
-    //console.log(listeItem)
-    //console.log("position : en px"+nativeEvent.contentOffset.y)
-    const positionY =  nativeEvent.contentOffset.y <= 0 ? 0.01 : nativeEvent.contentOffset.y
-    //console.log("Taille de la liste"+nativeEvent.contentSize.height)
-    //console.log(this.state.newscastsState.length)
-    let tailleItem =  (screen.height / 17) + (screen.height / 5) + .5 > nativeEvent.contentSize.height/this.state.displayDataSource.length ? (screen.height / 17) + (screen.height / 5) + .5 : nativeEvent.contentSize.height/this.state.displayDataSource.length;
-   //console.log(tailleItem)
-    //console.log("Taille d'un item "+tailleItem)
-    const tailleEcran = nativeEvent.layoutMeasurement.height;
-    //console.log("nb item par page"+tailleEcran/tailleItem)
-    const itemsParPage = tailleEcran/tailleItem;
-    //console.log("nb item par page"+itemsParPage)
-    //console.log("########################");
-    //console.log("nb de news "+this.state.newscastsState.length)
-    
-    //console.log("item par page"+itemsParPage+" taille item "+tailleItem)
-    let paquet = [ ];
-    //paquet.push('jjj')
-    //console.log(paquet)
-    let a = positionY/tailleItem;
-    console.log(a)
-    console.log(a.toFixed(2))
-    console.log((100-a.toFixed(2)).toFixed(2))
-    let indexTop = (a+"").split('.')[0];
-    console.log((100-a.toFixed(2)).toFixed(2)+"%")
-    //let beforepercentage = 100-a.toFixed(2) >=10 
-    let percentage = ((100-a.toFixed(2)).toFixed(2)+"").split('.')[1] +"%";
-    console.log(percentage)
-    percentage = percentage === "undefined%" ? "100%" : percentage;
-    paquet.push(
-      {
-        title : listeItem[indexTop].title,
-        url : listeItem[indexTop].url,
-        percentage : percentage//((100-a.toFixed(2))+" ").split('.')[1] +"%"
-      }
-    )
-
-    
-    let bottomArticle = (positionY+tailleEcran)/tailleItem;
-    //console.log("bottom : "+bottomArticle)
-    let indexB = (bottomArticle+" ").split('.')[0];
-    //console.log(listeItem[indexB].title)
-    
-    
-    let x = parseInt(indexTop);
-    x++;
-    const y = parseInt(indexB);
-    
-    for(x ; x<y;x++){
-      //console.log(listeItem[x].title)
-      paquet.push(
-        {
-          title : listeItem[x].title,
-          url : listeItem[x].url,
-          percentage : "100%"
-        }
-      )
-    }
-    percentage = ((100-bottomArticle.toFixed(2)).toFixed(2)+"").split('.')[1] +"%";
-    
-    percentage = percentage === "undefined%" ? "100%" : percentage;
-    paquet.push(
-      {
-        title : listeItem[indexB].title,
-        url : listeItem[indexB].url,
-        percentage : percentage
-      }
-    )
-    this.fetchEvent('scroll'," displayItem : "+paquet)
-    console.log(paquet)
-  }*/
+  
   FlatListItemSeparator = () => {
       return (
         <View
@@ -602,39 +538,14 @@ export default class Project extends Component {
           ItemSeparatorComponent = {this.FlatListItemSeparator}
           renderItem={({item, index, nativeEvent}) => this.renderItem({item, index, nativeEvent})}
           keyExtractor={(item, index) => index.toString()}
-          //onRefresh={this._clear}
-          //refreshing={this.state.refreshing && this.state.isLoading}
-
-          //onEndReached={() => this.state.isLoading==false&& this.state.refreshing==false ?  this.onEndReached() : console.log("attend mon bonhomme")}
           onEndReachedThreshold={0.5}
           onEndReached={({ distanceFromEnd }) => {
             this._ItemLoadMore();
          }}
-          /*onEndReachedThreshold={1}
-          onEndReached={({ distanceFromEnd }) => {
-            this.state.isLoading==false&& this.state.refreshing==false && distanceFromEnd>0  
-              ? this.onEndReached() //console.log('on end reached ', distanceFromEnd) 
-              : console.log("attend mon bonhomme")
-          }}*/
+         
           ref={ (el) => this._flatList = el }
           
-          //initialScrollIndex = {0}
-          /*onLayout={ ({nativeEvent}) => {
-            console.log("onLayout")
-            console.log(nativeEvent)
-            this._flatList.scrollToOffset({
-              offset: 1,
-              animated: false
-           })
-            const {width, height} = nativeEvent.layout;
-            this.setState({
-              y : height
-            });
-          } }*/
-          //viewabilityConfig={this.viewabilityConfig}
-          //onScroll={ ({ nativeEvent }) => {
-            //this._onScrollItem(nativeEvent);
-          //}}
+        
 
           onLayout={ ({nativeEvent}) => {
             console.log("onLayout")
@@ -642,11 +553,7 @@ export default class Project extends Component {
             this._flatList.scrollToOffset({
               offset: 1,
               animated: false
-           })/*
-            const {width, height} = nativeEvent.layout;
-            this.setState({
-              y : height
-            });*/
+           })
           } }
           getItemLayout={(data, index)=>this.getItemLayout(data, index)}
           viewabilityConfig={this.viewabilityConfig}
@@ -708,25 +615,3 @@ iconStyle:{
 },
  
 });
-{/*
-        <Button
-          onPress={()=>this._onPressOnItem()}
-          title="Learn More"
-          color="#841584"
-          accessibilityLabel="Learn more about this purple button"
-        />
-        <FlatList
-          data={ this.state.dataSource }
-          ItemSeparatorComponent = {this.FlatListItemSeparator}
-          renderItem={({item}) => 
-            <View style={{flex:1, flexDirection: 'row'}}>
-              <Image source = {{ uri: item.flower_image_url }} style={styles.imageView} />
-              <Text 
-                onPress={this.GetItem.bind(this, item.flower_name)} 
-                style={styles.textView} >{item.flower_name}</Text>
- 
-            </View>
-          }
-          keyExtractor={(item, index) => index.toString()}
-        />
-        */}

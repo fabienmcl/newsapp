@@ -14,7 +14,8 @@ import {
   Dimensions,
   StatusBar,
   NetInfo,
-  ScrollView 
+  ScrollView ,
+  AsyncStorage
 } from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import { Root, Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text, List, ListItem } from 'native-base';
@@ -41,7 +42,8 @@ import Settings from '../SideMenuScreens/Settings';
 import accelerometerSensor  from '../Sensors/AccelerometerSensor';
 import gyroscopeSensor from '../Sensors/GyroscopeSensor';
 import locationSensor from '../Sensors/LocationSensor';
-
+//import fetch
+import FetchFunction from '../Fetch/FetchFunction';
 function MiniOfflineSign() {
   return (
     <View style={styles.offlineContainer}>
@@ -66,6 +68,7 @@ export default class Project extends Component {
       selectedItem: null,
       items: null,
       loading: true,
+      token : undefined
     }
     YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
    
@@ -84,6 +87,15 @@ export default class Project extends Component {
     //accelerometerSensor._subscribe();
     //gyroscopeSensor._subscribe();
     //locationSensor._subscribe();
+    try {
+      AsyncStorage.getItem('token', (err, result)=>{
+       this.setState({token: result});
+       console.log("mon token de merde "+result)
+       })
+     } catch (error) {
+       // Error saving data
+       console.log("oh mon dieu le token a disparu")
+     }
   }
   componentWillUnmount() {
     NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);
@@ -125,10 +137,30 @@ export default class Project extends Component {
     this.setState({ isOpen });
   }
   fetchEvent =  async (something, someData)=>{
-    return someData === null ? 
-      console.log("[{Event : "+something+", timestamp :"+Date.now()+"}]")
+    console.log(this.state.token)
+    await FetchFunction._event(this.state.token,something, someData)
+    /*
+    let userData = null;
+    console.log(this.props)
+    someData === null ? 
+      userData = "[{Event : "+something+", timestamp :"+Date.now()+"}]"
       :
-      console.log("[{Event : "+something+", timestamp :"+Date.now()+","+someData+"}]")
+     userData="[{Event : "+something+", timestamp :"+Date.now()+","+someData+"}]";
+     const urlConst = 'https://api.renewal-research.com/user/events/'+this.state.token+'/'+userData;
+     
+     console.log(urlConst)
+     fetch('https://api.renewal-research.com/user/events/'+this.state.token+'/'+userData, {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },   
+      body:JSON.stringify({
+        something,
+        userData
+      })
+    })*/
+    
   }
   onMenuItemSelected = item =>{
     this.setState({
@@ -140,9 +172,9 @@ export default class Project extends Component {
   }
 
   contentSwitch(){
-    if(this.state.isConnected === false){
+    /*if(this.state.isConnected === false){
       return <View style={{flex:1}} ><MiniOfflineSign /></View>
-    }
+    }*/
     switch(this.props.navigation.state.params.screen){
       case "Favorite" :
         return (
@@ -166,7 +198,8 @@ export default class Project extends Component {
         );
       default : 
         return (
-          this.state.isConnected === false ? <View style={{flex:1}} ><MiniOfflineSign /></View> : <DiverseRecommendation />
+          <DiverseRecommendation />
+          //this.state.isConnected === false ? <View style={{flex:1}}><View style={{height:30}}><MiniOfflineSign /></View><DiverseRecommendation /></View> : <DiverseRecommendation />
         );
       
     }
@@ -276,7 +309,18 @@ export default class Project extends Component {
           <Right>
           </Right>
         </Header>
+        <View style={{flex:1}}>
+        { 
+          this.state.isConnected === false 
+            ? 
+              <View style={{height:30}}><MiniOfflineSign /></View> 
+            : 
+            <View></View>
+        }
         {content}
+        
+        </View>
+       
       </View>
       </SideMenu>
     );
