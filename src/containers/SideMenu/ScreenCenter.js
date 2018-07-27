@@ -42,8 +42,12 @@ import Settings from '../SideMenuScreens/Settings';
 import accelerometerSensor  from '../Sensors/AccelerometerSensor';
 import gyroscopeSensor from '../Sensors/GyroscopeSensor';
 import locationSensor from '../Sensors/LocationSensor';
+import deviceInfoSensor from '../Sensors/DeviceInfoSensor';
 //import fetch
 import FetchFunction from '../Fetch/FetchFunction';
+import Queue from '../Fetch/QueueFunction';
+
+
 function MiniOfflineSign() {
   return (
     <View style={styles.offlineContainer}>

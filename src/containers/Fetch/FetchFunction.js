@@ -17,7 +17,8 @@ import {
     View,
     StatusBar,
     Share,
-    Linking
+    Linking,
+    NetInfo
 } from "react-native";
 import {Actions} from 'react-native-router-flux';
 import * as Animatable from 'react-native-animatable';
@@ -107,6 +108,13 @@ const fetchFunction = {
         ).catch((error) => {
             console.error(error);
         });
+    },
+    _verify : async function(){
+        let res = undefined;
+        NetInfo.getConnectionInfo().then((connectionInfo) => {
+            res = connectionInfo.type === none ? res : connectionInfo.type
+        });
+        return res;
     },
     _event : async function (token, something, someData){
         console.log("inside function : "+token+','+something+","+someData)
