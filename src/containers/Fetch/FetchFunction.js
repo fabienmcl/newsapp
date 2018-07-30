@@ -36,6 +36,7 @@ const SCREEN_HEIGHT_CUSTOM_HEADER = SCREEN_HEIGHT/20;
 const SCREEN_HEIGHT_CUSTOM_REST= SCREEN_HEIGHT - SCREEN_HEIGHT_CUSTOM_HEADER;
 const PropTypes = require('prop-types');
 
+const timer = require('react-native-timer');
 const fetchFunction = {
     _auth : async function (username,password, wayOfConnection){
         await fetch('https://api.renewal-research.com/auth/'+username+'/'+wayOfConnection+'/'+password, 
@@ -110,23 +111,49 @@ const fetchFunction = {
         });
     },
     _verify : async function(){
-        let res = undefined;
+        console.log("let s start verify")
+        let response = undefined;
         NetInfo.getConnectionInfo().then((connectionInfo) => {
-            res = connectionInfo.type === none ? res : connectionInfo.type
+            //res = connectionInfo.type === none ? res : connectionInfo.type
+            console.log(connectionInfo.type)
+            response = connectionInfo.type;
+            //return connectionInfo.type === none ? false : true
         });
-        return res;
+        response = response === "none" ? false : true;
+        return response;
     },
     _event : async function (token, something, someData){
         console.log("inside function : "+token+','+something+","+someData)
+        
+        console.log(await fetchFunction._verify());
+        await fetchFunction._verify() ? 
+            fetchFunction._fetchURL(token, something, someData)
+            :
+            timer.setTimeout(
+                this, 'sendMsgEvent', () => fetchFunction._event(token,something, someData), 4000
+              );
+        /*
+        if(fetchFunction._verify()===true){
+            fetchFunction._fetchURL(urlConst);
+        }else{
+            timer.setTimeout(
+                this, 'sendMsgEvent', () => fetchFunction._fetchURL(urlConst), 4000
+              ); 
+        }
+        console.log(urlConst) */
+    },
+    _fetchURL : async function (token, something, someData){
         let userData = null;
         someData === null ? 
           userData = "[{Event : "+something+", timestamp :"+Date.now()+"}]"
           :
          userData="[{Event : "+something+", timestamp :"+Date.now()+","+someData+"}]";
-         const urlConst = 'https://api.renewal-research.com/user/events/'+token+'/'+userData;
          
-         console.log(urlConst)
-         fetch('https://api.renewal-research.com/user/events/'+token+'/'+userData, {
+        //const url = 'https://api.renewal-research.com/user/events/'+token+'/'+userData;
+        //console.log(url)
+
+
+        fetch('https://api.renewal-research.com/user/events/'+token+'/'+userData, {
           method: "POST",
           headers: {
             'Accept': 'application/json',
@@ -137,6 +164,7 @@ const fetchFunction = {
             userData
           })
         })
-    },
+        .then((response)=> console.log(response))
+    }
 }
 export default fetchFunction;
