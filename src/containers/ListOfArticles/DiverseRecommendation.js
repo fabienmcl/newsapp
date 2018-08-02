@@ -10,7 +10,7 @@ import {
   Image, 
   TouchableOpacity, 
   Alert, 
-  YellowBox 
+  YellowBox,
 } from 'react-native';
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text, List, ListItem } from 'native-base';
 import {Actions} from 'react-native-router-flux';
@@ -155,7 +155,10 @@ const demoDataNews = [
 export default class Project extends Component {
   constructor(props) {
     super(props);
+    var {height, width} = Dimensions.get('window'); 
       this.state = {
+        height : screen.height > screen.width ? screen.height : screen.width,
+        width : screen.width > screen.height ? screen.width : screen.height,
         isLoading: true,
         globalDataSource : null,
         displayDataSource : null,
@@ -163,7 +166,8 @@ export default class Project extends Component {
         nbItemPerPage : 5,
         newscastSavedState : null,
         refreshing: false,
-        token : null
+        token : null, 
+        orientation : height > width ? 'portrait' : 'landscape'
       }
       YellowBox.ignoreWarnings([
         'Warning: componentWillMount is deprecated',
@@ -192,10 +196,19 @@ export default class Project extends Component {
        console.log("oh mon dieu le token a disparu")
      }
     this.fetchEvent("launch",null)
+    Dimensions.addEventListener('change', () => {
+      var {height, width} = Dimensions.get('window'); 
+      this.setState({
+          orientation: height > width ? 'portrait' : 'landscape'
+      });
+      console.log(this.state.orientation);
+    });
     //this.getMoviesFromApi();
     //this.getNewsFromApi();
    // await this._generateDisplayItems()
+  
   }
+  
   fetchEvent =  async (something, someData)=>{
     return someData === null ? 
       console.log("[{Event : "+something+", timestamp :"+Date.now()+"}]")
@@ -402,7 +415,7 @@ export default class Project extends Component {
         <TouchableOpacity onPress={item.isRejected? console.log("item isRejected") : this._onPressOnItem.bind(this, item)} >
           <Image source = {{ uri: item.image }} 
             style={{
-              height: screen.height / 5,
+              height: this.state.height / 5,
               opacity: item.isRejected ? 0.3:1,
               margin: 1,
               borderRadius : 7,
@@ -416,10 +429,41 @@ export default class Project extends Component {
             }
              />
         </TouchableOpacity>
-        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width:'100%',height: screen.height / 17}}>
+        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width:'100%',height: this.state.height / 17}}>
           <Icon name={item.isSaved ? "ios-download" :"ios-download-outline"} style={styles.iconStyle}    onPress={()=>item.isRejected ? console.log("error") :this._toggleFav( { item, index } )} />
           <Text numberOfLines={2} style={styles.textView} onPress={item.isRejected? console.log("item isRejected") :this._onPressOnItem.bind(this, item)}>{item.title}</Text>
           <Icon name={item.isRejected ? "ios-checkmark" :"ios-close"}  style={{color: 'black', width :'10%', paddingLeft: '3%', alignItems: 'center', justifyContent: 'center',color: item.isRejected ? "green" :"red"}}   onPress={()=>this._toggleReject( { item, index } )} />
+        </View>
+      </View>
+    </View>   
+  )
+  renderItemLandscape=({item, index, nativeEvent}) => (        
+    <View  onPressItem={this._onPressItem}  >
+      <View style={{flex:1, flexDirection: 'row', backgroundColor: item.isRejected ? "#484848" : "#fff"}}>
+        <TouchableOpacity onPress={item.isRejected? console.log("item isRejected") : this._onPressOnItem.bind(this, item)} >
+          <Image source = {{ uri: item.image }} 
+            style={{
+              height: this.state.height / 8,
+              width : this.state.width/3,
+              opacity: item.isRejected ? 0.3:1,
+              margin: 1,
+              borderRadius : 7,
+              justifyContent: 'center', 
+              alignItems: 'center',
+              
+            }}//style={styles.imageView} 
+            onPress={this._onPressOnItem.bind(this, item)
+            //onPress={this._onScrollItem(nativeEvent)
+            
+            }
+             />
+        </TouchableOpacity>
+        <View style={{width:'100%', flexDirection : 'row', height: this.state.height / 8}}>
+          <Text numberOfLines={3} style={styles.textViewLandscape} onPress={item.isRejected? console.log("item isRejected") :this._onPressOnItem.bind(this, item)}>{item.title}</Text>
+          <View style={{alignItems: 'center', justifyContent: 'center', flexDirection : 'column'}} >
+            <Icon name={item.isSaved ? "ios-download" :"ios-download-outline"}     onPress={()=>item.isRejected ? console.log("error") :this._toggleFav( { item, index } )} />
+            <Icon name={item.isRejected ? "ios-checkmark" :"ios-close"}  style={{color: 'black', alignItems: 'center', justifyContent: 'center',color: item.isRejected ? "green" :"red"}}   onPress={()=>this._toggleReject( { item, index } )} />
+          </View>
         </View>
       </View>
     </View>   
@@ -528,6 +572,8 @@ export default class Project extends Component {
         </View>
       );
     }
+
+    
     return (
 
       
@@ -536,7 +582,7 @@ export default class Project extends Component {
           debug={this.state.debug}
           extraData={this.state}
           ItemSeparatorComponent = {this.FlatListItemSeparator}
-          renderItem={({item, index, nativeEvent}) => this.renderItem({item, index, nativeEvent})}
+          renderItem={({item, index, nativeEvent}) => this.state.orientation === 'portrait' ? this.renderItem({item, index, nativeEvent}) : this.renderItemLandscape({item, index, nativeEvent}) }
           keyExtractor={(item, index) => index.toString()}
           onEndReachedThreshold={0.5}
           onEndReached={({ distanceFromEnd }) => {
@@ -602,6 +648,14 @@ textView: {
   width : '80%',
   margin:0,
   padding:0
+
+},
+textViewLandscape: { 
+    width: screen.width/1.6,
+    textAlignVertical:'center',
+    textAlign: 'left',
+    paddingTop:screen.height / 20,
+    color: '#000', 
 
 },
 iconStyle:{
