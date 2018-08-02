@@ -651,7 +651,7 @@ textView: {
 
 },
 textViewLandscape: { 
-    width: screen.width/1.6,
+    width: screen.height < screen.width ?  screen.width/1.6 : screen.height/2,
     textAlignVertical:'center',
     textAlign: 'left',
     paddingTop:screen.height / 20,

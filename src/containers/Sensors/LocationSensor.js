@@ -33,6 +33,19 @@ const locationSensor = {
     },
     _unsubscribe : async function(){
         Location.remove();
+    },
+    _currentLOgation : async function() {
+        //const { Location, Permissions } = Expo;
+        const { status } = await Permissions.askAsync(Permissions.LOCATION);
+        if (status === 'granted') {
+          //return Location.getCurrentPositionAsync({enableHighAccuracy: true});
+          console.log(Location.getCurrentPositionAsync({enableHighAccuracy: true}))
+          return true;
+        } else {
+          //throw new Error('Location permission not granted');
+          console.log('Location permission not granted')
+          return false;
+        }
     }
 }
 export default locationSensor;
