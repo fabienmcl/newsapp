@@ -23,8 +23,8 @@ import {Actions} from 'react-native-router-flux';
 import * as Animatable from 'react-native-animatable';
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text, List, ListItem } from 'native-base';
 {/*import { Header } from 'react-native-elements';*/}
-const SCREEN_HEIGHT = Dimensions.get('window').height
-const SCREEN_WIDTH  = Dimensions.get('window').width
+const SCREEN_HEIGHT = Dimensions.get('window').height > Dimensions.get('window').width ? Dimensions.get('window').height : Dimensions.get('window').width;
+const SCREEN_WIDTH  = Dimensions.get('window').height < Dimensions.get('window').width ? Dimensions.get('window').height : Dimensions.get('window').width;
 const SCREEN_WIDTH_CUSTOM_PADDING = SCREEN_WIDTH*0.47;
 const SCREEN_HEIGHT_CUSTOM = SCREEN_HEIGHT-(SCREEN_HEIGHT/20);
 import FlatListViewArticle from '../ListOfArticles/FlatListViewArticleRecommandation';
@@ -61,7 +61,7 @@ export default class MessageWebView extends React.Component {
             title : this.props.navigation.state.params.title, 
             icon : "md-arrow-dropup", 
             scrollEventAnimation : false,
-            scrollIsEnabled : true,
+            scrollIsEnabled : false,
             scrollStartFrom : "bottom"
         };
         this.springValue = new Animated.Value(1)
@@ -110,11 +110,12 @@ export default class MessageWebView extends React.Component {
             this.scrollView.scrollTo({x: 0, y: 0, animated: true})
             //setTimeout(() => {this.setState({})}, 0)
             this.setState(previousState => {
-                return { icon: "md-arrow-dropup", isOpenB: false, scrollIsEnabled:true };
+                return { icon: "md-arrow-dropup", isOpenB: false, scrollIsEnabled:true,  };
               });
             //setTimeout(() => {this.setState({isOpen: false})}, 500)
             //setTimeout(() => {this.setState({icon: "md-arrow-dropup", isOpen: false})}, 1000)
         }
+
     }
     _handleScroll = (event) => {
         if(this.state.isInScroll == true){
@@ -122,7 +123,9 @@ export default class MessageWebView extends React.Component {
             const positionY = event.nativeEvent.contentOffset.y+" ";
             const splitPositionY = positionY.split('.')[0];
             console.log("position split :"+splitPositionY);
-        
+            
+            this.setState( { isScrollPositionY : event.nativeEvent.contentOffset.y+""});
+
             if(Number.parseInt(this.state.isScrollPositionY, 10) > Number.parseInt(splitPositionY, 10)  ){
                 console.log("down scroll");
                 this.setState(previousState => {
@@ -144,7 +147,7 @@ export default class MessageWebView extends React.Component {
                 });
             }else{
                 this.setState(previousState => {
-                    return { icon: "md-arrow-dropup", isOpenB: false };
+                    return { icon: "md-arrow-dropup", isOpenB: false, scrollIsEnabled : true };
                 });
             }
         
@@ -333,7 +336,37 @@ export default class MessageWebView extends React.Component {
                         //this.onMessageFromWebView(JSON.parse(e.nativeEvent.data))
                         //this.onMessageFromWebView(JSON.parse(JSON.stringify(e.nativeEvent.data)))
                     }
-                    style={{height: SCREEN_HEIGHT_CUSTOM_REST-(SCREEN_HEIGHT_CUSTOM_HEADER+(SCREEN_HEIGHT_CUSTOM_HEADER)), width:'100%' }}
+                    style={{height: SCREEN_HEIGHT_CUSTOM_REST-(SCREEN_HEIGHT_CUSTOM_HEADER+(SCREEN_HEIGHT_CUSTOM_HEADER)),
+                    
+                         width:'100%' }}
+                />
+                {this.renderStrip()}
+           </ScrollView>
+        );
+    }
+    renderContentLandscape(){
+        return(
+            <ScrollView  style={{flex:1}} scrollEnabled={this.state.scrollIsEnabled} ref={x => {this.scrollView = x}} keyboardShouldPersistTaps="always"
+                onScroll={this._handleScroll} 
+                scrollEventThrottle={100} //min 1 et max 16 (+de scroll detect)
+                onScrollBeginDrag={this._handleScrollBegin.bind(this)}
+                onScrollEndDrag={this._handleScrollEnd.bind(this)}
+            >  
+                <WebView
+                    //{...props}
+                    javaScriptEnabled
+                    ref={x => {this.WebView = x}}
+                    injectedJavaScript={WebViewFunction._JavaScriptInjection()}
+                    source={{uri:this.props.navigation.state.params.url}}
+                    onMessage={e => 
+                        //console.log(JSON.stringify(e.nativeEvent.data))
+                        this.onMessageFromWebView(e.nativeEvent.data)
+                        //this.onMessageFromWebView(JSON.parse(e.nativeEvent.data))
+                        //this.onMessageFromWebView(JSON.parse(JSON.stringify(e.nativeEvent.data)))
+                    }
+                    style={{height: (Dimensions.get('window').height/2) + SCREEN_HEIGHT_CUSTOM_HEADER*3,
+                    
+                         width:'100%' }}
                 />
                 {this.renderStrip()}
            </ScrollView>
@@ -351,7 +384,10 @@ export default class MessageWebView extends React.Component {
                 >
                     <Animatable.View animation="bounce" easing="ease-in-out" iterationCount="infinite" >
                         <TouchableOpacity onPress={this._onPress} style={{ paddingLeft:SCREEN_WIDTH_CUSTOM_PADDING, width:'100%'}} onPress={this._onPress} >
-                            <Icon name={this.state.icon} style={{ color: 'black'}}/> 
+                            <Icon
+                            name={parseInt(this.state.isScrollPositionY) > 20 ? "md-arrow-dropdown" : "md-arrow-dropup"}
+                            //name={this.state.icon} 
+                            style={{ color: 'black'}}/> 
                         </TouchableOpacity>
                     </Animatable.View>
                 </ScrollView>
@@ -425,7 +461,7 @@ export default class MessageWebView extends React.Component {
             >
                 <View  style={{justifyContent: 'center', flex:1, backgroundColor : "#212121", paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight}} >
                     {this.renderHeader()}
-                    {this.renderContent()}
+                    {Dimensions.get('window').height > Dimensions.get('window').width ? this.renderContent():this.renderContentLandscape()}
             
             </View>
             </SideMenu>

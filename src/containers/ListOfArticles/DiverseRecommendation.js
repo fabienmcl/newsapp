@@ -197,9 +197,14 @@ export default class Project extends Component {
      }
     this.fetchEvent("launch",null)
     Dimensions.addEventListener('change', () => {
-      var {height, width} = Dimensions.get('window'); 
+      //var {height, width} = Dimensions.get('window'); 
+      var deviceHeight = Dimensions.get('window').height;
+      var deviceWidth = Dimensions.get('window').width;
       this.setState({
-          orientation: height > width ? 'portrait' : 'landscape'
+          orientation: deviceHeight > deviceWidth ? 'portrait' : 'landscape',
+          height : deviceHeight > deviceWidth ? deviceHeight : deviceWidth,
+          width : deviceWidth > deviceHeight ? deviceWidth : deviceHeight,
+
       });
       console.log(this.state.orientation);
     });
@@ -264,13 +269,15 @@ export default class Project extends Component {
     }
   }
   _onPressOnItem (item) {
+    console.log(item)
+    
     let pack = {
       title: item.title,
       url:item.url,
       previous : "DiverseRecommendation"
     }
     this.fetchEvent("pressOnItem", "itemClickedTitle : "+item.title+" itemClickedUrl : "+item.url)
-    Actions.webview(pack)
+    Actions.webview(item);
   }
   GetItem (flower_name) {
     Alert.alert(flower_name);
@@ -651,7 +658,8 @@ textView: {
 
 },
 textViewLandscape: { 
-    width: screen.height < screen.width ?  screen.width/1.6 : screen.height/2,
+    //width: screen.height < screen.width ?  screen.width/1.6 : screen.height/2,
+    width: '63%',
     textAlignVertical:'center',
     textAlign: 'left',
     paddingTop:screen.height / 20,
