@@ -18,7 +18,6 @@ import {
     StatusBar,
     Share,
     Linking,
-    ActivityIndicator
     //Modal
 } from "react-native";
 import {Actions} from 'react-native-router-flux';
@@ -56,7 +55,6 @@ export default class MessageWebView extends React.Component {
         this.state = {
             isOpen: false, 
             isOpenB:false,
-            isConnected : true,
             modalVisible : false,
             selectedItem: 'wv',
             isClickScroll : false,
@@ -327,53 +325,42 @@ export default class MessageWebView extends React.Component {
             </Header>
         );
     }
-    renderErrorWebview(){
-        <View style={{flex:1}}> 
-            
-            <Button block rounded danger onPress={() => {this.setModalVisible(!this.state.modalVisible);}} style={{padding : 15, margin : 15}}>
-                <Text>Refresh</Text>
-            </Button>
-        </View>
-    }
     renderContent(){
         return(
-            /*<ScrollView  style={{flex:1}} scrollEnabled={this.state.scrollIsEnabled} ref={x => {this.scrollView = x}} keyboardShouldPersistTaps="always"
+            <ScrollView  style={{flex:1}} scrollEnabled={this.state.scrollIsEnabled} ref={x => {this.scrollView = x}} keyboardShouldPersistTaps="always"
                 onScroll={this._handleScroll} 
                 scrollEventThrottle={100} //min 1 et max 16 (+de scroll detect)
                 onScrollBeginDrag={this._handleScrollBegin.bind(this)}
                 onScrollEndDrag={this._handleScrollEnd.bind(this)}
-        > */
+            >  
                 <WebView
                     //{...props}
                     javaScriptEnabled
                     ref={x => {this.WebView = x}}
                     injectedJavaScript={WebViewFunction._JavaScriptInjection()}
                     source={{uri:this.props.navigation.state.params.url}}
-                    renderLoading={() => <View style={{flex:1,justifyContent: 'center',alignItems: 'center',}}> <ActivityIndicator size={'large'} />  </View>}
-                    renderError={() => <View style={{flex:1,justifyContent: 'center',alignItems: 'center',}}><Text style={{color:'#FFF'}}>No Internet connection, please reload</Text> <ActivityIndicator size={'large'} /> <Button block rounded danger  onPress={() => this.WebView.reload() } ><Text>Reload</Text> </Button> </View>}
                     onMessage={e => 
                         //console.log(JSON.stringify(e.nativeEvent.data))
                         this.onMessageFromWebView(e.nativeEvent.data)
                         //this.onMessageFromWebView(JSON.parse(e.nativeEvent.data))
                         //this.onMessageFromWebView(JSON.parse(JSON.stringify(e.nativeEvent.data)))
                     }
-                    /*style={{height: SCREEN_HEIGHT_CUSTOM_REST-(SCREEN_HEIGHT_CUSTOM_HEADER+(SCREEN_HEIGHT_CUSTOM_HEADER)),
+                    style={{height: SCREEN_HEIGHT_CUSTOM_REST-(SCREEN_HEIGHT_CUSTOM_HEADER+(SCREEN_HEIGHT_CUSTOM_HEADER)),
                     
-                         width:'100%' }}*/
+                         width:'100%' }}
                 />
-                /*
                 {this.renderStrip()}
-                </ScrollView>*/
+           </ScrollView>
         );
     }
     renderContentLandscape(){
         return(
-            /*<ScrollView  style={{flex:1}} scrollEnabled={this.state.scrollIsEnabled} ref={x => {this.scrollView = x}} keyboardShouldPersistTaps="always"
+            <ScrollView  style={{flex:1}} scrollEnabled={this.state.scrollIsEnabled} ref={x => {this.scrollView = x}} keyboardShouldPersistTaps="always"
                 onScroll={this._handleScroll} 
                 scrollEventThrottle={100} //min 1 et max 16 (+de scroll detect)
                 onScrollBeginDrag={this._handleScrollBegin.bind(this)}
                 onScrollEndDrag={this._handleScrollEnd.bind(this)}
-            > */ 
+            >  
                 <WebView
                     //{...props}
                     javaScriptEnabled
@@ -386,14 +373,14 @@ export default class MessageWebView extends React.Component {
                         //this.onMessageFromWebView(JSON.parse(e.nativeEvent.data))
                         //this.onMessageFromWebView(JSON.parse(JSON.stringify(e.nativeEvent.data)))
                     }
-                    /*style={{height: (Dimensions.get('window').height/2) + SCREEN_HEIGHT_CUSTOM_HEADER*3,
+                    style={{height: (Dimensions.get('window').height/2) + SCREEN_HEIGHT_CUSTOM_HEADER*3,
                     
-                         width:'100%' }}*/
+                         width:'100%' }}
                 />
-                /*{ 
+                { 
                     Dimensions.get('window').height > Dimensions.get('window').width ? this.renderStrip() : this.renderStripLandscape()
                 }
-           </ScrollView>*/
+           </ScrollView>
         );
     }
     renderStrip(){
@@ -561,12 +548,7 @@ export default class MessageWebView extends React.Component {
             >
                 <View  style={{justifyContent: 'center', flex:1, backgroundColor : "#212121", paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight}} >
                     {this.renderHeader()}
-
-                    {
-                        
-                        Dimensions.get('window').height > Dimensions.get('window').width ? this.renderContent():this.renderContentLandscape()
-                        
-                    }
+                    {Dimensions.get('window').height > Dimensions.get('window').width ? this.renderContent():this.renderContentLandscape()}
                     
                     <Modal
                         //animationType="slide"

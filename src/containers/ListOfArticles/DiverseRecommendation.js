@@ -22,7 +22,7 @@ const demoDataNews = [
     title: 'À lui seul, l’iPhone X a compté pour 35 % des bénéfices de l’industrie au Q4 2017',
     plot: "Ciblé pour son prix exorbitant, révoltant pour certains, l'iPhone X fait le bonheur des comptes d'Apple.L’iPhone X a une encoche. L’iPhone X est sorti trop tôt. L’iPhone X est cher. Mais l’iPhone X rapporte beaucoup, beaucoup d’argent, suggérant une marge à nulle autre pareille pour Apple. Les chiffres du cabinet d’analyse Counterpoint, partagés par CNBC, mettent en avant la mainmise du flagship ultra premium sur un marché global très stable : durant le quatrième trimestre de l’année 2017, l’iPhone X a pesé pour 35 % des bénéfices à lui tout seul, malgré des ventes supposément inférieures aux attentes de la firme de Cupertino. C’est dire. ",
     image: 'https://www.numerama.com/content/uploads/2017/11/iphone-x-une-2.jpg',
-    url:'https://www.numerama.com/tech/346171-a-lui-seul-liphone-x-a-compte-pour-35-des-benefices-de-lindustrie-au-q4-2017.html',
+     url:'https://www.numerama.com/tech/346171-a-lui-seul-liphone-x-a-compte-pour-35-des-benefices-de-lindustrie-au-q4-2017.html',
     isSaved:0,
     isRejected : 0
   },
@@ -145,6 +145,15 @@ const demoDataNews = [
     plot: "Les nouvelles ardoises destinées à se vendre en grand volume auraient un écran 10, des coins plus arrondis que les autres Surface, et un port USB-C. C’est Intel qui fournirait le processeur de ces appareils, qui auraient une autonomie d’environ 9 h 30, soit quatre heures de moins que ce dont est capable la Surface Pro. Un choix qui peut paraître étrange alors que Microsoft s’est associé à Qualcomm pour permettre l’émergence de machines sous Windows plus autonomes.",
     image: "https://img.igen.fr/2018/5/macgpic-1526473793-113252436470942-sc-jpt.jpg",
     url: "https://www.igen.fr/ailleurs/2018/05/microsoft-voudrait-concurrencer-lipad-avec-des-tablettes-surface-partir-de-400",
+    isSaved:0,
+    isRejected : 0
+  },
+  {
+    title: 'À lui seul, l’iPhone X a compté pour 35 % des bénéfices de l’industrie au Q4 2017',
+    plot: "Ciblé pour son prix exorbitant, révoltant pour certains, l'iPhone X fait le bonheur des comptes d'Apple.L’iPhone X a une encoche. L’iPhone X est sorti trop tôt. L’iPhone X est cher. Mais l’iPhone X rapporte beaucoup, beaucoup d’argent, suggérant une marge à nulle autre pareille pour Apple. Les chiffres du cabinet d’analyse Counterpoint, partagés par CNBC, mettent en avant la mainmise du flagship ultra premium sur un marché global très stable : durant le quatrième trimestre de l’année 2017, l’iPhone X a pesé pour 35 % des bénéfices à lui tout seul, malgré des ventes supposément inférieures aux attentes de la firme de Cupertino. C’est dire. ",
+    //image: 'https://www.numerama.com/content/uploads/2017/11/iphone-x-une-2.jpg',
+    image : 'https://www.iphon.fr/public//2013/Q1/panorama-iphone-ios-6-9.jpg',
+    url:'https://www.numerama.com/tech/346171-a-lui-seul-liphone-x-a-compte-pour-35-des-benefices-de-lindustrie-au-q4-2017.html',
     isSaved:0,
     isRejected : 0
   },
@@ -422,7 +431,9 @@ export default class Project extends Component {
         <TouchableOpacity onPress={item.isRejected? console.log("item isRejected") : this._onPressOnItem.bind(this, item)} >
           <Image source = {{ uri: item.image }} 
             style={{
-              height: this.state.height / 5,
+              //height: this.state.height / 5,
+              height : 70,//94.5,//135,
+              
               opacity: item.isRejected ? 0.3:1,
               margin: 1,
               borderRadius : 7,
@@ -436,7 +447,10 @@ export default class Project extends Component {
             }
              />
         </TouchableOpacity>
-        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width:'100%',height: this.state.height / 17}}>
+        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width:'100%',
+                      //height: this.state.height / 17
+                      height : 50
+        }}>
           <Icon name={item.isSaved ? "ios-download" :"ios-download-outline"} style={styles.iconStyle}    onPress={()=>item.isRejected ? console.log("error") :this._toggleFav( { item, index } )} />
           <Text numberOfLines={2} style={styles.textView} onPress={item.isRejected? console.log("item isRejected") :this._onPressOnItem.bind(this, item)}>{item.title}</Text>
           <Icon name={item.isRejected ? "ios-checkmark" :"ios-close"}  style={{color: 'black', width :'10%', paddingLeft: '3%', alignItems: 'center', justifyContent: 'center',color: item.isRejected ? "green" :"red"}}   onPress={()=>this._toggleReject( { item, index } )} />
@@ -450,7 +464,8 @@ export default class Project extends Component {
         <TouchableOpacity onPress={item.isRejected? console.log("item isRejected") : this._onPressOnItem.bind(this, item)} >
           <Image source = {{ uri: item.image }} 
             style={{
-              height: this.state.height / 8,
+              //height: this.state.height / 8,
+              height: 90,
               width : this.state.width/3,
               opacity: item.isRejected ? 0.3:1,
               margin: 1,
@@ -465,11 +480,12 @@ export default class Project extends Component {
             }
              />
         </TouchableOpacity>
-        <View style={{width:'100%', flexDirection : 'row', height: this.state.height / 8}}>
+        <View style={{width:'100%', flexDirection : 'row', backgroundColor : 'red', height:90//this.state.height / 8
+          }}>
           <Text numberOfLines={3} style={styles.textViewLandscape} onPress={item.isRejected? console.log("item isRejected") :this._onPressOnItem.bind(this, item)}>{item.title}</Text>
-          <View style={{alignItems: 'center', justifyContent: 'center', flexDirection : 'column'}} >
+          <View style={{alignItems: 'center', justifyContent: 'center', flexDirection : 'column', backgroundColor : 'green'}} >
             <Icon name={item.isSaved ? "ios-download" :"ios-download-outline"}     onPress={()=>item.isRejected ? console.log("error") :this._toggleFav( { item, index } )} />
-            <Icon name={item.isRejected ? "ios-checkmark" :"ios-close"}  style={{color: 'black', alignItems: 'center', justifyContent: 'center',color: item.isRejected ? "green" :"red"}}   onPress={()=>this._toggleReject( { item, index } )} />
+            <Icon name={item.isRejected ? "ios-checkmark" :"ios-close"}  style={{color: 'black', alignItems: 'center', justifyContent: 'center',color: item.isRejected ? "green" :"red", backgroundColor : 'orange'}}   onPress={()=>this._toggleReject( { item, index } )} />
           </View>
         </View>
       </View>
@@ -661,9 +677,18 @@ textViewLandscape: {
     //width: screen.height < screen.width ?  screen.width/1.6 : screen.height/2,
     width: '63%',
     textAlignVertical:'center',
+    alignItems: 'center',
     textAlign: 'left',
-    paddingTop:screen.height / 20,
+    //textAlign: 'left',
+    //paddingTop:screen.height / 20,
+    paddingTop: 30,
+    //paddingBottom : 30,
+    paddingLeft : 10,
+    paddingRight : 10,
+    //padding : 30,
+
     color: '#000', 
+    backgroundColor : 'yellow'
 
 },
 iconStyle:{

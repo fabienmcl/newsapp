@@ -373,7 +373,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-    width : screen.width,
+    width : '100%',
     position: 'absolute',
   },
   offlineText: { 
