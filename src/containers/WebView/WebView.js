@@ -18,7 +18,8 @@ import {
     StatusBar,
     Share,
     Linking,
-    ActivityIndicator
+    ActivityIndicator,
+    YellowBox
     //Modal
 } from "react-native";
 import {Actions} from 'react-native-router-flux';
@@ -70,7 +71,15 @@ export default class MessageWebView extends React.Component {
             scrollStartFrom : "bottom",
             orientation : Dimensions.get('window').height > Dimensions.get('window').width ? 'portrait' : 'landscape' 
         };
+        
         this.springValue = new Animated.Value(1)
+        YellowBox.ignoreWarnings([
+            'Warning: componentWillMount is deprecated',
+            'Warning: encountered an error loading page',
+            'Warning: componentWillReceiveProps is deprecated',
+            'TypeError: undefined is not an object'
+        ]);
+        console.disableYellowBox = true;
     }
     async componentDidMount(){
         await I18n.initAsync();
@@ -349,6 +358,8 @@ export default class MessageWebView extends React.Component {
                     ref={x => {this.WebView = x}}
                     injectedJavaScript={WebViewFunction._JavaScriptInjection()}
                     source={{uri:this.props.navigation.state.params.url}}
+                    domStorageEnabled={true}
+                    startInLoadingState={true}
                     renderLoading={() => <View style={{flex:1,justifyContent: 'center',alignItems: 'center',}}> <ActivityIndicator size={'large'} />  </View>}
                     renderError={() => <View style={{flex:1,justifyContent: 'center',alignItems: 'center',}}><Text style={{color:'#FFF'}}>No Internet connection, please reload</Text> <ActivityIndicator size={'large'} /> <Button block rounded danger  onPress={() => this.WebView.reload() } ><Text>Reload</Text> </Button> </View>}
                     onMessage={e => 
@@ -361,6 +372,7 @@ export default class MessageWebView extends React.Component {
                     
                          width:'100%' }}*/
                 />
+                
                 /*
                 {this.renderStrip()}
                 </ScrollView>*/
@@ -562,9 +574,9 @@ export default class MessageWebView extends React.Component {
                 <View  style={{justifyContent: 'center', flex:1, backgroundColor : "#212121", paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight}} >
                     {this.renderHeader()}
 
-                    {
+                    {/*
                         
-                        Dimensions.get('window').height > Dimensions.get('window').width ? this.renderContent():this.renderContentLandscape()
+                        Dimensions.get('window').height > Dimensions.get('window').width ?*/ this.renderContent()//:this.renderContentLandscape()
                         
                     }
                     
