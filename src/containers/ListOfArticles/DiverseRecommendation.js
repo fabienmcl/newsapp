@@ -222,7 +222,7 @@ export default class Project extends Component {
       console.log(this.state.orientation);
     });
     console.log("pixel ratio : "+PixelRatio.get())
-
+    console.log("pixel round : "+PixelRatio.roundToNearestPixel(100))
     //this.getMoviesFromApi();
     //this.getNewsFromApi();
    // await this._generateDisplayItems()
@@ -438,8 +438,8 @@ export default class Project extends Component {
           <Image source = {{ uri: item.image }} 
             style={{
               //height: this.state.height / 5,
-              height : 70,//94.5,//135,
-              
+              height : PixelRatio.roundToNearestPixel(70),//94.5,//135,
+              height : Platform.OS === 'ios' ? PixelRatio.roundToNearestPixel(140/PixelRatio.get()) : PixelRatio.roundToNearestPixel(70),
               opacity: item.isRejected ? 0.3:1,
               margin: 1,
               borderRadius : 7,
@@ -455,7 +455,8 @@ export default class Project extends Component {
         </TouchableOpacity>
         <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width:'100%',
                       //height: this.state.height / 17
-                      height : 50
+
+                      height : Platform.OS === 'ios' ? PixelRatio.roundToNearestPixel(100/PixelRatio.get()) : PixelRatio.roundToNearestPixel(50)
         }}>
           <Icon name={item.isSaved ? "ios-download" :"ios-download-outline"} style={styles.iconStyle}    onPress={()=>item.isRejected ? console.log("error") :this._toggleFav( { item, index } )} />
           <Text numberOfLines={2} style={styles.textView} onPress={item.isRejected? console.log("item isRejected") :this._onPressOnItem.bind(this, item)}>{item.title}</Text>
@@ -556,9 +557,7 @@ export default class Project extends Component {
     let tailleItem =  (screen.height / 17) + (screen.height / 5) + .5 > sizeGlobalDisplay/displayLenght ? (screen.height / 17) + (screen.height / 5) + .5 : sizeGlobalDisplay/displayLenght;
     const tailleEcran = nativeEvent.layoutMeasurement.height;
     console.log("taille ecran"+ tailleEcran)
-    console.log("pixel ratio "+PixelRatio.get())
-    console.log("Pixel size "+PixelRatio.getPixelSizeForLayoutSize(200))
-    console.log(PixelRatio.roundToNearestPixel(10))
+    console.log("pixel ratio "+PixelRatio.get()+"pixel round 100 "+PixelRatio.roundToNearestPixel(100))
     let paquet = [ ];
     const itemTop = await this.percentageCalculator(tailleItem, nativeEvent.contentOffset.y);
     paquet.push(itemTop)
