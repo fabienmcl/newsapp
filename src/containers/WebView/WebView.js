@@ -20,7 +20,6 @@ import {
     Linking,
     ActivityIndicator,
     YellowBox
-    //Modal
 } from "react-native";
 import {Actions} from 'react-native-router-flux';
 import * as Animatable from 'react-native-animatable';
@@ -572,17 +571,55 @@ export default class MessageWebView extends React.Component {
                 onChange={isOpen => this.updateMenuState(isOpen)}
             >
                 <View  style={{justifyContent: 'center', flex:1, backgroundColor : "#212121", paddingTop: Platform.OS === 'ios' ? 0 : Expo.Constants.statusBarHeight}} >
-                    {this.renderHeader()}
-
-                    {/*
-                        
-                        Dimensions.get('window').height > Dimensions.get('window').width ?*/ this.renderContent()//:this.renderContentLandscape()
-                        
-                    }
-                    
-                    <Modal
+                <Header style={{backgroundColor: '#212121'}}>
+                <StatusBar barStyle="light-content"/>
+                <Left style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-start' }}>
+                    <Button transparent>
+                        <Icon name='ios-arrow-back-outline' style={{ color: '#fff'}}   onPress={()=>this.fetchEvent("back", "fromTitle : "+this.props.navigation.state.params.title+" fromUrl : "+this.props.navigation.state.params.url)&&this.props.navigation.goBack()} />
+                    </Button>
+                    <Button transparent>
+                        <Icon name='menu' style={{ color: '#fff'}}   onPress={()=>this._sideMenuPress()} />
+                    </Button>
+                </Left>
+                <Body>
+                    <Title style={{color:'white'}}>{this.props.navigation.state.params.title}</Title>
+                </Body>
+                <Right>
+                    <Button transparent>
+                        <Icon name='ios-add' style={{ color: '#fff'}}   onPress={()=>this.setModalVisible(true)} />
+                    </Button>
+                </Right>
+            </Header>
+            <ScrollView  style={{flex:1}} scrollEnabled={this.state.scrollIsEnabled} ref={x => {this.scrollView = x}} keyboardShouldPersistTaps="always"
+                onScroll={this._handleScroll} 
+                scrollEventThrottle={100} //min 1 et max 16 (+de scroll detect)
+                onScrollBeginDrag={this._handleScrollBegin.bind(this)}
+                onScrollEndDrag={this._handleScrollEnd.bind(this)}
+        > 
+            <WebView
+                {...props}
+                javaScriptEnabled
+                injectedJavaScript={javasciptInjectionWithPatchPostMessage}
+                source={{uri:this.props.navigation.state.params.url}}
+               
+                ref={x => {this.WebView = x}}
+                onMessage={e => 
+                    //console.log(JSON.stringify(e.nativeEvent.data))
+                    this.onMessageFromWebView(e.nativeEvent.data)
+                    //this.onMessageFromWebView(JSON.parse(e.nativeEvent.data))
+                    //this.onMessageFromWebView(JSON.parse(JSON.stringify(e.nativeEvent.data)))
+                }
+                style={{
+                    height : Dimensions.get('window').height > Dimensions.get('window').width ? Dimensions.get('window').height-100 : '100%',
+                    //height: SCREEN_HEIGHT_CUSTOM_REST-(SCREEN_HEIGHT_CUSTOM_HEADER+(SCREEN_HEIGHT_CUSTOM_HEADER)),
+                    width:'100%' }}
+            />
+            {Dimensions.get('window').height > Dimensions.get('window').width ? this.renderStrip() : <View></View>}
+            </ScrollView>
+            <Modal
                         //animationType="slide"
                         //transparent={false}
+                        animationInTiming={500}
                         visible={this.state.modalVisible}
                         style={styles.bottomModal}
                         /*onRequestClose={() => {
@@ -590,11 +627,11 @@ export default class MessageWebView extends React.Component {
                     }}*/
                     >
                         
-                           
+                         
                 
                 <View 
                     style={{backgroundColor: 'white',
-                    height : '100%',
+                    height : Dimensions.get('window').height > Dimensions.get('window').width ? '50%' : '80%',
                     padding: 22,
                     justifyContent: 'center',
                     alignItems: 'center',
@@ -618,9 +655,16 @@ export default class MessageWebView extends React.Component {
                                     <Text>close</Text>
                                 </Button>
                             </View>
-                       
+                  
                     </Modal>
+
+
+
+
+
+
                 </View>
+                
             </SideMenu>
         )
     }
@@ -639,7 +683,8 @@ const styles = StyleSheet.create({
     bottomModal: {
         justifyContent: 'flex-end',
         margin: 0,
-        padding : 0
+        paddingTop : 0,
+        
       }
  })
 /*

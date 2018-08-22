@@ -132,6 +132,7 @@ export default class Opening extends Component {
       // Error saving data
       console.log("error")
     }
+    Actions.screnCenter()
 
   }
 

@@ -4,6 +4,7 @@ import {
   StyleSheet, 
   Platform, 
   Dimensions,
+  PixelRatio,
   View, 
   ActivityIndicator, 
   FlatList, 
@@ -176,6 +177,9 @@ export default class Project extends Component {
         newscastSavedState : null,
         refreshing: false,
         token : null, 
+        sizeImageRatio : 210,
+        sizeViewRatio : 150,
+        ratio : PixelRatio.get(),
         orientation : height > width ? 'portrait' : 'landscape'
       }
       YellowBox.ignoreWarnings([
@@ -217,6 +221,8 @@ export default class Project extends Component {
       });
       console.log(this.state.orientation);
     });
+    console.log("pixel ratio : "+PixelRatio.get())
+
     //this.getMoviesFromApi();
     //this.getNewsFromApi();
    // await this._generateDisplayItems()
@@ -480,12 +486,12 @@ export default class Project extends Component {
             }
              />
         </TouchableOpacity>
-        <View style={{width:'100%', flexDirection : 'row', backgroundColor : 'red', height:90//this.state.height / 8
+        <View style={{width:'100%', flexDirection : 'row',  height:90//this.state.height / 8
           }}>
           <Text numberOfLines={3} style={styles.textViewLandscape} onPress={item.isRejected? console.log("item isRejected") :this._onPressOnItem.bind(this, item)}>{item.title}</Text>
-          <View style={{alignItems: 'center', justifyContent: 'center', flexDirection : 'column', backgroundColor : 'green'}} >
+          <View style={{alignItems: 'center', justifyContent: 'center', flexDirection : 'column'}} >
             <Icon name={item.isSaved ? "ios-download" :"ios-download-outline"}     onPress={()=>item.isRejected ? console.log("error") :this._toggleFav( { item, index } )} />
-            <Icon name={item.isRejected ? "ios-checkmark" :"ios-close"}  style={{color: 'black', alignItems: 'center', justifyContent: 'center',color: item.isRejected ? "green" :"red", backgroundColor : 'orange'}}   onPress={()=>this._toggleReject( { item, index } )} />
+            <Icon name={item.isRejected ? "ios-checkmark" :"ios-close"}  style={{color: 'black', alignItems: 'center', justifyContent: 'center',color: item.isRejected ? "green" :"red"}}   onPress={()=>this._toggleReject( { item, index } )} />
           </View>
         </View>
       </View>
@@ -550,7 +556,9 @@ export default class Project extends Component {
     let tailleItem =  (screen.height / 17) + (screen.height / 5) + .5 > sizeGlobalDisplay/displayLenght ? (screen.height / 17) + (screen.height / 5) + .5 : sizeGlobalDisplay/displayLenght;
     const tailleEcran = nativeEvent.layoutMeasurement.height;
     console.log("taille ecran"+ tailleEcran)
-
+    console.log("pixel ratio "+PixelRatio.get())
+    console.log("Pixel size "+PixelRatio.getPixelSizeForLayoutSize(200))
+    console.log(PixelRatio.roundToNearestPixel(10))
     let paquet = [ ];
     const itemTop = await this.percentageCalculator(tailleItem, nativeEvent.contentOffset.y);
     paquet.push(itemTop)
@@ -688,7 +696,7 @@ textViewLandscape: {
     //padding : 30,
 
     color: '#000', 
-    backgroundColor : 'yellow'
+   // backgroundColor : 'yellow'
 
 },
 iconStyle:{

@@ -37,7 +37,7 @@ const PropTypes = require('prop-types');
 import I18n from 'ex-react-native-i18n';
 I18n.fallbacks = true
 const deviceLocale = I18n.locale
-
+import Modal from 'react-native-modal';
 I18n.translations = {
   'en': require("../../i18n/en"),
   'fr': require('../../i18n/fr'),
@@ -104,6 +104,7 @@ export default class MessageWebView extends React.Component {
             icon : "md-arrow-dropup", 
             scrollEventAnimation : false,
             scrollIsEnabled : true,
+            modalVisible : false,
             scrollStartFrom : "bottom"
         };
         this.springValue = new Animated.Value(1)
@@ -137,7 +138,9 @@ export default class MessageWebView extends React.Component {
             subject: `Je recommande l'article : ${this.props.navigation.state.params.title}` //  for email 
         }).then(result => console.log(result)).catch(errorMsg => console.log(errorMsg));
     }
-    
+    setModalVisible(visible) {
+        this.setState({modalVisible: visible});
+    }
     onMessageFromWebView (something){
         try{
             let mess = JSON.parse(something)
@@ -437,54 +440,12 @@ export default class MessageWebView extends React.Component {
                     <Title style={{color:'white'}}>{this.props.navigation.state.params.title}</Title>
                 </Body>
                 <Right>
-                    {/*<Button transparent>
-                        <Icon name='menu' style={{ color: '#fff'}}   onPress={()=>this._sideMenuPress()} />
+                    <Button transparent>
+                        <Icon name='ios-add' style={{ color: '#fff'}}   onPress={()=>this.setModalVisible(true)} />
                     </Button>
-                    */}
                 </Right>
             </Header>
-            <ScrollView  style={{flex:1}} scrollEnabled={this.state.scrollIsEnabled} ref={x => {this.scrollView = x}} keyboardShouldPersistTaps="always"
-                onScroll={this._handleScroll} 
-                scrollEventThrottle={100} //min 1 et max 16 (+de scroll detect)
-                onScrollBeginDrag={this._handleScrollBegin.bind(this)}
-                onScrollEndDrag={this._handleScrollEnd.bind(this)}
-                
-               
-                /*
-                //onTouchStart={ () => console.log( 'touch start' ) }
-                //onTouchMove={ () => console.log( 'touch move' ) }
-                
-                //onTouchEnd={ () => console.log( 'touch end' ) }
-                
-                //onScrollBeginDrag={ () => console.log( 'scroll begin' ) }
-                
-                //onScrollEndDrag={ () => console.log( 'scroll end' ) }
-                
-                //onMomentumScrollBegin={ () => console.log( 'momentum begin' ) }
-                
-                onMomentumScrollEnd={ () => console.log( 'momentum end' ) }
-                
-                onStartShouldSetResponder={ () => console.log( 'on start' ) }
-                
-                onStartShouldSetResponderCapture={ () => console.log( 'on start capture' ) }
-                
-                onScrollShouldSetResponder={ () => console.log( 'on scroll' ) }
-                
-                onResponderGrant={ () => console.log( 'granted' ) }
-                
-                onResponderTerminationRequest={ () => console.log( 'term req' ) }
-                
-                onResponderTerminate={ () => console.log( 'term' ) }
-                
-                onResponderRelease={ () => console.log( 'release' ) }
-                
-                onResponderReject={ () => console.log( 'reject' ) }
-                
-                onScrollAnimationEnd={ () => console.log( 'anim end' ) }
-                
-                //scrollEventThrottle={ 100 }*/
-               
-            >  
+            
             <WebView
                 {...props}
                 javaScriptEnabled
@@ -499,103 +460,52 @@ export default class MessageWebView extends React.Component {
                     //this.onMessageFromWebView(JSON.parse(JSON.stringify(e.nativeEvent.data)))
                 }
                 style={{height: SCREEN_HEIGHT_CUSTOM_REST-(SCREEN_HEIGHT_CUSTOM_HEADER+(SCREEN_HEIGHT_CUSTOM_HEADER)), width:'100%' }}
-            />*
+            />
             
-            <View  style={styles.MainContainer} > 
-                <ScrollView 
+            <Modal
+                        //animationType="slide"
+                        //transparent={false}
+                        animationInTiming={500}
+                        visible={this.state.modalVisible}
+                        style={styles.bottomModal}
+                        /*onRequestClose={() => {
+                            alert('Modal has been closed.');
+                    }}*/
+                    >
+                        
+                         
                 
-                onTouchStart={()=>this.touchStartIcon() }
-
-                //onTouchMove={ () => console.log( '################## touch move' ) }
-                
-                //onTouchEnd={ () => console.log( '################# touch end' ) }
-                onScroll={this._handleScroll} 
-                scrollEventThrottle={100} //min 1 et max 16 (+de scroll detect)
-                onScrollBeginDrag={this._handleScrollBegin.bind(this)}
-                onScrollEndDrag={this._handleScrollEnd.bind(this)}
-                >
-                <Animatable.View animation="bounce" easing="ease-in-out" iterationCount="infinite" >
-                <TouchableOpacity onPress={this._onPress} style={{ paddingLeft:SCREEN_WIDTH_CUSTOM_PADDING, width:'100%'}} onPress={this._onPress} >
-                    
-                    <Icon name={this.state.icon} style={{ color: 'black'}}/> 
-    
-                </TouchableOpacity>
-                </Animatable.View>
-                </ScrollView>
-                <View style={{ alignItems: 'center', justifyContent: 'flex-end' }}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 22 }}>{I18n.t('wv_opinion')} </Text>
-                </View>
-
-                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', flex:1 }}>
-                        <TouchableOpacity> 
-                            <Icon name="md-heart-outline" style={{ color: 'black' }} />
-                        </TouchableOpacity>
-                        <TouchableOpacity>
-                            <Slider
-                                style={{ width: 150 }}
-                                step={1}
-                                minimumValue={0}
-                                maximumValue={100}
-                                value={50}
-                            />
-                        </TouchableOpacity>  
-                        <TouchableOpacity> 
-                            <Icon name="md-heart" style={{ color: 'black' }} />
-                        </TouchableOpacity>
-                </View>
-                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', flex:1 }} >
-                        <TouchableOpacity> 
-                            <Icon name="md-sad" style={{ color: 'black' }} />
-                        </TouchableOpacity>
-                        <TouchableOpacity>
-                            <Slider
-                                style={{ width: 150 }}
-                                step={1}
-                                minimumValue={0}
-                                maximumValue={100}
-                                value={50}
-                            />
-                        </TouchableOpacity>  
-                        <TouchableOpacity  > 
-                            <Icon name="md-happy" style={{ color: 'black' }} />
-                        </TouchableOpacity>
-                </View>
-                <View style={{ alignItems: 'center', justifyContent: 'flex-end'}}>
+                <View 
+                    style={{backgroundColor: 'white',
+                    height : '100%',
+                    padding: 22,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderRadius: 10,
+                    paddingBottom : 0,
+                    borderColor: 'rgba(0, 0, 0, 1)',}}>
+                <View style={{ alignItems: 'center'}}>
                     <Button iconLeft block onPress={ this.ShareMessage }>
                         <Icon name='share' />
                         <Text>{I18n.t('wv_share')}</Text>
                     </Button>
                 </View>
-                {/*
-                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', flex:1 }}>
-                        <TouchableOpacity onPress={ this.ShareMessage }>
-                            <Image style={{ width: 60, height: 60 }}
-                                source={require('../../images/facebook.png')}/>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={()=>console.log("twitter")}>
-                            <Image style={{ width: 60, height: 60 }}
-                                source={require('../../images/twitter.png')}/>
-                            </TouchableOpacity>  
-                        <TouchableOpacity onPress={()=>console.log("linkedin")}>
-                            <Image style={{ width: 60, height: 60 }}
-                                source={require('../../images/linkedin.png')}/>
-                            </TouchableOpacity>  
-                        <TouchableOpacity onPress={()=>console.log("whatsapp")}>
-                            <Image style={{ width: 60, height: 60 }}
-                                source={require('../../images/whatsapp.png')}/>
-                        </TouchableOpacity> 
-                </View>
-                */}
-                <View style={{ alignItems: 'center', justifyContent: 'flex-end'}}>
+                <View style={{ alignItems: 'center', justifyContent: 'flex-end',  paddingTop : 10}}>
                     <Text style={{ fontWeight: 'bold', fontSize: 22 }}>{I18n.t('wv_recommendations')}</Text>
                 </View>
-                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', height: SCREEN_HEIGHT/1.70 }}>
+                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', height: '50%'}}>
                     <FlatListViewArticle style={{flex: 1}}  ref={x => {this.child = x}}>
                     </FlatListViewArticle>
                 </View>
-            </View>
+                                <Button block rounded danger onPress={() => {this.setModalVisible(!this.state.modalVisible);}} style={{padding : 15, margin : 15}}>
+                                    <Text>close</Text>
+                                </Button>
+                            </View>
+                  
+                    </Modal>
+            
       
-            </ScrollView>
+            
             </View>
             </SideMenu>
         )
