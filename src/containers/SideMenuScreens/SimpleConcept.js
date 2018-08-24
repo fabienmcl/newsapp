@@ -24,12 +24,14 @@ const SCREEN_WIDTH  = Dimensions.get('window').width
 
 const styles = StyleSheet.create({
   wrapper: {
+    backgroundColor : 'orange'
   },
   slide1: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#67daff',
+
   },
   slide2: {
     flex: 1,
@@ -102,6 +104,7 @@ export default class SwiperConcept extends Component {
     }
 
     async componentDidMount(){
+        Expo.ScreenOrientation.allow(Expo.ScreenOrientation.Orientation.PORTRAIT);
         await Font.loadAsync({
           Roboto: require("native-base/Fonts/Roboto.ttf"),
           Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
@@ -170,23 +173,23 @@ export default class SwiperConcept extends Component {
         );
     }
     return (
-      <Swiper style={styles.wrapper} loop={!this.state.isConnected? true:false} showsButtons={true} autoplay={!this.state.isConnected? true:false} >
+      <Swiper style={styles.wrapper} loop={!this.state.isConnected? true:false} showsButtons={true} autoplay={!this.state.isConnected? true:false} showsPagination={false} >
         <View style={styles.slide1}>
             
                 <TouchableOpacity onPress={() => this._skipConcept()}>
                     <Text style={{color: '#fff'}}> {!this.state.isConnected? I18n.t('concept_skip'): ""} </Text>
                 </TouchableOpacity>
             
-            
-           <Image style={ this.state.isConnected? {width:SCREEN_WIDTH, height:SCREEN_HEIGHT*3/5} : {width:SCREEN_WIDTH}} source={s1}/> 
+            <Image style={ this.state.isConnected? {width:SCREEN_WIDTH, height:SCREEN_HEIGHT*3.5/5} : {width:SCREEN_WIDTH}} source={s1}/> 
             <Text style={styles.text}>{I18n.t('concept_welcome')}</Text>
             <Text style={{color:'#fff', textAlign: 'center'}}> {I18n.t('concept_welcome_explain')}</Text>
+            
         </View>
         <View style={styles.slide2}>
             <TouchableOpacity onPress={() => this._skipConcept()}>
                 <Text style={{color: '#fff'}}> {!this.state.isConnected? I18n.t('concept_skip'): ""} </Text>
             </TouchableOpacity>
-            <Image style={ this.state.isConnected? {width:SCREEN_WIDTH, height:SCREEN_HEIGHT*3/5} : {width:SCREEN_WIDTH}} source={s2}/> 
+            <Image style={ this.state.isConnected? {width:SCREEN_WIDTH, height:SCREEN_HEIGHT*3.5/5} : {width:SCREEN_WIDTH}} source={s2}/> 
             <Text style={styles.text}>{I18n.t('concept_discover')}</Text>
             <Text style={{color:'#fff', textAlign: 'center'}}> {I18n.t('concept_discover_explain')} </Text>
         </View>
@@ -194,7 +197,7 @@ export default class SwiperConcept extends Component {
             <TouchableOpacity onPress={() => this._skipConcept()}>
                 <Text style={{color: '#fff'}}> {!this.state.isConnected? I18n.t('concept_skip'): ""} </Text>
             </TouchableOpacity>
-            <Image style={ this.state.isConnected? {width:SCREEN_WIDTH, height:SCREEN_HEIGHT*3/5} : {width:SCREEN_WIDTH}} source={s3}/> 
+            <Image style={ this.state.isConnected? {width:SCREEN_WIDTH, height:SCREEN_HEIGHT*3.5/5} : {width:SCREEN_WIDTH}} source={s3}/> 
             <Text style={styles.text}>{I18n.t('concept_sn')} </Text>
             <TouchableOpacity onPress={() => this._toggleModal()}>
                 <Text style={{color:'#fff', textAlign: 'center'}}> {I18n.t('concept_sn_explain')} </Text>

@@ -555,6 +555,9 @@ export default class MessageWebView extends React.Component {
             </View>
         );
     }
+    renderWV(title){
+
+    }
     render() {
         //console.log(this.props.navigation.state.params.data); 
         const { html, source, url, onMessage, ...props } = this.props

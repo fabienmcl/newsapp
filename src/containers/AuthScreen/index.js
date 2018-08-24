@@ -50,6 +50,7 @@ export default class AuthScreen extends Component {
   }
 
   async componentWillMount() {
+    Expo.ScreenOrientation.allow(Expo.ScreenOrientation.Orientation.PORTRAIT);
     await Expo.Font.loadAsync({
       Roboto: require("native-base/Fonts/Roboto.ttf"),
       Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
@@ -63,6 +64,9 @@ export default class AuthScreen extends Component {
     if (!this.props.isLoggedIn && nextProps.isLoggedIn) {
       this._hideAuthScreen()
     }
+  }
+  async componentWillUnmount(){
+    Expo.ScreenOrientation.allow(Expo.ScreenOrientation.Orientation.ALL);
   }
 
   _hideAuthScreen = async () => {

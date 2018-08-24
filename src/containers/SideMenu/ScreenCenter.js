@@ -179,6 +179,7 @@ export default class Project extends Component {
     /*if(this.state.isConnected === false){
       return <View style={{flex:1}} ><MiniOfflineSign /></View>
     }*/
+    Expo.ScreenOrientation.allow(Expo.ScreenOrientation.Orientation.ALL);
     switch(this.props.navigation.state.params.screen){
       case "Favorite" :
         return (

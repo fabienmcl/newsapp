@@ -552,12 +552,15 @@ export default class Project extends Component {
     
   }
   _onScrollItem = async (nativeEvent) => {
+    console.log("##### detect scroll item ####")
     const sizeGlobalDisplay = nativeEvent.contentSize.height;
     const displayLenght = this.state.displayDataSource.length;
-    let tailleItem =  (screen.height / 17) + (screen.height / 5) + .5 > sizeGlobalDisplay/displayLenght ? (screen.height / 17) + (screen.height / 5) + .5 : sizeGlobalDisplay/displayLenght;
+    //let tailleItem =  (screen.height / 17) + (screen.height / 5) + .5 > sizeGlobalDisplay/displayLenght ? (screen.height / 17) + (screen.height / 5) + .5 : sizeGlobalDisplay/displayLenght;
+    let tailleItem = sizeGlobalDisplay/displayLenght; 
     const tailleEcran = nativeEvent.layoutMeasurement.height;
-    console.log("taille ecran"+ tailleEcran)
-    console.log("pixel ratio "+PixelRatio.get()+"pixel round 100 "+PixelRatio.roundToNearestPixel(100))
+    console.log("taille ecran"+ tailleEcran);
+    console.log("Taille item"+tailleItem);
+    console.log("NB items visible : "+tailleEcran/tailleItem)
     let paquet = [ ];
     const itemTop = await this.percentageCalculator(tailleItem, nativeEvent.contentOffset.y);
     paquet.push(itemTop)
@@ -626,10 +629,12 @@ export default class Project extends Component {
           onLayout={ ({nativeEvent}) => {
             console.log("onLayout")
             console.log(nativeEvent)
+            Platform.OS === 'ios' ? 
             this._flatList.scrollToOffset({
               offset: 1,
               animated: false
-           })
+           }) :
+           this._flatList.getScrollResponder().scrollTo({x: 0, y: 1, animated: true});
           } }
           getItemLayout={(data, index)=>this.getItemLayout(data, index)}
           viewabilityConfig={this.viewabilityConfig}
