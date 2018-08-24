@@ -604,7 +604,12 @@ export default class MessageWebView extends React.Component {
                 javaScriptEnabled
                 injectedJavaScript={javasciptInjectionWithPatchPostMessage}
                 source={{uri:this.props.navigation.state.params.url}}
-               
+                renderLoading={() => <View style={{justifyContent: 'center',alignItems: 'center',  height : Dimensions.get('window').height > Dimensions.get('window').width ? Dimensions.get('window').height-100 : Dimensions.get('window').height,
+                //height: SCREEN_HEIGHT_CUSTOM_REST-(SCREEN_HEIGHT_CUSTOM_HEADER+(SCREEN_HEIGHT_CUSTOM_HEADER)),
+                width:'100%'}}> <ActivityIndicator size={'large'} />  </View>}
+                renderError={() => <View style={{justifyContent: 'center',alignItems: 'center',  height : Dimensions.get('window').height > Dimensions.get('window').width ? Dimensions.get('window').height-100 : Dimensions.get('window').height,
+                //height: SCREEN_HEIGHT_CUSTOM_REST-(SCREEN_HEIGHT_CUSTOM_HEADER+(SCREEN_HEIGHT_CUSTOM_HEADER)),
+                width:'100%'}}><Text style={{color:'#FFF'}}>No Internet connection, please reload</Text> <ActivityIndicator size={'large'} /> <Button block rounded danger  onPress={() => this.WebView.reload() } ><Text>Reload</Text> </Button> </View>}
                 ref={x => {this.WebView = x}}
                 onMessage={e => 
                     //console.log(JSON.stringify(e.nativeEvent.data))
@@ -612,8 +617,9 @@ export default class MessageWebView extends React.Component {
                     //this.onMessageFromWebView(JSON.parse(e.nativeEvent.data))
                     //this.onMessageFromWebView(JSON.parse(JSON.stringify(e.nativeEvent.data)))
                 }
+
                 style={{
-                    height : Dimensions.get('window').height > Dimensions.get('window').width ? Dimensions.get('window').height-100 : '100%',
+                    height : Dimensions.get('window').height > Dimensions.get('window').width ? Dimensions.get('window').height-100 : Dimensions.get('window').height,
                     //height: SCREEN_HEIGHT_CUSTOM_REST-(SCREEN_HEIGHT_CUSTOM_HEADER+(SCREEN_HEIGHT_CUSTOM_HEADER)),
                     width:'100%' }}
             />
