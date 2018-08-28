@@ -160,7 +160,88 @@ const demoDataNews = [
   },
 ];
 
-
+const demoDataNewsLoadMore = [
+  {
+    title: 'Une envie de Windows 95 ? Cette application fait renaître l’OS de Microsoft',
+    plot: "Après les jeux vidéo, la nostalgie touchera-t-elle de vieux systèmes d’exploitation ? Peut-être. Le développeur Felix Rieseberg s’est amusé à ressusciter Windows 95 dans une application que les utilisateurs Mac, Windows et Linux pourront télécharger.",
+    image: 'https://www.numerama.com/content/uploads/2018/08/maxresdefault.jpg',
+    url:'https://www.numerama.com/pop-culture/410274-une-envie-de-windows-95-cette-application-fait-renaitre-los-de-microsoft.html',
+    isSaved:0,
+    isRejected : 0
+  },
+  {
+    title: 'Pour fêter les 500 millions de consoles vendues, Sony a conçu cette magnifique PS4 Pro collector',
+    plot: "Acteur majeur du marché des consoles, Sony transforme tout en or avec sa marque PlayStation. Ainsi, tout récemment, il a annoncé avoir écoulé plus de 500 millions de consoles depuis le lancement de la toute première PlayStation, en 1994 (au Japon). Un chiffre colossal, que le constructeur a voulu fêter dignement avec une PlayStation 4 Pro collector limitée à 50 000 exemplaires dans le monde (bon courage pour en trouver une).",
+    image: 'https://www.numerama.com/content/uploads/2018/08/sony-ps4-pro-500-millions-15.jpg',
+    url:'https://www.numerama.com/pop-culture/410112-pour-feter-les-500-millions-de-consoles-vendues-sony-a-concu-cette-magnifique-ps4-pro-collector.html',
+    isSaved:0,
+    isRejected : 0
+  },
+  {
+    title: '« Le Monde » refait son site',
+    plot: "« Le Monde » fait évoluer son site Web, en commençant par sa page d’accueil.",
+    image: 'https://img.lemde.fr/2018/07/12/352/0/3500/2331/184/122/60/0/a222ac2_10821-1n4nge5.ooi4.png',
+    url:'https://www.lemonde.fr/refaire-le-monde/article/2018/08/16/le-monde-refait-son-site_5343010_5330899.html',
+    isSaved:0,
+    isRejected : 0
+  },
+  {
+    title: 'The Legend Of Zelda : Breath of the Wild officiellement placé dans la chronologie de la licence',
+    plot: "Ainsi, ce dernier se place en toute fin de la frise chronologique dans ce qui semble être une nouvelle branche, alors que l'épisode précédent, Skyward Sword, reste lui bien accroché au tout début. Vu l'état d'Hyrule dans le titre, ce placement ne semble pas du tout étrange, même si l'on pourrait placer The Wind Waker dans le débat. ",
+    image: 'http://image.jeuxvideo.com/medias-md/153358/1533578262-5850-card.jpg',
+    url:'http://www.jeuxvideo.com/news/897415/the-legend-of-zelda-breath-of-the-wild-officiellement-place-dans-la-chronologie-de-la-licence.htm',
+    isSaved:0,
+    isRejected : 0
+  },
+  {
+    title: 'Heures sup’ exonérées : quel impact sur le pouvoir d’achat et le chômage ?',
+    plot: "Officiellement, c’est le grand retour du « travail qui paie ». Et donc de l’exonération de charges sur les heures supplémentaires, promesse de campagne d’Emmanuel Macron qui sera appliquée au 1er septembre 2019. L’objectif est louable : augmenter le pouvoir d’achat des salariés et faire en sorte que le travail « paie de mieux en mieux », comme l’a énoncé Édouard Philippe dans le JDD dimanche.",
+    image: 'http://s1.lprs1.fr/images/2018/08/27/7866102_7f019644-a9f2-11e8-8956-de5ad4b6bb68-1_1000x625.jpg',
+    url:'http://www.leparisien.fr/economie/heures-sup-exonerees-quel-impact-sur-le-pouvoir-d-achat-et-le-chomage-27-08-2018-7866102.php',
+    isSaved:0,
+    isRejected : 0
+  },
+  {
+    title: 'Ivre, il demande à un gendarme de lui payer son plein',
+    plot: "L’homme de 26 ans, sous l’emprise d’alcool et de stupéfiants, avait besoin d’essence mais n’avait pas de carte bancaire. Il s’est adressé à un autre client de la station. Mauvaise pioche, c’était un gendarme au repos.",
+    image: 'https://media.ouest-france.fr/v1/pictures/0cc6af850bd0ce1865d6a491ed98d5d5-carquefou-ivre-il-demande-un-gendarme-de-lui-payer-son-plein.jpg',
+    url:'https://www.ouest-france.fr/pays-de-la-loire/nantes-44000/carquefou-ivre-il-demande-un-gendarme-de-lui-payer-son-plein-5909000',
+    isSaved:0,
+    isRejected : 0
+  },
+  {
+    title: 'Ivre, il entre par effraction et se cuisine des lardons',
+    plot: "La faim justifie les moyens. Lundi 6 août vers 19 h, un habitant de la rue de Cornouaille, dans le quartier de Kergoat, à Brest, entend du bruit venant de sa cuisine.Intrigué, il va jeter un œil. Il se retrouve nez à nez avec un homme, en fort état d’ébriété, occupé à cuire des lardons. Il a aussi fait brûler un morceau de pain, qui a endommagé le linoléum au sol. L’inconnu est tout simplement entré par la fenêtre de la salle de bains restée ouverte.",
+    image: 'https://media.ouest-france.fr/v1/pictures/17db77eae33a82cfdfcd337f27dda78c-brest-ivre-il-entre-par-effraction-et-se-cuisine-des-lardons_1.jpg?width=1260&height=712&fill=0&focuspoint=50%2C50&cropresize=1',
+    url:'https://www.ouest-france.fr/bretagne/brest-29200/brest-ivre-il-entre-par-effraction-et-se-cuisine-des-lardons-5913701',
+    isSaved:0,
+    isRejected : 0
+  },
+  {
+    title: 'Ivre, il "bénit" les gendarmes avec la brosse des toilettes',
+    plot: "L’homme de 26 ans, sous l’emprise d’alcool et de stupéfiants, avait besoin d’essence mais n’avait pas de carte bancaire. Il s’est adressé à un autre client de la station. Mauvaise pioche, c’était un gendarme au repos.",
+    image: 'https://media.ouest-france.fr/v1/pictures/0cc6af850bd0ce1865d6a491ed98d5d5-carquefou-ivre-il-demande-un-gendarme-de-lui-payer-son-plein.jpg',
+    url:'https://www.ouest-france.fr/pays-de-la-loire/angers-49000/segre-ivre-il-benit-les-gendarmes-avec-la-brosse-des-toilettes-5823583',
+    isSaved:0,
+    isRejected : 0
+  },
+  {
+    title: 'un homme, armé et ivre, vole des lots à une kermesse',
+    plot: "L’homme de 26 ans, sous l’emprise d’alcool et de stupéfiants, avait besoin d’essence mais n’avait pas de carte bancaire. Il s’est adressé à un autre client de la station. Mauvaise pioche, c’était un gendarme au repos.",
+    image: 'https://static.ladepeche.fr/content/media/image/large/2018/07/03/20180703082847118-0.jpg',
+    url:'https://www.ladepeche.fr/article/2018/07/10/2833843-bretagne-homme-arme-ivre-vole-lots-kermesse.html',
+    isSaved:0,
+    isRejected : 0
+  },
+  {
+    title: 'Ivre et sans permis, un unijambiste conduisant avec un balai provoque un accident ',
+    plot: "L’homme de 26 ans, sous l’emprise d’alcool et de stupéfiants, avait besoin d’essence mais n’avait pas de carte bancaire. Il s’est adressé à un autre client de la station. Mauvaise pioche, c’était un gendarme au repos.",
+    image: 'https://static.cnews.fr/sites/default/files/styles/image_640_360/public/balai_illustration_cc_quidditch.jpg?itok=v7t6xali',
+    url:'https://www.cnews.fr/monde/2017-11-30/brest-ivre-et-sans-permis-un-unijambiste-conduisant-avec-un-balai-provoque-un',
+    isSaved:0,
+    isRejected : 0
+  },
+];
 
 export default class Project extends Component {
   constructor(props) {
@@ -202,11 +283,11 @@ export default class Project extends Component {
     try {
       AsyncStorage.getItem('token', (err, result)=>{
        this.setState({token: result});
-       console.log("mon token de merde "+result)
+       //console.log("mon token de merde "+result)
        })
      } catch (error) {
        // Error saving data
-       console.log("oh mon dieu le token a disparu")
+       //console.log("oh mon dieu le token a disparu")
      }
     this.fetchEvent("launch",null)
     Dimensions.addEventListener('change', () => {
@@ -221,8 +302,8 @@ export default class Project extends Component {
       });
       console.log(this.state.orientation);
     });
-    console.log("pixel ratio : "+PixelRatio.get())
-    console.log("pixel round : "+PixelRatio.roundToNearestPixel(100))
+    //console.log("pixel ratio : "+PixelRatio.get())
+    //console.log("pixel round : "+PixelRatio.roundToNearestPixel(100))
     //this.getMoviesFromApi();
     //this.getNewsFromApi();
    // await this._generateDisplayItems()
@@ -247,7 +328,7 @@ export default class Project extends Component {
     //await this.executeSql('create table if not exists newscasts ( id integer primary key , title text not null,image text not null,url text not null,isSaved integer default 0, isRejected integer default 0 );');
   }
   _updateSelectedItems = async()=>{
-    console.log("update")
+    //console.log("update")
     await this.executeSql('select * from newscastSaved', []).then(newscastSavedState => this.setState({newscastSavedState})  );
     await this._checkSavedItems();
   }
@@ -264,7 +345,7 @@ export default class Project extends Component {
         for(let i=0;this.state.newscastSavedState.length !=i;i++){
           //console.log(this.state.displayDataSource[j].url)
           if(this.state.newscastSavedState[i].url === this.state.displayDataSource[j].url ){
-            console.log("it's match!")
+            //console.log("it's match!")
             display[j].isSaved = 1
     
           }
@@ -366,6 +447,19 @@ export default class Project extends Component {
     while(i!=j){
       pack.push(this.state.globalDataSource[i])
       i++;
+    }
+    console.log(pack.length)
+    console.log(this.state.globalDataSource.length)
+    if(pack.length > this.state.globalDataSource.length/2){
+      console.log("################################################ ok ####################################");
+      let global = this.state.globalDataSource;
+      for(let i=0;i!=demoDataNewsLoadMore.length;i++){
+        console.log(demoDataNewsLoadMore[i])
+        global.push(demoDataNewsLoadMore[i]);
+      }
+      this.setState({
+        globalDataSource : global
+      })
     }
     this.setState({
       page : this.state.page+1,
@@ -513,7 +607,7 @@ export default class Project extends Component {
     let positionEndItem = currentItemIndex*sizeOneNews
     //console.log(sizeOneNews)
     //console.log(position)
-    console.log("##################")
+    //console.log("##################")
     //console.log("positon end "+positionEndItem)
     //console.log(positionEndItem-position)
     let p = ((100*(positionEndItem-position))/sizeOneNews+"").split('.')[0]
@@ -552,22 +646,22 @@ export default class Project extends Component {
     
   }
   _onScrollItem = async (nativeEvent) => {
-    console.log("##### detect scroll item ####")
+    //console.log("##### detect scroll item ####")
     const sizeGlobalDisplay = nativeEvent.contentSize.height;
     const displayLenght = this.state.displayDataSource.length;
     //let tailleItem =  (screen.height / 17) + (screen.height / 5) + .5 > sizeGlobalDisplay/displayLenght ? (screen.height / 17) + (screen.height / 5) + .5 : sizeGlobalDisplay/displayLenght;
     let tailleItem = sizeGlobalDisplay/displayLenght; 
     const tailleEcran = nativeEvent.layoutMeasurement.height;
-    console.log("taille ecran"+ tailleEcran);
-    console.log("Taille item"+tailleItem);
-    console.log("NB items visible : "+tailleEcran/tailleItem)
+    //console.log("taille ecran"+ tailleEcran);
+    //console.log("Taille item"+tailleItem);
+    //console.log("NB items visible : "+tailleEcran/tailleItem)
     let paquet = [ ];
     const itemTop = await this.percentageCalculator(tailleItem, nativeEvent.contentOffset.y);
     paquet.push(itemTop)
     const itemBottom = await this.percentageCalculatorBottom(tailleItem, nativeEvent.contentOffset.y+tailleEcran,sizeGlobalDisplay);
     let i = await itemTop.index;
     let j = itemBottom === null ? this.state.displayDataSource.length : itemBottom.index;
-    console.log("j : "+j)
+    //console.log("j : "+j)
     i++;
     for(i; i<j;i++){
       paquet.push(
@@ -582,7 +676,7 @@ export default class Project extends Component {
     paquet.push(itemBottom)
     
     console.log(paquet)
-    console.log(tailleEcran/tailleItem)
+    //console.log(tailleEcran/tailleItem)
     
   }
   
@@ -596,6 +690,23 @@ export default class Project extends Component {
           }}
         />
       );
+  }
+  renderFooter = () => {
+    return (
+      <View
+        style={{
+          paddingVertical: 20,
+          borderTopWidth: 1,
+          borderColor: "#CED0CE"
+        }}
+      >
+        <ActivityIndicator animating size="large" />
+      </View>
+    );
+  };
+  async onRefresh() {
+    await console.log('refreshing')
+    await this.webCall();
   }
   render() {
     if (this.state.isLoading) {
@@ -614,6 +725,9 @@ export default class Project extends Component {
           data={ this.state.displayDataSource }
           debug={this.state.debug}
           extraData={this.state}
+          refreshing={this.state.isLoading}
+          onRefresh={()=>this.onRefresh()}
+          ListFooterComponent={this.renderFooter}
           ItemSeparatorComponent = {this.FlatListItemSeparator}
           renderItem={({item, index, nativeEvent}) => this.state.orientation === 'portrait' ? this.renderItem({item, index, nativeEvent}) : this.renderItemLandscape({item, index, nativeEvent}) }
           keyExtractor={(item, index) => index.toString()}
@@ -627,8 +741,8 @@ export default class Project extends Component {
         
 
           onLayout={ ({nativeEvent}) => {
-            console.log("onLayout")
-            console.log(nativeEvent)
+            //console.log("onLayout")
+            //console.log(nativeEvent)
             Platform.OS === 'ios' ? 
             this._flatList.scrollToOffset({
               offset: 1,
