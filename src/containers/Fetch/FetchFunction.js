@@ -28,10 +28,6 @@ const SCREEN_HEIGHT = Dimensions.get('window').height
 const SCREEN_WIDTH  = Dimensions.get('window').width
 const SCREEN_WIDTH_CUSTOM_PADDING = SCREEN_WIDTH*0.47;
 const SCREEN_HEIGHT_CUSTOM = SCREEN_HEIGHT-(SCREEN_HEIGHT/20);
-import FlatListViewArticle from '../ListOfArticles/FlatListViewArticleRecommandation';
-import SideMenu from 'react-native-side-menu';
-import Menu from '../SideMenu/Menu';
-import TimerMixin from 'react-timer-mixin';
 const SCREEN_HEIGHT_CUSTOM_HEADER = SCREEN_HEIGHT/20;
 const SCREEN_HEIGHT_CUSTOM_REST= SCREEN_HEIGHT - SCREEN_HEIGHT_CUSTOM_HEADER;
 const PropTypes = require('prop-types');

@@ -283,15 +283,6 @@ export default class Project extends Component {
         </Root>
       );
     }
-    /*
-    if(this.state.appState==="background" ){
-      this.componentWillUnmount();
-      return (
-        <Root>
-          <AppLoading />
-        </Root>
-      );
-    }*/
     return (
       <SideMenu
         menu={menu}
@@ -321,7 +312,6 @@ export default class Project extends Component {
         {content}
         
         </View>
-       
       </View>
       </SideMenu>
     );
