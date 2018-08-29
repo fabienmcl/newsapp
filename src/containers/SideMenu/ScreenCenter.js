@@ -74,7 +74,7 @@ export default class Project extends Component {
       loading: true,
       token : undefined
     }
-    YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated',]);
+    YellowBox.ignoreWarnings(['Warning: componentWillMount is deprecated','Warning: componentWillReceiveProps is deprecated','Warning: Can only update a mounted or mounting component']);
    
   }
   
@@ -85,7 +85,7 @@ export default class Project extends Component {
     });
     await I18n.initAsync();
     //console.log(this.props)
-    this.setState({ loading: false });
+    //this.setState({ loading: false });
     NetInfo.isConnected.addEventListener('connectionChange', this.handleConnectivityChange);
     AppState.addEventListener('change', this._handleAppStateChange);
     //accelerometerSensor._subscribe();
@@ -93,13 +93,14 @@ export default class Project extends Component {
     //locationSensor._subscribe();
     try {
       AsyncStorage.getItem('token', (err, result)=>{
-       this.setState({token: result});
+        setTimeout(() => this.setState({ token:result }))//this.setState({token: result});
        console.log("mon token de merde "+result)
        })
      } catch (error) {
        // Error saving data
        console.log("oh mon dieu le token a disparu")
      }
+     setTimeout(() => this.setState({ loading:false }))
   }
   componentWillUnmount() {
     NetInfo.isConnected.removeEventListener('connectionChange', this.handleConnectivityChange);

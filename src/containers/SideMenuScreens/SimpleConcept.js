@@ -127,7 +127,7 @@ export default class SwiperConcept extends Component {
               if(this.state.userInformationBasic.email === "Empty"){
                 console.log("email est vide")
               }else{
-                this.setState({isConnected : true})
+                setTimeout(() => this.setState({ isConnected:true }))// this.setState({isConnected : true})
               }
             }
 
@@ -140,7 +140,8 @@ export default class SwiperConcept extends Component {
         }
         await I18n.initAsync();
         
-        this.setState({isLoading:false})
+        setTimeout(() => this.setState({ isLoading:false }))//this.setState({isLoading:false})
+        Expo.ScreenOrientation.allow(Expo.ScreenOrientation.Orientation.PORTRAIT);
     }
     _initAsyncStorage = async () =>{
       //AsyncStorage.removeItem('infoGeoloc',(error, result));

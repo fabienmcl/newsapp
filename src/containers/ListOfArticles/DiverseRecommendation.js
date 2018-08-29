@@ -691,6 +691,19 @@ export default class Project extends Component {
         />
       );
   }
+  renderEmpty = () => {
+    return (
+      <View
+        style={{
+          paddingVertical: 20,
+          borderTopWidth: 1,
+          borderColor: "#CED0CE"
+        }}
+      >
+        <ActivityIndicator animating size="large" />
+      </View>
+    );
+  };
   renderFooter = () => {
     return (
       <View
@@ -727,6 +740,7 @@ export default class Project extends Component {
           extraData={this.state}
           refreshing={this.state.isLoading}
           onRefresh={()=>this.onRefresh()}
+          ListEmptyComponent={this.renderEmpty}
           ListFooterComponent={this.renderFooter}
           ItemSeparatorComponent = {this.FlatListItemSeparator}
           renderItem={({item, index, nativeEvent}) => this.state.orientation === 'portrait' ? this.renderItem({item, index, nativeEvent}) : this.renderItemLandscape({item, index, nativeEvent}) }
