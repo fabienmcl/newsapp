@@ -46,7 +46,6 @@ I18n.translations = {
   'fr': require('../../i18n/fr'),
 };
 import javasciptInjectionWithPatchPostMessage from './injectionJS';
-import WebViewFunction from './WebviewFunction';
 
 
 export default class MessageWebView extends React.Component {
@@ -235,7 +234,7 @@ export default class MessageWebView extends React.Component {
         });
     }
     _onMomentumScrollEnd = (event) => {
-        console.log("jn")
+        console.log("_onMomentumScrollEnd")
     }
     ShareMessage=()=>{
         Share.share({
@@ -343,70 +342,6 @@ export default class MessageWebView extends React.Component {
             </Button>
         </View>
     }
-    renderContent(){
-        return(
-            /*<ScrollView  style={{flex:1}} scrollEnabled={this.state.scrollIsEnabled} ref={x => {this.scrollView = x}} keyboardShouldPersistTaps="always"
-                onScroll={this._handleScroll} 
-                scrollEventThrottle={100} //min 1 et max 16 (+de scroll detect)
-                onScrollBeginDrag={this._handleScrollBegin.bind(this)}
-                onScrollEndDrag={this._handleScrollEnd.bind(this)}
-        > */
-                <WebView
-                    //{...props}
-                    javaScriptEnabled
-                    ref={x => {this.WebView = x}}
-                    injectedJavaScript={WebViewFunction._JavaScriptInjection()}
-                    source={{uri:this.props.navigation.state.params.url}}
-                    domStorageEnabled={true}
-                    startInLoadingState={true}
-                    renderLoading={() => <View style={{flex:1,justifyContent: 'center',alignItems: 'center',}}> <ActivityIndicator size={'large'} />  </View>}
-                    renderError={() => <View style={{flex:1,justifyContent: 'center',alignItems: 'center',}}><Text style={{color:'#FFF'}}>No Internet connection, please reload</Text> <ActivityIndicator size={'large'} /> <Button block rounded danger  onPress={() => this.WebView.reload() } ><Text>Reload</Text> </Button> </View>}
-                    onMessage={e => 
-                        //console.log(JSON.stringify(e.nativeEvent.data))
-                        this.onMessageFromWebView(e.nativeEvent.data)
-                        //this.onMessageFromWebView(JSON.parse(e.nativeEvent.data))
-                        //this.onMessageFromWebView(JSON.parse(JSON.stringify(e.nativeEvent.data)))
-                    }
-                    /*style={{height: SCREEN_HEIGHT_CUSTOM_REST-(SCREEN_HEIGHT_CUSTOM_HEADER+(SCREEN_HEIGHT_CUSTOM_HEADER)),
-                    
-                         width:'100%' }}*/
-                />
-                
-                /*
-                {this.renderStrip()}
-                </ScrollView>*/
-        );
-    }
-    renderContentLandscape(){
-        return(
-            /*<ScrollView  style={{flex:1}} scrollEnabled={this.state.scrollIsEnabled} ref={x => {this.scrollView = x}} keyboardShouldPersistTaps="always"
-                onScroll={this._handleScroll} 
-                scrollEventThrottle={100} //min 1 et max 16 (+de scroll detect)
-                onScrollBeginDrag={this._handleScrollBegin.bind(this)}
-                onScrollEndDrag={this._handleScrollEnd.bind(this)}
-            > */ 
-                <WebView
-                    //{...props}
-                    javaScriptEnabled
-                    ref={x => {this.WebView = x}}
-                    injectedJavaScript={WebViewFunction._JavaScriptInjection()}
-                    source={{uri:this.props.navigation.state.params.url}}
-                    onMessage={e => 
-                        //console.log(JSON.stringify(e.nativeEvent.data))
-                        this.onMessageFromWebView(e.nativeEvent.data)
-                        //this.onMessageFromWebView(JSON.parse(e.nativeEvent.data))
-                        //this.onMessageFromWebView(JSON.parse(JSON.stringify(e.nativeEvent.data)))
-                    }
-                    /*style={{height: (Dimensions.get('window').height/2) + SCREEN_HEIGHT_CUSTOM_HEADER*3,
-                    
-                         width:'100%' }}*/
-                />
-                /*{ 
-                    Dimensions.get('window').height > Dimensions.get('window').width ? this.renderStrip() : this.renderStripLandscape()
-                }
-           </ScrollView>*/
-        );
-    }
     renderStrip(){
         return(
             <View  style={styles.MainContainer} > 
@@ -479,85 +414,7 @@ export default class MessageWebView extends React.Component {
             </View>
         );
     }
-    renderStripLandscape(){
-        return(
-            <View  style={styles.MainContainer} > 
-                <ScrollView 
-                    onTouchStart={()=>this.touchStartIcon() }
-                    onScroll={this._handleScroll} 
-                    scrollEventThrottle={100} //min 1 et max 16 (+de scroll detect)
-                    onScrollBeginDrag={this._handleScrollBegin.bind(this)}
-                    onScrollEndDrag={this._handleScrollEnd.bind(this)}
-                >
-                    <Animatable.View animation="bounce" easing="ease-in-out" iterationCount="infinite" >
-                        <TouchableOpacity onPress={this._onPress} style={{ paddingLeft:SCREEN_WIDTH_CUSTOM_PADDING, width:'100%'}} onPress={this._onPress} >
-                            <Icon
-                            name={parseInt(this.state.isScrollPositionY) > 20 ? "md-arrow-dropdown" : "md-arrow-dropup"}
-                            //name={this.state.icon} 
-                            style={{ color: 'black'}}/> 
-                        </TouchableOpacity>
-                    </Animatable.View>
-                </ScrollView>
-                    <View style={{ alignItems: 'center', justifyContent: 'flex-end' }}>
-                        <Text style={{ fontWeight: 'bold', fontSize: 22 }}>{I18n.t('wv_opinion')} </Text>
-                    </View>
-                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', flex:1 }}>
-                        <TouchableOpacity> 
-                            <Icon name="md-heart-outline" style={{ color: 'black' }} />
-                        </TouchableOpacity>
-                        <TouchableOpacity>
-                            <Slider
-                                style={{ width: 150 }}
-                                step={1}
-                                minimumValue={0}
-                                maximumValue={100}
-                                value={50}
-                            />
-                        </TouchableOpacity>  
-                        <TouchableOpacity> 
-                            <Icon name="md-heart" style={{ color: 'black' }} />
-                        </TouchableOpacity>
-                    </View>
-                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', flex:1 }} >
-                        <TouchableOpacity> 
-                            <Icon name="md-sad" style={{ color: 'black' }} />
-                        </TouchableOpacity>
-                        <TouchableOpacity>
-                            <Slider
-                                style={{ width: 150 }}
-                                step={1}
-                                minimumValue={0}
-                                maximumValue={100}
-                                value={50}
-                            />
-                        </TouchableOpacity>  
-                        <TouchableOpacity  > 
-                            <Icon name="md-happy" style={{ color: 'black' }} />
-                        </TouchableOpacity>
-                    </View>
-                <View style={{ alignItems: 'center', justifyContent: 'flex-end'}}>
-                    <Button iconLeft block onPress={ this.ShareMessage }>
-                        <Icon name='share' />
-                        <Text>{I18n.t('wv_share')}</Text>
-                    </Button>
-                </View>
-                <View style={{ alignItems: 'center', justifyContent: 'flex-end'}}>
-                    <Text style={{ fontWeight: 'bold', fontSize: 22 }}>{I18n.t('wv_recommendations')}</Text>
-                </View>
-                {/*
-                 
-                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-around', height: SCREEN_HEIGHT/1.70 }}>
-                    <FlatListViewArticle style={{flex: 1}}  ref={x => {this.child = x}}>
-                    </FlatListViewArticle>
-                </View>
-                   */
-                }
-            </View>
-        );
-    }
-    renderWV(title){
-
-    }
+    
     render() {
         //console.log(this.props.navigation.state.params.data); 
         const { html, source, url, onMessage, ...props } = this.props
@@ -696,28 +553,3 @@ const styles = StyleSheet.create({
         
       }
  })
-/*
-<TouchableOpacity activeOpacity={0.5} onPress={this.SampleFunction} style={styles.TouchableOpacityStyle} >
-                <Image source={{uri : 'https://reactnativecode.com/wp-content/uploads/2017/11/Floating_Button.png'}} 
-                    style={styles.FloatingButtonStyle} />
-            </TouchableOpacity>
-            , 
-    TouchableOpacityStyle:{
- 
-    position: 'relative',
-    width: 50,
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    right: 0,
-    bottom: 150,
-  },
- 
-  FloatingButtonStyle: {
- 
-    //resizeMode: 'contain',
-    width: 50,
-    height: 50,
-    zIndex: 999
-  }
-  */
