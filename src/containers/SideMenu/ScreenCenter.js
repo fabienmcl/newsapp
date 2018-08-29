@@ -45,7 +45,6 @@ import locationSensor from '../Sensors/LocationSensor';
 import deviceInfoSensor from '../Sensors/DeviceInfoSensor';
 //import fetch
 import FetchFunction from '../Fetch/FetchFunction';
-import Queue from '../Fetch/QueueFunction';
 
 
 function MiniOfflineSign() {
@@ -53,10 +52,6 @@ function MiniOfflineSign() {
     <View style={styles.offlineContainer}>
       <Text style={styles.offlineText}>{I18n.t('no_connection')}</Text>
   </View>
-/*
-    <View style={{flex:1,height: 30, alignItems: 'center',}}>
-      <Text style={styles.offlineText}>No Internet Connection</Text>
-    </View>*/
   );
 }
 
